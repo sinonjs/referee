@@ -29,6 +29,7 @@ if (typeof require != "undefined") {
 
             var error = new buster.assert.AssertionError();
             assert.ok(Error.prototype.isPrototypeOf(error));
+            assert.ok(error instanceof Error);
         }
     });
 
@@ -336,6 +337,16 @@ if (typeof require != "undefined") {
             });
         },
 
+        "should fail when comparing primitives without coercion": function () {
+            assert.throws(function () {
+                buster.assert.same(666, "666");
+            });
+
+            assert.throws(function () {
+                buster.assert.same(0, "");
+            });
+        },
+
         "should pass when comparing null to null": function () {
             assert.doesNotThrow(function () {
                 buster.assert.same(null, null);
@@ -555,11 +566,206 @@ if (typeof require != "undefined") {
             });
         },
 
+        "should pass when comparing object to itself with message": function () {
+            assert.doesNotThrow(function () {
+                var obj = { id: 42 };
+                buster.assert.equals("These should be equal", obj, obj);
+            });
+        },
+
+        "should pass when comparing primitives": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.equals("Hey", "Hey");
+                buster.assert.equals(32, 32);
+                buster.assert.equals(false, false);
+                buster.assert.equals(null, null);
+                buster.assert.equals(undefined, undefined);
+            });
+        },
+
+        "should pass when comparing function to itself": function () {
+            assert.doesNotThrow(function () {
+                var func = function () {};
+                buster.assert.equals(func, func);
+            });
+        },
+
+        "should fail when comparing functions": function () {
+            assert.throws(function () {
+                buster.assert.equals(function () {}, function () {});
+            });
+        },
+
+        "should pass when comparing object to itself": function () {
+            assert.doesNotThrow(function () {
+                var obj = [];
+                buster.assert.equals(obj, obj);
+            });
+        },
+
+        "should pass when comparing date objects with same date": function () {
+            var date = new Date();
+            var anotherDate = new Date(date.getTime());
+
+            assert.doesNotThrow(function () {
+                buster.assert.equals(date, anotherDate);
+            });
+        },
+
+        "should fail when comparing date objects with different dates": function () {
+            var date = new Date();
+            var anotherDate = new Date(date.getTime() - 10);
+
+            assert.throws(function () {
+                buster.assert.equals(date, anotherDate);
+            });
+        },
+
+        "should pass when comparing primitives with coercion": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.equals("4", 4);
+                buster.assert.equals(32, "32");
+                buster.assert.equals(0, "");
+            });
+        },
+
+        "should fail when comparing objects with different own properties": function () {
+            assert.throws(function () {
+                buster.assert.equals({ id: 42 }, { id: 42, di: 24 });
+            });
+
+            assert.throws(function () {
+                buster.assert.equals({ id: undefined }, { di: 24 });
+            });
+
+            assert.throws(function () {
+                buster.assert.equals({ id: 24 }, { di: undefined });
+            });
+        },
+
+        "should pass when comparing objects with one property": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.equals({ id: 42 }, { id: 42 });
+            });
+        },
+
+        "should pass when comparing objects with one object property": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.equals({ obj: { id: 42 } }, { obj: { id: 42 } });
+            });
+        },
+
+        "should fail when comparing objects with one property with different values": function () {
+            assert.throws(function () {
+                buster.assert.equals({ id: 42 }, { id: 24 });
+            });
+        },
+
+        "should pass when comparing complex objects": function () {
+            assert.doesNotThrow(function () {
+                var obj1 = {
+                    id: 42,
+                    name: "Hey",
+                    sayIt: function () {
+                        return this.name;
+                    },
+
+                    child: {
+                        speaking: function () {}
+                    }
+                };
+
+                var obj2 = {
+                    sayIt: obj1.sayIt,
+                    child: { speaking: obj1.child.speaking },
+                    id: 42,
+                    name: "Hey"
+                };
+
+                buster.assert.equals(obj1, obj2);
+            });
+        },
+
+        "should pass when comparing arrays": function () {
+            function func() {}
+            var arr1 = [1, 2, "Hey there", func, { id: 42, prop: [2, 3] }];
+            var arr2 = [1, 2, "Hey there", func, { id: 42, prop: [2, 3] }];
+
+            assert.doesNotThrow(function () {
+                buster.assert.equals(arr1, arr2);
+            });
+        },
+
+        "should pass when comparing regexp literals": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.equals(/a/, /a/);
+            });
+        },
+
+        "should pass when comparing regexp objects": function () {
+            assert.doesNotThrow(function () {
+                var obj1 = new RegExp("[a-z]+");
+                var obj2 = new RegExp("[a-z]+");
+
+                buster.assert.equals(obj1, obj2);
+            });
+        },
+
+        "should fail when comparing regexp objects with custom properties": function () {
+            assert.throws(function () {
+                var obj1 = new RegExp("[a-z]+");
+                var obj2 = new RegExp("[a-z]+");
+                obj2.id = 42;
+
+                buster.assert.equals(obj1, obj2);
+            });
+        },
+
         "should fail when comparing different objects": function () {
             assert.throws(function () {
                 var obj = { id: 42 };
                 buster.assert.equals(obj, {});
             });
+        },
+
+        "should fail when comparing different objects with message": function () {
+            assert.throws(function () {
+                var obj = { id: 42 };
+                buster.assert.equals("This is a message", obj, {});
+            });
+        },
+
+        "should fail via assert.fail": function () {
+            assertFailThroughAssertFail(function () {
+                buster.assert.equals({ id: 42 }, {});
+            });
+        },
+
+        "should always update assertion counter": function () {
+            buster.assert.count = 0;
+            buster.assert.equals("Hey", "Hey");
+
+            try {
+                buster.assert.equals({ id: 42 }, {});
+            } catch (e) {}
+
+            assert.equal(2, buster.assert.count);
+
+            delete buster.assert.count;
+            buster.assert.equals("Hey", "Hey");
+            assert.equal(1, buster.assert.count);
         }
     });
+
+    if (typeof document != "undefined") {
+        testCase("AssertEqualsHostObjectTest", {
+            "should pass when comparing DOM element to itself": function () {
+                var element = document.createElement("div");
+
+                assert.doesNotThrow(function () {
+                    buster.assert.equals(element, element);
+                });
+            }
+        });
+    }
 }());
