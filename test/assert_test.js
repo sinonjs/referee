@@ -621,6 +621,12 @@ if (typeof require != "undefined") {
             });
         },
 
+        "should fail when comparing date objects to null": function () {
+            assert.throws(function () {
+                buster.assert.equals(new Date(), null);
+            });
+        },
+
         "should pass when comparing primitives with coercion": function () {
             assert.doesNotThrow(function () {
                 buster.assert.equals("4", 4);
@@ -735,6 +741,76 @@ if (typeof require != "undefined") {
             });
         },
 
+        "should fail when comparing to null": function () {
+            assert.throws(function () {
+                buster.assert.equals({}, null);
+            });
+
+            assert.throws(function () {
+                buster.assert.equals(null, {});
+            });
+        },
+
+        "should fail when comparing to undefined": function () {
+            assert.throws(function () {
+                buster.assert.equals({}, undefined);
+            });
+
+            assert.throws(function () {
+                buster.assert.equals(undefined, {});
+            });
+        },
+
+        "should fail when comparing to booleans": function () {
+            assert.throws(function () {
+                buster.assert.equals({}, false);
+            });
+
+            assert.throws(function () {
+                buster.assert.equals(false, {});
+            });
+
+            assert.throws(function () {
+                buster.assert.equals({}, true);
+            });
+
+            assert.throws(function () {
+                buster.assert.equals(true, {});
+            });
+        },
+
+        "should fail when comparing 'empty' objects": function () {
+            assert.throws(function () {
+                buster.assert.equals({}, new Date());
+            });
+
+            assert.throws(function () {
+                buster.assert.equals({}, new String());
+            });
+
+            assert.throws(function () {
+                buster.assert.equals({}, []);
+            });
+
+            assert.throws(function () {
+                buster.assert.equals({}, new Number());
+            });
+        },
+
+        "should pass when comparing arguments to object": function () {
+            function gather() {
+                return arguments;
+            }
+
+            assert.doesNotThrow(function () {
+                var array = [1, 2, {}, []];
+                var args = gather(1, 2, {}, []);
+
+                buster.assert.equals(array, args);
+                buster.assert.equals([], gather());
+            });
+        },
+
         "should fail via assert.fail": function () {
             assertFailThroughAssertFail(function () {
                 buster.assert.equals({ id: 42 }, {});
@@ -764,6 +840,15 @@ if (typeof require != "undefined") {
 
                 assert.doesNotThrow(function () {
                     buster.assert.equals(element, element);
+                });
+            },
+
+            "should fail when comparing different DOM elements": function () {
+                var div = document.createElement("div");
+                var span = document.createElement("span");
+
+                assert.throws(function () {
+                    buster.assert.equals(div, span);
                 });
             }
         });
