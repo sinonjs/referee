@@ -596,7 +596,7 @@ if (typeof require != "undefined") {
             });
         },
 
-        "should pass when comparing object to itself": function () {
+        "should pass when comparing array to itself": function () {
             assert.doesNotThrow(function () {
                 var obj = [];
                 buster.assert.equals(obj, obj);
@@ -797,7 +797,7 @@ if (typeof require != "undefined") {
             });
         },
 
-        "should pass when comparing arguments to object": function () {
+        "should pass when comparing arguments to array": function () {
             function gather() {
                 return arguments;
             }
@@ -809,6 +809,44 @@ if (typeof require != "undefined") {
                 buster.assert.equals(array, args);
                 buster.assert.equals([], gather());
             });
+        },
+
+        "should pass when comparing arguments to array like object": function () {
+            function gather() {
+                return arguments;
+            }
+
+            assert.doesNotThrow(function () {
+                var object = {
+                    length: 4,
+                    "0": 1,
+                    "1": 2,
+                    "2": {},
+                    "3": []
+                };
+
+                var args = gather(1, 2, {}, []);
+
+                buster.assert.equals(object, args);
+            });
+        },
+
+        "should fail with understandable message": function () {
+            try {
+                buster.assert.equals({}, "Hey");
+                throw new Error("Did not fail");
+            } catch (e) {
+                assert.equal("Expected {} to be equal to \"Hey\"", e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.equals("Is they, uhm, equals?", {}, "Hey");
+                throw new Error("Did not fail");
+            } catch (e) {
+                assert.equal("Is they, uhm, equals? Expected {} to be equal to \"Hey\"", e.message);
+            }
         },
 
         "should fail via assert.fail": function () {
@@ -853,4 +891,315 @@ if (typeof require != "undefined") {
             }
         });
     }
+
+    testCase("AssertNotEqualsTest", {
+        "should fail when comparing object to itself": function () {
+            assert.throws(function () {
+                var obj = { id: 42 };
+                buster.assert.notEquals(obj, obj);
+            });
+        },
+
+        "should fail when comparing object to itself with message": function () {
+            assert.throws(function () {
+                var obj = { id: 42 };
+                buster.assert.notEquals("These should be equal", obj, obj);
+            });
+        },
+
+        "should fail when comparing primitives": function () {
+            assert.throws(function () {
+                buster.assert.notEquals("Hey", "Hey");
+            });
+
+            assert.throws(function () {
+                buster.assert.notEquals(32, 32);
+            });
+
+            assert.throws(function () {
+                buster.assert.notEquals(false, false);
+            });
+
+            assert.throws(function () {
+                buster.assert.notEquals(null, null);
+            });
+
+            assert.throws(function () {
+                buster.assert.notEquals(undefined, undefined);
+            });
+        },
+
+        "should fail when comparing function to itself": function () {
+            assert.throws(function () {
+                var func = function () {};
+                buster.assert.notEquals(func, func);
+            });
+        },
+
+        "should pass when comparing functions": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notEquals(function () {}, function () {});
+            });
+        },
+
+        "should fail when comparing array to itself": function () {
+            assert.throws(function () {
+                var obj = [];
+                buster.assert.notEquals(obj, obj);
+            });
+        },
+
+        "should fail when comparing date objects with same date": function () {
+            var date = new Date();
+            var anotherDate = new Date(date.getTime());
+
+            assert.throws(function () {
+                buster.assert.notEquals(date, anotherDate);
+            });
+        },
+
+        "should pass when comparing date objects with different dates": function () {
+            var date = new Date();
+            var anotherDate = new Date(date.getTime() - 10);
+
+            assert.doesNotThrow(function () {
+                buster.assert.notEquals(date, anotherDate);
+            });
+        },
+
+        "should pass when comparing date objects to null": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notEquals(new Date(), null);
+            });
+        },
+
+        "should fail when comparing primitives with coercion": function () {
+            assert.throws(function () {
+                buster.assert.notEquals("4", 4);
+            });
+
+            assert.throws(function () {
+                buster.assert.notEquals(32, "32");
+            });
+
+            assert.throws(function () {
+                buster.assert.notEquals(0, "");
+            });
+        },
+
+        "should pass when comparing objects with different own properties": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notEquals({ id: 42 }, { id: 42, di: 24 });
+            });
+
+            assert.doesNotThrow(function () {
+                buster.assert.notEquals({ id: undefined }, { di: 24 });
+            });
+
+            assert.doesNotThrow(function () {
+                buster.assert.notEquals({ id: 24 }, { di: undefined });
+            });
+        },
+
+        "should fail when comparing objects with one property": function () {
+            assert.throws(function () {
+                buster.assert.notEquals({ id: 42 }, { id: 42 });
+            });
+        },
+
+        "should fail when comparing objects with one object property": function () {
+            assert.throws(function () {
+                buster.assert.notEquals({ obj: { id: 42 } }, { obj: { id: 42 } });
+            });
+        },
+
+        "should pass when comparing objects with one property with different values": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notEquals({ id: 42 }, { id: 24 });
+            });
+        },
+
+        "should fail when comparing complex objects": function () {
+            assert.throws(function () {
+                var obj1 = {
+                    id: 42,
+                    name: "Hey",
+                    sayIt: function () {
+                        return this.name;
+                    },
+
+                    child: {
+                        speaking: function () {}
+                    }
+                };
+
+                var obj2 = {
+                    sayIt: obj1.sayIt,
+                    child: { speaking: obj1.child.speaking },
+                    id: 42,
+                    name: "Hey"
+                };
+
+                buster.assert.notEquals(obj1, obj2);
+            });
+        },
+
+        "should fail when comparing arrays": function () {
+            function func() {}
+            var arr1 = [1, 2, "Hey there", func, { id: 42, prop: [2, 3] }];
+            var arr2 = [1, 2, "Hey there", func, { id: 42, prop: [2, 3] }];
+
+            assert.throws(function () {
+                buster.assert.notEquals(arr1, arr2);
+            });
+        },
+
+        "should fail when comparing regexp literals": function () {
+            assert.throws(function () {
+                buster.assert.notEquals(/a/, /a/);
+            });
+        },
+
+        "should fail when comparing regexp objects": function () {
+            assert.throws(function () {
+                var obj1 = new RegExp("[a-z]+");
+                var obj2 = new RegExp("[a-z]+");
+
+                buster.assert.notEquals(obj1, obj2);
+            });
+        },
+
+        "should pass when comparing regexp objects with custom properties": function () {
+            assert.doesNotThrow(function () {
+                var obj1 = new RegExp("[a-z]+");
+                var obj2 = new RegExp("[a-z]+");
+                obj2.id = 42;
+
+                buster.assert.notEquals(obj1, obj2);
+            });
+        },
+
+        "should pass when comparing different objects": function () {
+            assert.doesNotThrow(function () {
+                var obj = { id: 42 };
+                buster.assert.notEquals(obj, {});
+            });
+        },
+
+        "should pass when comparing different objects with message": function () {
+            assert.doesNotThrow(function () {
+                var obj = { id: 42 };
+                buster.assert.notEquals("This is a message", obj, {});
+            });
+        },
+
+        "should pass when comparing to null": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notEquals({}, null);
+                buster.assert.notEquals(null, {});
+            });
+        },
+
+        "should pass when comparing to undefined": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notEquals({}, undefined);
+                buster.assert.notEquals(undefined, {});
+            });
+        },
+
+        "should pass when comparing to booleans": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notEquals({}, false);
+                buster.assert.notEquals(false, {});
+                buster.assert.notEquals({}, true);
+                buster.assert.notEquals(true, {});
+            });
+        },
+
+        "should pass when comparing 'empty' objects": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notEquals({}, new Date());
+                buster.assert.notEquals({}, new String());
+                buster.assert.notEquals({}, []);
+                buster.assert.notEquals({}, new Number());
+            });
+        },
+
+        "should fail when comparing arguments to array": function () {
+            function gather() {
+                return arguments;
+            }
+
+            var array = [1, 2, {}, []];
+            var args = gather(1, 2, {}, []);
+
+            assert.throws(function () {
+                buster.assert.notEquals(array, args);
+            });
+
+            assert.throws(function () {
+                buster.assert.notEquals([], gather());
+            });
+        },
+
+        "should fail when comparing arguments to array like object": function () {
+            function gather() {
+                return arguments;
+            }
+
+            assert.throws(function () {
+                var object = {
+                    length: 4,
+                    "0": 1,
+                    "1": 2,
+                    "2": {},
+                    "3": []
+                };
+
+                var args = gather(1, 2, {}, []);
+
+                buster.assert.notEquals(object, args);
+            });
+        },
+
+        "should fail with understandable message": function () {
+            try {
+                buster.assert.notEquals({}, {});
+                throw new Error("Did not fail");
+            } catch (e) {
+                assert.equal("Expected {} not to be equal to {}", e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.notEquals("Is they, uhm, equals?", {}, {});
+                throw new Error("Did not fail");
+            } catch (e) {
+                assert.equal("Is they, uhm, equals? Expected {} not to be equal to {}",
+                             e.message);
+            }
+        },
+
+        "should fail via assert.fail": function () {
+            assertFailThroughAssertFail(function () {
+                buster.assert.notEquals({}, {});
+            });
+        },
+
+        "should always update assertion counter": function () {
+            buster.assert.count = 0;
+            buster.assert.notEquals({}, "Hey");
+
+            try {
+                buster.assert.notEquals({}, {});
+            } catch (e) {}
+
+            assert.equal(2, buster.assert.count);
+
+            delete buster.assert.count;
+            buster.assert.notEquals({}, "Hey");
+            assert.equal(1, buster.assert.count);
+        }
+    });
 }());
