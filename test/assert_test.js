@@ -1368,4 +1368,188 @@ if (typeof require != "undefined") {
             assert.equal(1, buster.assert.count);
         }
     });
+
+    testCase("AssertNotTypeOfTest", {
+        "should fail when types match": function () {
+            assert.throws(function () {
+                buster.assert.notTypeOf("function", function () {});
+            });
+        },
+
+        "should fail when types match with message": function () {
+            assert.throws(function () {
+                buster.assert.notTypeOf("OMG!", "function", function () {});
+            });
+        },
+
+        "should pass when types don't match": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notTypeOf("function", {});
+            });
+        },
+
+        "should pass when types don't match with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notTypeOf("OMG!", "function", {});
+            });
+        },
+
+        "should generate failure message": function () {
+            try {
+                buster.assert.notTypeOf("object", {});
+                throw new Error("Expected assert.notTypeOf to fail");
+            } catch (e) {
+                assert.equal(
+                    "[assert.notTypeOf] Expected typeof [object Object] not to " +
+                    "be object", e.message
+                );
+            }
+        },
+
+        "should generate failure message with custom message": function () {
+            try {
+                buster.assert.notTypeOf("OMG!", "boolean", true);
+                throw new Error("Expected assert.notTypeOf to fail");
+            } catch (e) {
+                assert.equal(
+                    "[assert.notTypeOf] OMG! Expected typeof true " +
+                    "not to be boolean", e.message
+                );
+            }
+        },
+
+        "should fail via assert.fail": function () {
+            assertFailThroughAssertFail(buster.assert.notTypeOf, "object", {});
+        },
+
+        "should format value with assert.format": function () {
+            var calls = spy(buster.assert, "format", function () {
+                buster.assert.notTypeOf("boolean", false);
+            });
+
+            assert.equal(false, calls[0][0]);
+            assert.equal("boolean", calls[1][0]);
+        },
+
+        "should not format objects if assertion passes": function () {
+            var calls = spy(buster.assert, "format", function () {
+                buster.assert.notTypeOf("object", "Oh noes!");
+            });
+
+            assert.equal(0, calls.length);
+        },
+
+        "should always update assertion counter": function () {
+            buster.assert.count = 0;
+            buster.assert.notTypeOf("function", {});
+
+            try {
+                buster.assert.notTypeOf("object", {});
+            } catch (e) {}
+
+            assert.equal(2, buster.assert.count);
+
+            delete buster.assert.count;
+            buster.assert.notTypeOf("string", {});
+            assert.equal(1, buster.assert.count);
+        }
+    });
+
+    testCase("AssertStringTest", {
+        "should pass for string": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isString("Hey");
+            });
+        },
+
+        "should pass for string with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isString("Whatup?", "Hey");
+            });
+        },
+
+        "should fail for object": function () {
+            assert.throws(function () {
+                buster.assert.isString({});
+            });
+        },
+
+        "should fail for object with message": function () {
+            assert.throws(function () {
+                buster.assert.isString("Whatup?", {});
+            });
+        },
+
+        "should fail with descriptive message": function () {
+            try {
+                buster.assert.isString({});
+                throw new Error("Expected isString to fail");
+            } catch (e) {
+                assert.equal("[assert.isString] Expected typeof [object Object] " +
+                             "(object) to be string", e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.isString("OMG!!", {});
+                throw new Error("Expected isString to fail");
+            } catch (e) {
+                assert.equal("[assert.isString] OMG!! Expected typeof " +
+                             "[object Object] (object) to be string", e.message);
+            }
+        }
+    });
+
+    testCase("AssertObjectTest", {
+        "should pass for object": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isObject({});
+            });
+        },
+
+        "should pass for object with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isObject("Whatup?", {});
+            });
+        },
+
+        "should fail for function": function () {
+            assert.throws(function () {
+                buster.assert.isObject(function () {});
+            });
+        },
+
+        "should fail for null": function () {
+            assert.throws(function () {
+                buster.assert.isObject(null);
+            });
+        },
+
+        "should fail for function with message": function () {
+            assert.throws(function () {
+                buster.assert.isObject("Whatup?", function () {});
+            });
+        },
+
+        "should fail with descriptive message": function () {
+            try {
+                buster.assert.isObject("Hey");
+                throw new Error("Expected isObject to fail");
+            } catch (e) {
+                assert.equal("[assert.isObject] Expected typeof Hey " +
+                             "(string) to be object and not null", e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.isObject("OMG!!", true);
+                throw new Error("Expected isObject to fail");
+            } catch (e) {
+                assert.equal("[assert.isObject] OMG!! Expected typeof " +
+                             "true (boolean) to be object and not null", e.message);
+            }
+        }
+    });
 }());
