@@ -27,12 +27,20 @@ if (typeof require != "undefined") {
         return calls;
     }
 
-    function assertFailThroughAssertFail(assertion) {
-        var args = Array.prototype.slice.call(arguments, 1);
+    function assertUpAssertionCount(assertion, passing, failing) {
+        buster.assert.count = 0;
+        assertion.apply(buster.assert, passing);
+        assert.equal(1, buster.assert.count);
 
-        assert.equal(1, spy(buster.assert, "fail", function () {
-            assertion.apply(buster.assert, args);
-        }).length);
+        try {
+            assertion.apply(buster.assert, passing);
+        } catch (e) {}
+
+        assert.equal(2, buster.assert.count);
+
+        delete buster.assert.count;
+        assertion.apply(buster.assert, passing);
+        assert.equal(1, buster.assert.count);
     }
 
     function assertFormatWithFormat(assertion) {
@@ -136,8 +144,8 @@ if (typeof require != "undefined") {
             }
         },
 
-        "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(buster.assert, false);
+        "should update assertion count": function () {
+            assertUpAssertionCount(buster.assert, [true], [false]);
         },
 
         "should format value with assert.format": function () {
@@ -151,21 +159,6 @@ if (typeof require != "undefined") {
             } catch (e) {
                 assert.equal("Expected to receive at least 1 argument", e.message);
             }
-        },
-
-        "should always update assertion counter": function () {
-            buster.assert.count = 0;
-            buster.assert(true);
-
-            try {
-                buster.assert(false);
-            } catch (e) {}
-
-            assert.equal(2, buster.assert.count);
-
-            delete buster.assert.count;
-            buster.assert(true);
-            assert.equal(1, buster.assert.count);
         }
     });
 
@@ -243,27 +236,12 @@ if (typeof require != "undefined") {
             }
         },
 
-        "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(buster.assert.isTrue, false);
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isTrue, [true], [false]);
         },
 
         "should format value with assert.format": function () {
             assertFormatWithFormat(buster.assert.isTrue, false);
-        },
-
-        "should always update assertion counter": function () {
-            buster.assert.count = 0;
-            buster.assert.isTrue(true);
-
-            try {
-                buster.assert.isTrue(false);
-            } catch (e) {}
-
-            assert.equal(2, buster.assert.count);
-
-            delete buster.assert.count;
-            buster.assert(true);
-            assert.equal(1, buster.assert.count);
         }
     });
 
@@ -336,27 +314,12 @@ if (typeof require != "undefined") {
             });
         },
 
-        "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(buster.assert.isFalse, true);
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isFalse, [false], [true]);
         },
 
         "should format value with assert.format": function () {
             assertFormatWithFormat(buster.assert.isFalse, true);
-        },
-
-        "should always update assertion counter": function () {
-            buster.assert.count = 0;
-            buster.assert.isFalse(false);
-
-            try {
-                buster.assert.isFalse(true);
-            } catch (e) {}
-
-            assert.equal(2, buster.assert.count);
-
-            delete buster.assert.count;
-            buster.assert(true);
-            assert.equal(1, buster.assert.count);
         }
     });
 
@@ -466,28 +429,13 @@ if (typeof require != "undefined") {
             }
         },
 
-        "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(buster.assert.same, {}, {});
+        "should update assertion counter": function () {
+            var obj = {};
+            assertUpAssertionCount(buster.assert.same, [obj, obj], [{}, {}]);
         },
 
         "should format value with assert.format": function () {
             assertFormatWithFormat(buster.assert.same, {}, {});
-        },
-
-        "should always update assertion counter": function () {
-            buster.assert.count = 0;
-            var obj = {};
-            buster.assert.same(obj, obj);
-
-            try {
-                buster.assert.same({}, {});
-            } catch (e) {}
-
-            assert.equal(2, buster.assert.count);
-
-            delete buster.assert.count;
-            buster.assert.same(obj, obj);
-            assert.equal(1, buster.assert.count);
         }
     });
 
@@ -595,31 +543,14 @@ if (typeof require != "undefined") {
             }
         },
 
-        "should fail via assert.fail": function () {
+        "should update assertion counter": function () {
             var obj = {};
-            assertFailThroughAssertFail(buster.assert.notSame, obj, obj);
+            assertUpAssertionCount(buster.assert.notSame, [{}, {}], [obj, obj]);
         },
 
         "should format value with assert.format": function () {
             var obj = {};
             assertFormatWithFormat(buster.assert.notSame, obj, obj);
-        },
-
-        "should always update assertion counter": function () {
-            buster.assert.count = 0;
-            var obj1 = {};
-            var obj2 = {};
-            buster.assert.notSame(obj1, obj2);
-
-            try {
-                buster.assert.notSame(obj1, obj1);
-            } catch (e) {}
-
-            assert.equal(2, buster.assert.count);
-
-            delete buster.assert.count;
-            buster.assert.notSame(obj1, obj2);
-            assert.equal(1, buster.assert.count);
         }
     });
 
@@ -923,27 +854,12 @@ if (typeof require != "undefined") {
             }
         },
 
-        "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(buster.assert.equals, { id: 42 }, {});
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.equals, [{}, {}], [{ id: 42 }, {}]);
         },
 
         "should format value with assert.format": function () {
             assertFormatWithFormat(buster.assert.equals, {}, { id: 42 });
-        },
-
-        "should always update assertion counter": function () {
-            buster.assert.count = 0;
-            buster.assert.equals("Hey", "Hey");
-
-            try {
-                buster.assert.equals({ id: 42 }, {});
-            } catch (e) {}
-
-            assert.equal(2, buster.assert.count);
-
-            delete buster.assert.count;
-            buster.assert.equals("Hey", "Hey");
-            assert.equal(1, buster.assert.count);
         }
     });
 
@@ -1259,27 +1175,12 @@ if (typeof require != "undefined") {
             }
         },
 
-        "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(buster.assert.notEquals, {}, {});
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.notEquals, [{}, { id: 42 }], [{}, {}]);
         },
 
         "should format value with assert.format": function () {
             assertFormatWithFormat(buster.assert.notEquals, "Hmm", "Hmm");
-        },
-
-        "should always update assertion counter": function () {
-            buster.assert.count = 0;
-            buster.assert.notEquals({}, "Hey");
-
-            try {
-                buster.assert.notEquals({}, {});
-            } catch (e) {}
-
-            assert.equal(2, buster.assert.count);
-
-            delete buster.assert.count;
-            buster.assert.notEquals({}, "Hey");
-            assert.equal(1, buster.assert.count);
         }
     });
 
@@ -1332,8 +1233,8 @@ if (typeof require != "undefined") {
             }
         },
 
-        "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(buster.assert.typeOf, "string", {});
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.typeOf, ["string", ""], ["string", {}]);
         },
 
         "should format value with assert.format": function () {
@@ -1351,21 +1252,6 @@ if (typeof require != "undefined") {
             });
 
             assert.equal(0, calls.length);
-        },
-
-        "should always update assertion counter": function () {
-            buster.assert.count = 0;
-            buster.assert.typeOf("object", {});
-
-            try {
-                buster.assert.typeOf("function", {});
-            } catch (e) {}
-
-            assert.equal(2, buster.assert.count);
-
-            delete buster.assert.count;
-            buster.assert.typeOf("object", {});
-            assert.equal(1, buster.assert.count);
         }
     });
 
@@ -1418,8 +1304,8 @@ if (typeof require != "undefined") {
             }
         },
 
-        "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(buster.assert.notTypeOf, "object", {});
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.notTypeOf, ["string", true], ["object", {}]);
         },
 
         "should format value with assert.format": function () {
@@ -1437,21 +1323,6 @@ if (typeof require != "undefined") {
             });
 
             assert.equal(0, calls.length);
-        },
-
-        "should always update assertion counter": function () {
-            buster.assert.count = 0;
-            buster.assert.notTypeOf("function", {});
-
-            try {
-                buster.assert.notTypeOf("object", {});
-            } catch (e) {}
-
-            assert.equal(2, buster.assert.count);
-
-            delete buster.assert.count;
-            buster.assert.notTypeOf("string", {});
-            assert.equal(1, buster.assert.count);
         }
     });
 
@@ -1498,6 +1369,14 @@ if (typeof require != "undefined") {
                 assert.equal("[assert.isString] OMG!! Expected typeof " +
                              "[object Object] (object) to be string", e.message);
             }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isString, [""], [{}]);
+        },
+
+        "should format value with assert.format": function () {
+            assertFormatWithFormat(buster.assert.isString, {});
         }
     });
 
@@ -1550,6 +1429,14 @@ if (typeof require != "undefined") {
                 assert.equal("[assert.isObject] OMG!! Expected typeof " +
                              "true (boolean) to be object and not null", e.message);
             }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isObject, [{}], [""]);
+        },
+
+        "should format value with assert.format": function () {
+            assertFormatWithFormat(buster.assert.isObject, "");
         }
     });
 }());
