@@ -1439,4 +1439,409 @@ if (typeof require != "undefined") {
             assertFormatWithFormat(buster.assert.isObject, "");
         }
     });
+
+    testCase("AssertFunctionTest", {
+        "should pass for function": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isFunction(function () {});
+            });
+        },
+
+        "should pass for function with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isFunction("Whatup?", function () {});
+            });
+        },
+
+        "should fail for object": function () {
+            assert.throws(function () {
+                buster.assert.isFunction({});
+            });
+        },
+
+        "should fail for object with message": function () {
+            assert.throws(function () {
+                buster.assert.isFunction("Whatup?", {});
+            });
+        },
+
+        "should fail with descriptive message": function () {
+            try {
+                buster.assert.isFunction("Hey");
+                throw new Error("Expected isFunction to fail");
+            } catch (e) {
+                assert.equal("[assert.isFunction] Expected typeof Hey " +
+                             "(string) to be function", e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.isFunction("OMG!!", true);
+                throw new Error("Expected isFunction to fail");
+            } catch (e) {
+                assert.equal("[assert.isFunction] OMG!! Expected typeof " +
+                             "true (boolean) to be function", e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isFunction, [function () {}], [""]);
+        },
+
+        "should format value with assert.format": function () {
+            assertFormatWithFormat(buster.assert.isFunction, {});
+        }
+    });
+
+    testCase("AssertBooleanTest", {
+        "should pass for boolean": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isBoolean(true);
+            });
+        },
+
+        "should pass for boolean with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isBoolean("Whatup?", true);
+            });
+        },
+
+        "should fail for function": function () {
+            assert.throws(function () {
+                buster.assert.isBoolean(function () {});
+            });
+        },
+
+        "should fail for null": function () {
+            assert.throws(function () {
+                buster.assert.isBoolean(null);
+            });
+        },
+
+        "should fail for function with message": function () {
+            assert.throws(function () {
+                buster.assert.isBoolean("Whatup?", function () {});
+            });
+        },
+
+        "should fail with descriptive message": function () {
+            try {
+                buster.assert.isBoolean("Hey");
+                throw new Error("Expected isBoolean to fail");
+            } catch (e) {
+                assert.equal("[assert.isBoolean] Expected typeof Hey " +
+                             "(string) to be boolean", e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.isBoolean("OMG!!", "Hey");
+                throw new Error("Expected isBoolean to fail");
+            } catch (e) {
+                assert.equal("[assert.isBoolean] OMG!! Expected typeof " +
+                             "Hey (string) to be boolean", e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isBoolean, [true], [""]);
+        },
+
+        "should format value with assert.format": function () {
+            assertFormatWithFormat(buster.assert.isBoolean, {});
+        }
+    });
+
+    testCase("AssertNumberTest", {
+        "should pass for number": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNumber(32);
+            });
+        },
+
+        "should pass for number with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNumber("Whatup?", 32);
+            });
+        },
+
+        "should fail for function": function () {
+            assert.throws(function () {
+                buster.assert.isNumber(function () {});
+            });
+        },
+
+        "should fail for null": function () {
+            assert.throws(function () {
+                buster.assert.isNumber(null);
+            });
+        },
+
+        "should fail for function with message": function () {
+            assert.throws(function () {
+                buster.assert.isNumber("Whatup?", function () {});
+            });
+        },
+
+        "should fail with descriptive message": function () {
+            try {
+                buster.assert.isNumber("Hey");
+                throw new Error("Expected isNumber to fail");
+            } catch (e) {
+                assert.equal("[assert.isNumber] Expected typeof Hey " +
+                             "(string) to be number", e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.isNumber("OMG!!", true);
+                throw new Error("Expected isNumber to fail");
+            } catch (e) {
+                assert.equal("[assert.isNumber] OMG!! Expected typeof " +
+                             "true (boolean) to be number", e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isNumber, [42], [""]);
+        },
+
+        "should format value with assert.format": function () {
+            assertFormatWithFormat(buster.assert.isNumber, "Oh my");
+        }
+    });
+
+    testCase("AssertUndefinedTest", {
+        "should pass for undefined": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isUndefined(undefined);
+            });
+        },
+
+        "should pass for undefined with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isUndefined("Whatup?", undefined);
+            });
+        },
+
+        "should fail for function": function () {
+            assert.throws(function () {
+                buster.assert.isUndefined(function () {});
+            });
+        },
+
+        "should fail for null": function () {
+            assert.throws(function () {
+                buster.assert.isUndefined(null);
+            });
+        },
+
+        "should fail for function with message": function () {
+            assert.throws(function () {
+                buster.assert.isUndefined("Whatup?", function () {});
+            });
+        },
+
+        "should fail with descriptive message": function () {
+            try {
+                buster.assert.isUndefined("Hey");
+                throw new Error("Expected isUndefined to fail");
+            } catch (e) {
+                assert.equal("[assert.isUndefined] Expected typeof Hey " +
+                             "(string) to be undefined", e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.isUndefined("OMG!!", true);
+                throw new Error("Expected isUndefined to fail");
+            } catch (e) {
+                assert.equal("[assert.isUndefined] OMG!! Expected typeof " +
+                             "true (boolean) to be undefined", e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isUndefined, [undefined], [""]);
+        },
+
+        "should format value with assert.format": function () {
+            assertFormatWithFormat(buster.assert.isUndefined, null);
+        }
+    });
+
+    testCase("AssertNotUndefinedTest", {
+        "should fail for undefined": function () {
+            assert.throws(function () {
+                buster.assert.isNotUndefined(undefined);
+            });
+        },
+
+        "should fail for undefined with message": function () {
+            assert.throws(function () {
+                buster.assert.isNotUndefined("Whatup?", undefined);
+            });
+        },
+
+        "should pass for function": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNotUndefined(function () {});
+            });
+        },
+
+        "should pass for null": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNotUndefined(null);
+            });
+        },
+
+        "should pass for function with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNotUndefined("Whatup?", function () {});
+            });
+        },
+
+        "should fail with descriptive message": function () {
+            try {
+                buster.assert.isNotUndefined(undefined);
+                throw new Error("Expected isNotUndefined to fail");
+            } catch (e) {
+                assert.equal("[assert.isNotUndefined] Expected not to be undefined",
+                             e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.isNotUndefined("OMG!!", undefined);
+                throw new Error("Expected isNotUndefined to fail");
+            } catch (e) {
+                assert.equal("[assert.isNotUndefined] OMG!! Expected not to be " +
+                             "undefined", e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isNotUndefined, [""], [undefined]);
+        }
+    });
+
+    testCase("AssertNullTest", {
+        "should pass for null": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNull(null);
+            });
+        },
+
+        "should pass for null with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNull("Whatup?", null);
+            });
+        },
+
+        "should fail for function": function () {
+            assert.throws(function () {
+                buster.assert.isNull(function () {});
+            });
+        },
+
+        "should fail for undefined": function () {
+            assert.throws(function () {
+                buster.assert.isNull(undefined);
+            });
+        },
+
+        "should fail for function with message": function () {
+            assert.throws(function () {
+                buster.assert.isNull("Whatup?", function () {});
+            });
+        },
+
+        "should fail with descriptive message": function () {
+            try {
+                buster.assert.isNull("Hey");
+                throw new Error("Expected isNull to fail");
+            } catch (e) {
+                assert.equal("[assert.isNull] Expected Hey to be null", e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.isNull("OMG!!", true);
+                throw new Error("Expected isNull to fail");
+            } catch (e) {
+                assert.equal("[assert.isNull] OMG!! Expected true to be null",
+                             e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isNull, [null], [""]);
+        },
+
+        "should format value with assert.format": function () {
+            assertFormatWithFormat(buster.assert.isNull, {});
+        }
+    });
+
+    testCase("AssertNotNullTest", {
+        "should fail for null": function () {
+            assert.throws(function () {
+                buster.assert.isNotNull(null);
+            });
+        },
+
+        "should fail for null with message": function () {
+            assert.throws(function () {
+                buster.assert.isNotNull("Whatup?", null);
+            });
+        },
+
+        "should pass for function": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNotNull(function () {});
+            });
+        },
+
+        "should pass for undefined": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNotNull(undefined);
+            });
+        },
+
+        "should pass for function with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNotNull("Whatup?", function () {});
+            });
+        },
+
+        "should fail with descriptive message": function () {
+            try {
+                buster.assert.isNotNull(null);
+                throw new Error("Expected isNotNull to fail");
+            } catch (e) {
+                assert.equal("[assert.isNotNull] Expected not to be null",
+                             e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.isNotNull("OMG!!", null);
+                throw new Error("Expected isNotNull to fail");
+            } catch (e) {
+                assert.equal("[assert.isNotNull] OMG!! Expected not to be " +
+                             "null", e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isNotNull, [""], [null]);
+        }
+    });
 }());
