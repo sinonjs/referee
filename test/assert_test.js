@@ -691,8 +691,15 @@ if (typeof require != "undefined") {
         "should pass when comparing primitives with coercion": function () {
             assert.doesNotThrow(function () {
                 buster.assert.equals("4", 4);
+                buster.assert.equals(4, "4");
                 buster.assert.equals(32, "32");
+                buster.assert.equals("32", 32);
+                buster.assert.equals(32, new Number(32));
+                buster.assert.equals(new Number(32), 32);
                 buster.assert.equals(0, "");
+                buster.assert.equals("", 0);
+                buster.assert.equals("4", new String("4"));
+                buster.assert.equals(new String("4"), "4");
             });
         },
 
