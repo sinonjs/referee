@@ -6,7 +6,8 @@ if (typeof require != "undefined") {
 }
 
 (function () {
-    function assertFailThroughAssertFail(fn) {
+    function assertFailThroughAssertFail(assertion) {
+        var args = Array.prototype.slice.call(arguments, 1);
         var failedProperly = false;
         var baf = buster.assert.fail;
 
@@ -15,13 +16,33 @@ if (typeof require != "undefined") {
         };
 
         try {
-            fn();
-        } catch (e) {
-        } finally {
-            buster.assert.fail = baf;
-        }
+            assertion.apply(buster.assert, args);
+        } catch (e) {}
 
+        buster.assert.fail = baf;
         assert.ok(failedProperly);
+    }
+
+    function assertFormatWithFormat(assertion) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        var formatted = [];
+        var baf = buster.assert.format;
+
+        buster.assert.format = function (object) {
+            formatted.push(object);
+        };
+
+        try {
+            assertion.apply(buster.assert, args);
+        } catch (e) {}
+
+        buster.assert.format = baf;
+
+        assert.equal(args.length, formatted.length);
+
+        for (var i = 0, l = args.length; i < l; ++i) {
+            assert.equal(args[i], formatted[i]);
+        }
     }
 
     testCase("AssertionErrorTest", {
@@ -97,7 +118,7 @@ if (typeof require != "undefined") {
                 throw new Error("Didn't fail");
             } catch (e) {
                 assert.equal("AssertionError", e.type);
-                assert.equal("Expected truthy value but was false", e.message);
+                assert.equal("[assert] Expected false to be truthy", e.message);
             }
         },
 
@@ -107,14 +128,25 @@ if (typeof require != "undefined") {
                 throw new Error("Didn't fail");
             } catch (e) {
                 assert.equal("AssertionError", e.type);
-                assert.equal("False FTW: Expected truthy value but was false", e.message);
+                assert.equal("False FTW", e.message);
             }
         },
 
         "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(function () {
-                buster.assert(false);
-            });
+            assertFailThroughAssertFail(buster.assert, false);
+        },
+
+        "should format value with assert.format": function () {
+            assertFormatWithFormat(buster.assert, false);
+        },
+
+        "should fail if not passed arguments": function () {
+            try {
+                buster.assert();
+                throw new Error("Expected assert to fail");
+            } catch (e) {
+                assert.equal("Expected to receive at least 1 argument", e.message);
+            }
         },
 
         "should always update assertion counter": function () {
@@ -163,7 +195,8 @@ if (typeof require != "undefined") {
                 buster.assert.isTrue("Awww", false);
                 throw new Error("Didn't fail");
             } catch (e) {
-                assert.equal("Awww: Expected true but was false", e.message);
+                assert.equal("[assert.isTrue] Awww: Expected false to be true",
+                             e.message);
             }
         },
 
@@ -172,7 +205,10 @@ if (typeof require != "undefined") {
                 buster.assert.isTrue("Awww", {});
                 throw new Error("Didn't fail");
             } catch (e) {
-                assert.equal("Awww: Expected true but was {}", e.message);
+                assert.equal(
+                    "[assert.isTrue] Awww: Expected [object Object] to be true",
+                    e.message
+                );
             }
         },
 
@@ -194,10 +230,21 @@ if (typeof require != "undefined") {
             });
         },
 
+        "should fail if not passed arguments": function () {
+            try {
+                buster.assert.isTrue();
+                throw new Error("Expected assert.isTrue to fail");
+            } catch (e) {
+                assert.equal("Expected to receive at least 1 argument", e.message);
+            }
+        },
+
         "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(function () {
-                buster.assert.isTrue(false);
-            });
+            assertFailThroughAssertFail(buster.assert.isTrue, false);
+        },
+
+        "should format value with assert.format": function () {
+            assertFormatWithFormat(buster.assert.isTrue, false);
         },
 
         "should always update assertion counter": function () {
@@ -246,7 +293,8 @@ if (typeof require != "undefined") {
                 buster.assert.isFalse("Ah, sucks", true);
                 throw new Error("Didn't fail");
             } catch (e) {
-                assert.equal("Ah, sucks: Expected false but was true", e.message);
+                assert.equal("[assert.isFalse] Ah, sucks: Expected true to be false",
+                             e.message);
             }
         },
 
@@ -255,7 +303,10 @@ if (typeof require != "undefined") {
                 buster.assert.isFalse("Sucker", {});
                 throw new Error("Didn't fail");
             } catch (e) {
-                assert.equal("Sucker: Expected false but was {}", e.message);
+                assert.equal(
+                    "[assert.isFalse] Sucker: Expected [object Object] to be false",
+                    e.message
+                );
             }
         },
 
@@ -282,9 +333,11 @@ if (typeof require != "undefined") {
         },
 
         "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(function () {
-                buster.assert.isFalse(true);
-            });
+            assertFailThroughAssertFail(buster.assert.isFalse, true);
+        },
+
+        "should format value with assert.format": function () {
+            assertFormatWithFormat(buster.assert.isFalse, true);
         },
 
         "should always update assertion counter": function () {
@@ -390,7 +443,8 @@ if (typeof require != "undefined") {
                 throw new Error("Did not fail");
             } catch (e) {
                 assert.equal("AssertionError", e.type);
-                assert.equal("Expected {} to be the same object as {}", e.message);
+                assert.equal("[assert.same] Expected [object Object] to be the " +
+                             "same object as [object Object]", e.message);
             }
         },
 
@@ -403,15 +457,17 @@ if (typeof require != "undefined") {
                 throw new Error("Did not fail");
             } catch (e) {
                 assert.equal("AssertionError", e.type);
-                assert.equal("Oh noes: Expected {} to be the same object as {}",
-                             e.message);
+                assert.equal("[assert.same] Oh noes: Expected [object Object] to " +
+                             "be the same object as [object Object]", e.message);
             }
         },
 
         "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(function () {
-                buster.assert.same({}, {});
-            });
+            assertFailThroughAssertFail(buster.assert.same, {}, {});
+        },
+
+        "should format value with assert.format": function () {
+            assertFormatWithFormat(buster.assert.same, {}, {});
         },
 
         "should always update assertion counter": function () {
@@ -516,8 +572,8 @@ if (typeof require != "undefined") {
                 throw new Error("Did not fail");
             } catch (e) {
                 assert.equal("AssertionError", e.type);
-                assert.equal("Expected {} not to be the same object as {}",
-                             e.message);
+                assert.equal("[assert.notSame] Expected [object Object] not to be " +
+                             "the same object as [object Object]", e.message);
             }
         },
 
@@ -529,16 +585,20 @@ if (typeof require != "undefined") {
                 throw new Error("Did not fail");
             } catch (e) {
                 assert.equal("AssertionError", e.type);
-                assert.equal("Oh noes: Expected {} not to be the same object as {}",
+                assert.equal("[assert.notSame] Oh noes: Expected [object Object] " +
+                             "not to be the same object as [object Object]",
                              e.message);
             }
         },
 
         "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(function () {
-                var obj = {};
-                buster.assert.notSame(obj, obj);
-            });
+            var obj = {};
+            assertFailThroughAssertFail(buster.assert.notSame, obj, obj);
+        },
+
+        "should format value with assert.format": function () {
+            var obj = {};
+            assertFormatWithFormat(buster.assert.notSame, obj, obj);
         },
 
         "should always update assertion counter": function () {
@@ -787,6 +847,7 @@ if (typeof require != "undefined") {
 
             assert.throws(function () {
                 buster.assert.equals({}, new String());
+                jstestdriver.console.log("Hmm");
             });
 
             assert.throws(function () {
@@ -837,7 +898,8 @@ if (typeof require != "undefined") {
                 buster.assert.equals({}, "Hey");
                 throw new Error("Did not fail");
             } catch (e) {
-                assert.equal("Expected {} to be equal to \"Hey\"", e.message);
+                assert.equal("[assert.equals] Expected [object Object] to be equal " +
+                             "to Hey", e.message);
             }
         },
 
@@ -846,14 +908,17 @@ if (typeof require != "undefined") {
                 buster.assert.equals("Is they, uhm, equals?", {}, "Hey");
                 throw new Error("Did not fail");
             } catch (e) {
-                assert.equal("Is they, uhm, equals? Expected {} to be equal to \"Hey\"", e.message);
+                assert.equal("[assert.equals] Is they, uhm, equals? Expected " +
+                             "[object Object] to be equal to Hey", e.message);
             }
         },
 
         "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(function () {
-                buster.assert.equals({ id: 42 }, {});
-            });
+            assertFailThroughAssertFail(buster.assert.equals, { id: 42 }, {});
+        },
+
+        "should format value with assert.format": function () {
+            assertFormatWithFormat(buster.assert.equals, {}, { id: 42 });
         },
 
         "should always update assertion counter": function () {
@@ -1168,7 +1233,8 @@ if (typeof require != "undefined") {
                 buster.assert.notEquals({}, {});
                 throw new Error("Did not fail");
             } catch (e) {
-                assert.equal("Expected {} not to be equal to {}", e.message);
+                assert.equal("[assert.notEquals] Expected [object Object] not to " +
+                             "be equal to [object Object]", e.message);
             }
         },
 
@@ -1177,15 +1243,18 @@ if (typeof require != "undefined") {
                 buster.assert.notEquals("Is they, uhm, equals?", {}, {});
                 throw new Error("Did not fail");
             } catch (e) {
-                assert.equal("Is they, uhm, equals? Expected {} not to be equal to {}",
+                assert.equal("[assert.notEquals] Is they, uhm, equals? Expected " +
+                             "[object Object] not to be equal to [object Object]",
                              e.message);
             }
         },
 
         "should fail via assert.fail": function () {
-            assertFailThroughAssertFail(function () {
-                buster.assert.notEquals({}, {});
-            });
+            assertFailThroughAssertFail(buster.assert.notEquals, {}, {});
+        },
+
+        "should format value with assert.format": function () {
+            assertFormatWithFormat(buster.assert.notEquals, "Hmm", "Hmm");
         },
 
         "should always update assertion counter": function () {
