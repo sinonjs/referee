@@ -6,42 +6,43 @@ if (typeof require != "undefined") {
 }
 
 (function () {
-    function assertFailThroughAssertFail(assertion) {
-        var args = Array.prototype.slice.call(arguments, 1);
-        var failedProperly = false;
-        var baf = buster.assert.fail;
+    function spy(obj, method, callback) {
+        var saved = obj[method];
+        var calls = [];
 
-        buster.assert.fail = function () {
-            failedProperly = true;
+        obj[method] = function () {
+            calls.push(Array.prototype.slice.call(arguments));
+            return saved.apply(obj, arguments);
         };
 
         try {
-            assertion.apply(buster.assert, args);
+            callback();
         } catch (e) {}
 
-        buster.assert.fail = baf;
-        assert.ok(failedProperly);
+        obj[method] = saved;
+
+        return calls;
+    }
+
+    function assertFailThroughAssertFail(assertion) {
+        var args = Array.prototype.slice.call(arguments, 1);
+
+        assert.equal(1, spy(buster.assert, "fail", function () {
+            assertion.apply(buster.assert, args);
+        }).length);
     }
 
     function assertFormatWithFormat(assertion) {
         var args = Array.prototype.slice.call(arguments, 1);
-        var formatted = [];
-        var baf = buster.assert.format;
 
-        buster.assert.format = function (object) {
-            formatted.push(object);
-        };
-
-        try {
+        var calls = spy(buster.assert, "format", function () {
             assertion.apply(buster.assert, args);
-        } catch (e) {}
+        });
 
-        buster.assert.format = baf;
-
-        assert.equal(args.length, formatted.length);
+        assert.equal(args.length, calls.length);
 
         for (var i = 0, l = args.length; i < l; ++i) {
-            assert.equal(args[i], formatted[i]);
+            assert.equal(args[i], calls[i][0]);
         }
     }
 
@@ -1276,6 +1277,92 @@ if (typeof require != "undefined") {
 
             delete buster.assert.count;
             buster.assert.notEquals({}, "Hey");
+            assert.equal(1, buster.assert.count);
+        }
+    });
+
+    testCase("AssertTypeOfTest", {
+        "should pass when types match": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.typeOf("function", function () {});
+            });
+        },
+
+        "should pass when types match with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.typeOf("OMG!", "function", function () {});
+            });
+        },
+
+        "should fail when types don't match": function () {
+            assert.throws(function () {
+                buster.assert.typeOf("function", {});
+            });
+        },
+
+        "should fail when types don't match with message": function () {
+            assert.throws(function () {
+                buster.assert.typeOf("OMG!", "function", {});
+            });
+        },
+
+        "should generate failure message": function () {
+            try {
+                buster.assert.typeOf("function", {});
+                throw new Error("Expected assert.typeOf to fail");
+            } catch (e) {
+                assert.equal(
+                    "[assert.typeOf] Expected typeof [object Object] (object) to " +
+                    "be function", e.message
+                );
+            }
+        },
+
+        "should generate failure message with custom message": function () {
+            try {
+                buster.assert.typeOf("OMG!", "boolean", "Hey");
+                throw new Error("Expected assert.typeOf to fail");
+            } catch (e) {
+                assert.equal(
+                    "[assert.typeOf] OMG! Expected typeof Hey " +
+                    "(string) to be boolean", e.message
+                );
+            }
+        },
+
+        "should fail via assert.fail": function () {
+            assertFailThroughAssertFail(buster.assert.typeOf, "string", {});
+        },
+
+        "should format value with assert.format": function () {
+            var calls = spy(buster.assert, "format", function () {
+                buster.assert.typeOf("string", false);
+            });
+
+            assert.equal(false, calls[0][0]);
+            assert.equal("string", calls[1][0]);
+         },
+
+        "should not format objects if assertion does not fail": function () {
+            var calls = spy(buster.assert, "format", function () {
+                buster.assert.typeOf("string", "Oh noes!");
+            });
+
+            assert.equal(0, calls.length);
+         },
+
+        "should always update assertion counter": function () {
+            buster.assert.count = 0;
+            buster.assert.typeOf("object", {});
+
+            try {
+                buster.assert.typeOf("function", {});
+            } catch (e) {}
+
+            assert.equal(2, buster.assert.count);
+
+            delete buster.assert.count;
+            buster.assert.typeOf("object", {});
             assert.equal(1, buster.assert.count);
         }
     });
