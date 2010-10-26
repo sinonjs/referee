@@ -1,3 +1,6 @@
+/*jslint onevar: false, browser: true, eqeqeq: false, nomen: false, plusplus: false*/
+/*global require, __dirname*/
+
 if (typeof require != "undefined") {
     require.paths.unshift(__dirname + "/../deps/buster-util/lib/");
     var testCase = require("test_case").testCase;
@@ -855,7 +858,6 @@ if (typeof require != "undefined") {
 
             assert.throws(function () {
                 buster.assert.equals({}, new String());
-                jstestdriver.console.log("Hmm");
             });
 
             assert.throws(function () {
@@ -1341,7 +1343,7 @@ if (typeof require != "undefined") {
 
             assert.equal(false, calls[0][0]);
             assert.equal("string", calls[1][0]);
-         },
+        },
 
         "should not format objects if assertion does not fail": function () {
             var calls = spy(buster.assert, "format", function () {
@@ -1349,7 +1351,7 @@ if (typeof require != "undefined") {
             });
 
             assert.equal(0, calls.length);
-         },
+        },
 
         "should always update assertion counter": function () {
             buster.assert.count = 0;
