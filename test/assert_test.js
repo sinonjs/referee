@@ -1844,4 +1844,214 @@ if (typeof require != "undefined") {
             assertUpAssertionCount(buster.assert.isNotNull, [""], [null]);
         }
     });
+
+    testCase("AssertMatchTest", {
+        "should pass matching regexp": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.match(/[a-z]/, "Assertions");
+            });
+        },
+
+        "should pass matching regexp with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.match("Working?", /[a-z]/, "Assertions");
+            });
+        },
+
+        "should pass for generic object with test method returning true": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.match({
+                    test: function () {
+                        return true;
+                    }
+                }, "Assertions");
+            });
+        },
+
+        "should fail for non-matching regexp": function () {
+            assert.throws(function () {
+                buster.assert.match(/^[a-z]$/, "Assertions 123");
+            });
+        },
+
+        "should fail for non-matching regexp with message": function () {
+            assert.throws(function () {
+                buster.assert.match("Woot", /^[a-z]$/, "Assertions 123");
+            });
+        },
+
+        "should fail for generic object with test method returning false": function () {
+            assert.throws(function () {
+                buster.assert.match({
+                    test: function () {
+                        return false;
+                    }
+                }, "Assertions");
+            });
+        },
+
+        "should fail with understandable message": function () {
+            try {
+                buster.assert.match(/^[a-z]+$/, "Assertions 123");
+                throw new Error("Expected assert.match to fail");
+            } catch (e) {
+                assert.equal("[assert.match] Expected Assertions 123 to match " +
+                             "/^[a-z]+$/", e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.match("Wow!", /^[a-z]+$/, "Assertions 123");
+                throw new Error("Expected assert.match to fail");
+            } catch (e) {
+                assert.equal("[assert.match] Wow! Expected Assertions 123 to match " +
+                             "/^[a-z]+$/", e.message);
+            }
+        },
+
+        "should format objects for message": function () {
+            var calls = spy(buster.assert, "format", function () {
+                buster.assert.match(/^[a-z]+$/, "Assertions 123");
+            });
+
+            assert.equal(2, calls.length);
+        },
+
+        "should fail if regexp is not an object with a test method": function () {
+            try {
+                buster.assert.match("^[a-z]+$", "Assertions 123");
+                throw new Error("Expected assert.match to fail");
+            } catch (e) {
+                assert.equal("[assert.match] Expected regular expression or object " +
+                             "with test method, but was ^[a-z]+$", e.message);
+            }
+        },
+
+        "should format non-regexp object for message": function () {
+            var calls = spy(buster.assert, "format", function () {
+                buster.assert.match("^[a-z]+$", "Assertions 123");
+            });
+
+            assert.equal(1, calls.length);
+            assert.equal("^[a-z]+$", calls[0][0]);
+        },
+
+        "should fail through assert.fail": function () {
+            var calls = spy(buster.assert, "fail", function () {
+                buster.assert.match("^[a-z]+$", "Assertions 123");
+            });
+
+            assert.equal(1, calls.length);
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.match, [/[a-z]/, "a"], [/[a-z]/, "1"]);
+        }
+    });
+
+    testCase("AssertNoMatchTest", {
+        "should fail matching regexp": function () {
+            assert.throws(function () {
+                buster.assert.noMatch(/[a-z]/, "Assertions");
+            });
+        },
+
+        "should fail matching regexp with message": function () {
+            assert.throws(function () {
+                buster.assert.noMatch("Working?", /[a-z]/, "Assertions");
+            });
+        },
+
+        "should fail for generic object with test method returning true": function () {
+            assert.throws(function () {
+                buster.assert.noMatch({
+                    test: function () {
+                        return true;
+                    }
+                }, "Assertions");
+            });
+        },
+
+        "should pass for non-matching regexp": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.noMatch(/^[a-z]$/, "Assertions 123");
+            });
+        },
+
+        "should pass for non-matching regexp with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.noMatch("Woot", /^[a-z]$/, "Assertions 123");
+            });
+        },
+
+        "should pass for generic object with test method returning false": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.noMatch({
+                    test: function () {
+                        return false;
+                    }
+                }, "Assertions");
+            });
+        },
+
+        "should fail with understandable message": function () {
+            try {
+                buster.assert.noMatch(/^[a-z]+$/i, "Assertions");
+                throw new Error("Expected assert.noMatch to fail");
+            } catch (e) {
+                assert.equal("[assert.noMatch] Expected Assertions not to " +
+                             "match /^[a-z]+$/i", e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.noMatch("Wow!", /^[a-z]+$/i, "Assertions");
+                throw new Error("Expected assert.noMatch to fail");
+            } catch (e) {
+                assert.equal("[assert.noMatch] Wow! Expected Assertions not " +
+                             "to match /^[a-z]+$/i", e.message);
+            }
+        },
+
+        "should format objects for message": function () {
+            var calls = spy(buster.assert, "format", function () {
+                buster.assert.noMatch(/^[a-z]+$/i, "Assertions");
+            });
+
+            assert.equal(2, calls.length);
+        },
+
+        "should fail if regexp is not an object with a test method": function () {
+            try {
+                buster.assert.noMatch("^[a-z]+$", "Assertions 123");
+                throw new Error("Expected assert.noMatch to fail");
+            } catch (e) {
+                assert.equal("[assert.noMatch] Expected regular expression or object " +
+                             "with test method, but was ^[a-z]+$", e.message);
+            }
+        },
+
+        "should format non-regexp object for message": function () {
+            var calls = spy(buster.assert, "format", function () {
+                buster.assert.noMatch("^[a-z]+$", "Assertions");
+            });
+
+            assert.equal(1, calls.length);
+            assert.equal("^[a-z]+$", calls[0][0]);
+        },
+
+        "should fail through assert.fail": function () {
+            var calls = spy(buster.assert, "fail", function () {
+                buster.assert.noMatch("^[a-z]+$", "Assertions");
+            });
+
+            assert.equal(1, calls.length);
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.noMatch, [/[a-z]/, "1"], [/[a-z]/, "s"]);
+        }
+    });
 }());
