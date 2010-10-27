@@ -1918,23 +1918,164 @@ if (typeof require != "undefined") {
             assert.equal(2, calls.length);
         },
 
-        "should fail if regexp is not an object with a test method": function () {
+        // "should fail if regexp is not an object with a test method": function () {
+        //     try {
+        //         buster.assert.match("^[a-z]+$", "Assertions 123");
+        //         throw new Error("Expected assert.match to fail");
+        //     } catch (e) {
+        //         assert.equal("[assert.match] Expected regular expression or object " +
+        //                      "with test method, but was ^[a-z]+$", e.message);
+        //     }
+        // },
+
+        "should fail if match object is null": function () {
             try {
-                buster.assert.match("^[a-z]+$", "Assertions 123");
+                buster.assert.match(null, "Assertions 123");
                 throw new Error("Expected assert.match to fail");
             } catch (e) {
-                assert.equal("[assert.match] Expected regular expression or object " +
-                             "with test method, but was ^[a-z]+$", e.message);
+                assert.equal("[assert.match] Matcher (null) was not a string, " +
+                             "a function or an object", e.message);
             }
+        },
+
+        "should fail if match object is undefined": function () {
+            try {
+                buster.assert.match(undefined, "Assertions 123");
+                throw new Error("Expected assert.match to fail");
+            } catch (e) {
+                assert.equal("[assert.match] Matcher (undefined) was not a string, " +
+                             "a function or an object", e.message);
+            }
+        },
+
+        "should fail if match object is false": function () {
+            try {
+                buster.assert.match(false, "Assertions 123");
+                throw new Error("Expected assert.match to fail");
+            } catch (e) {
+                assert.equal("[assert.match] Matcher (false) was not a string, " +
+                             "a function or an object", e.message);
+            }
+        },
+
+        "should fail if match object is number": function () {
+            try {
+                buster.assert.match(23, "Assertions 123");
+                throw new Error("Expected assert.match to fail");
+            } catch (e) {
+                assert.equal("[assert.match] Matcher (23) was not a string, " +
+                             "a function or an object", e.message);
+            }
+        },
+
+        "should pass if matcher is a function that returns true": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.match(function (obj) {
+                    return true;
+                }, "Assertions 123");
+            });
+        },
+
+        "should fail if matcher is a function that returns false": function () {
+            assert.throws(function () {
+                buster.assert.match(function (obj) {
+                    return false;
+                }, "Assertions 123");
+            });
+        },
+
+        "should fail if matcher is a function that returns falsy": function () {
+            assert.throws(function () {
+                buster.assert.match(function () {}, "Assertions 123");
+            });
+        },
+
+        "should fail if matcher does not return explicit true": function () {
+            assert.throws(function () {
+                buster.assert.match(function () {
+                    return "Hey";
+                }, "Assertions 123");
+            });
+        },
+
+        "should call matcher with assertion argument": function () {
+            var received;
+
+            buster.assert.match(function (obj) {
+                received = obj;
+                return true;
+            }, "Assertions 123");
+
+            assert.equal("Assertions 123", received);
+        },
+
+        "should pass if matcher is substring of matchee": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.match("or", "Diskord");
+            });
+        },
+
+        "should pass if matcher is string equal to matchee": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.match("Diskord", "Diskord");
+            });
+        },
+
+        "should fail if match string is not substring of matchee": function () {
+            assert.throws(function () {
+                buster.assert.match("Emacs", "Vim");
+            });
+        },
+
+        "should fail if match string is not substring of object": function () {
+            try {
+                buster.assert.match("Emacs", {});
+                throw new Error("Expected assert.match to fail");
+            } catch (e) {
+                assert.equal("[assert.match] Expected [object Object] to match " +
+                             "Emacs", e.message);
+            }
+        },
+
+        "should fail if matcher is substring of object.toString": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.match("Emacs", {
+                    toString: function () {
+                        return "Emacs";
+                    }
+                });
+            });
+        },
+
+        "should fail if matcher is string and matchee is falsy": function () {
+            assert.throws(function () {
+                buster.assert.match("", null);
+            });
+
+            assert.throws(function () {
+                buster.assert.match("", undefined);
+            });
+
+            assert.throws(function () {
+                buster.assert.match("", false);
+            });
+
+            assert.throws(function () {
+                buster.assert.match("", 0);
+            });
+
+            assert.throws(function () {
+                buster.assert.match("", NaN);
+            });
         },
 
         "should format non-regexp object for message": function () {
             var calls = spy(buster.assert, "format", function () {
-                buster.assert.match("^[a-z]+$", "Assertions 123");
+                buster.assert.match(null, "Assertions 123");
             });
 
             assert.equal(1, calls.length);
-            assert.equal("^[a-z]+$", calls[0][0]);
+            assert.equal(null, calls[0][0]);
         },
 
         "should fail through assert.fail": function () {
@@ -2023,15 +2164,15 @@ if (typeof require != "undefined") {
             assert.equal(2, calls.length);
         },
 
-        "should fail if regexp is not an object with a test method": function () {
-            try {
-                buster.assert.noMatch("^[a-z]+$", "Assertions 123");
-                throw new Error("Expected assert.noMatch to fail");
-            } catch (e) {
-                assert.equal("[assert.noMatch] Expected regular expression or object " +
-                             "with test method, but was ^[a-z]+$", e.message);
-            }
-        },
+        // "should fail if regexp is not an object with a test method": function () {
+        //     try {
+        //         buster.assert.noMatch("^[a-z]+$", "Assertions 123");
+        //         throw new Error("Expected assert.noMatch to fail");
+        //     } catch (e) {
+        //         assert.equal("[assert.noMatch] Expected regular expression or object " +
+        //                      "with test method, but was ^[a-z]+$", e.message);
+        //     }
+        // },
 
         "should format non-regexp object for message": function () {
             var calls = spy(buster.assert, "format", function () {
