@@ -2023,6 +2023,13 @@ if (typeof require != "undefined") {
             });
         },
 
+        "should match strings ignoring case": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.match("LoOk Ma, CaSe-InSenSiTiVe",
+                                    "Look ma, case-insensitive");
+            });
+        },
+
         "should fail if match string is not substring of matchee": function () {
             assert.throws(function () {
                 buster.assert.match("Emacs", "Vim");
