@@ -1614,6 +1614,82 @@ if (typeof require != "undefined") {
         }
     });
 
+    testCase("AssertNaNTest", {
+        "should pass for NaN": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNaN(NaN);
+            });
+        },
+
+        "should pass for NaN with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNaN("Whatup?", NaN);
+            });
+        },
+
+        "should fail for number": function () {
+            assert.throws(function () {
+                buster.assert.isNaN(32);
+            });
+        },
+
+        "should fail for number with message": function () {
+            assert.throws(function () {
+                buster.assert.isNaN("Whatup?", 32);
+            });
+        },
+
+        "should pass for function": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNaN(function () {});
+            });
+        },
+
+        "should pass for function with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNaN("Whatup?", function () {});
+            });
+        },
+
+        "should pass for object": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNaN(function () {});
+            });
+        },
+
+        "should fail for null": function () {
+            assert.throws(function () {
+                buster.assert.isNaN(null);
+            });
+        },
+
+        "should fail with descriptive message": function () {
+            try {
+                buster.assert.isNaN(32);
+                throw new Error("Expected isNaN to fail");
+            } catch (e) {
+                assert.equal("[assert.isNaN] Expected 32 to be NaN", e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.isNaN("OMG!", 32);
+                throw new Error("Expected isNaN to fail");
+            } catch (e) {
+                assert.equal("[assert.isNaN] OMG! Expected 32 to be NaN", e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isNaN, [NaN], [42]);
+        },
+
+        "should format value with assert.format": function () {
+            assertFormatWithFormat(buster.assert.isNaN, 32);
+        }
+    });
+
     testCase("AssertUndefinedTest", {
         "should pass for undefined": function () {
             assert.doesNotThrow(function () {
@@ -2446,4 +2522,5 @@ if (typeof require != "undefined") {
             assertUpAssertionCount(buster.assert.noMatch, [/[a-z]/, [/[a-z]/, "a"], "1"]);
         }
     });
+
 }());
