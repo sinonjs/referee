@@ -1690,6 +1690,78 @@ if (typeof require != "undefined") {
         }
     });
 
+    testCase("AssertNotNaNTest", {
+        "should fail for NaN": function () {
+            assert.throws(function () {
+                buster.assert.isNotNaN(NaN);
+            });
+        },
+
+        "should fail for NaN with message": function () {
+            assert.throws(function () {
+                buster.assert.isNotNaN("Whatup?", NaN);
+            });
+        },
+
+        "should pass for number": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNotNaN(32);
+            });
+        },
+
+        "should pass for number with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNotNaN("Whatup?", 32);
+            });
+        },
+
+        "should fail for function": function () {
+            assert.throws(function () {
+                buster.assert.isNotNaN(function () {});
+            });
+        },
+
+        "should fail for function with message": function () {
+            assert.throws(function () {
+                buster.assert.isNotNaN("Whatup?", function () {});
+            });
+        },
+
+        "should fail for object": function () {
+            assert.throws(function () {
+                buster.assert.isNotNaN(function () {});
+            });
+        },
+
+        "should pass for null": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNotNaN(null);
+            });
+        },
+
+        "should fail with descriptive message": function () {
+            try {
+                buster.assert.isNotNaN(NaN);
+                throw new Error("Expected isNotNaN to fail");
+            } catch (e) {
+                assert.equal("[assert.isNotNaN] Expected not to be NaN", e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.isNotNaN("OMG!", NaN);
+                throw new Error("Expected isNotNaN to fail");
+            } catch (e) {
+                assert.equal("[assert.isNotNaN] OMG! Expected not to be NaN", e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isNotNaN, [42], [NaN]);
+        }
+    });
+
     testCase("AssertUndefinedTest", {
         "should pass for undefined": function () {
             assert.doesNotThrow(function () {
