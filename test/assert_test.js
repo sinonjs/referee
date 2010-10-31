@@ -1920,6 +1920,164 @@ if (typeof require != "undefined") {
         }
     });
 
+    testCase("AssertArrayLike", {
+        "should pass for array": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isArrayLike([]);
+            });
+        },
+
+        "should pass for array with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isArrayLike("Message", [1, 2, 3]);
+            });
+        },
+
+        "should fail for object": function () {
+            assert.throws(function () {
+                buster.assert.isArrayLike({});
+            });
+        },
+
+        "should fail for object with message": function () {
+            assert.throws(function () {
+                buster.assert.isArrayLike("Is it an array?", {});
+            });
+        },
+
+        "should pass for arguments": function () {
+            var args;
+
+            function captureArgs() {
+                args = arguments;
+            }
+
+            captureArgs();
+
+            assert.doesNotThrow(function () {
+                buster.assert.isArrayLike(args);
+            });
+        },
+
+        "should pass for array like": function () {
+            var arrayLike = {
+                length: 4,
+                "0": "One",
+                "1": "Two",
+                "2": "Three",
+                "3": "Four",
+                splice: function () {}
+            };
+
+            assert.doesNotThrow(function () {
+                buster.assert.isArrayLike(arrayLike);
+            });
+        },
+
+        "should fail with descriptive message": function () {
+            try {
+                buster.assert.isArrayLike({});
+                throw new Error("Expected isArrayLike to fail");
+            } catch (e) {
+                assert.equal("[assert.isArrayLike] Expected [object Object] to be " +
+                             "array like", e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.isArrayLike("OMG!", NaN);
+                throw new Error("Expected isArrayLike to fail");
+            } catch (e) {
+                assert.equal("[assert.isArrayLike] OMG! Expected NaN to be array like",
+                             e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isArrayLike, [[]], [NaN]);
+        }
+    });
+
+    testCase("AssertNotArrayLike", {
+        "should fail for array": function () {
+            assert.throws(function () {
+                buster.assert.isNotArrayLike([]);
+            });
+        },
+
+        "should fail for array with message": function () {
+            assert.throws(function () {
+                buster.assert.isNotArrayLike("Message", [1, 2, 3]);
+            });
+        },
+
+        "should pass for object": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNotArrayLike({});
+            });
+        },
+
+        "should pass for object with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.isNotArrayLike("Is it an array?", {});
+            });
+        },
+
+        "should fail for arguments": function () {
+            var args;
+
+            function captureArgs() {
+                args = arguments;
+            }
+
+            captureArgs();
+
+            assert.throws(function () {
+                buster.assert.isNotArrayLike(args);
+            });
+        },
+
+        "should fail for array like": function () {
+            var arrayLike = {
+                length: 4,
+                "0": "One",
+                "1": "Two",
+                "2": "Three",
+                "3": "Four",
+                splice: function () {}
+            };
+
+            assert.throws(function () {
+                buster.assert.isNotArrayLike(arrayLike);
+            });
+        },
+
+        "should fail with descriptive message": function () {
+            try {
+                buster.assert.isNotArrayLike([1, 2]);
+                throw new Error("Expected isNotArrayLike to fail");
+            } catch (e) {
+                assert.equal("[assert.isNotArrayLike] Expected 1,2 not to be array like",
+                             e.message);
+            }
+        },
+
+        "should pass with custom message": function () {
+            try {
+                buster.assert.isNotArrayLike("OMG!", [1, 2]);
+                throw new Error("Expected isNotArrayLike to fail");
+            } catch (e) {
+                assert.equal("[assert.isNotArrayLike] OMG! Expected 1,2 not to be " +
+                             "array like", e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.isNotArrayLike, [NaN], [[]]);
+        }
+    });
+
     testCase("AssertUndefinedTest", {
         "should pass for undefined": function () {
             assert.doesNotThrow(function () {
