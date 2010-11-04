@@ -11,3 +11,9 @@
 * TODO assert.instanceOf
 * TODO assert.notInstanceOf
 * TODO Documentation!
+* TODO assert.messages should contain printf-style messages:
+buster.assert.messages: {
+  equals: "Expected %1 to be equal to %2"
+}
+
+This way, messages can be easily overwritten.
