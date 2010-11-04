@@ -1,0 +1,147 @@
+buster-assert 0.1.0 documentation
+=================================
+
+buster-assert is a collection of assertions to be used with a unit testing
+framework. buster-assert works well with any CommonJS compliant testing
+framework out of the box, and can be easily configured to work with most any
+testing framework.
+
+buster-assert contains lots of assertions. I strongly believe that high-level
+assertions are essential in the interest of producing clear and intent-revealing
+tests, and they also give you to-the-point failure messages even if you don't
+specify custom assertion messages.
+
+This document describes each assertion as well as extension points for
+developers looking to either customize failure messages or using buster-assert
+in other projects.
+
+:Author: Christian Johansen
+:Email: <christian@cjohansen.no>
+
+Assertions
+----------
+
+All assertions live in the +buster.assert+ namespace. +buster.assert+ is itself
+a function, the most generic assertion. For brevity, the +buster.assert+ prefix
+is not included in the list below, see examples for how to use them.
+
++buster.assert([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails if +actual+ is falsy (+0+, +""+, +null+, +undefined+, +NaN+).
+
+[source,javascript]
+assert("This will pass", { not: "Falsy" });
+assert("This will fail", null);
+assert(null); // Fails
+assert(34);  // Passes
+
++isTrue([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isFalse([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++same([message,] expected, actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++notSame([message,] expected, actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++equals([message,] expected, actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++notEquals([message,] expected, actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++typeOf([message,] expected, object)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++notTypeOf([message,] expected, object)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isString([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isObject([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isFunction([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isBoolean([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isNumber([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isNaN([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isNotNaN([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isArray([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isNotArray([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isArrayLike([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isNotArrayLike([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isUndefined([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isNotUndefined([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isNull([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++isNotNull([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++match([message,] expected, actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++noMatch([message,] expected, actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Browser/DOM-specific assertions
+-------------------------------
+
+Customizing and integrating with buster-assert
+----------------------------------------------
+
+buster-assert is written in a generic way and can be used entirely on its
+own. If your testing framework is CommonJS compliant, chances are you can just
+drop buster-assert right in and immediately start using it.
+
+Customizing assertion messages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Customizing object formatting for assertion messages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Assertion failures
+~~~~~~~~~~~~~~~~~~
+
+When an assertion fails, it calls +buster.assert.fail+ with the failure message
+as the only argument. The built-in +buster.assert.fail+ function throws an
++AssertionError+ which can be caught and handled by the testing framework. If
+this behavior is not suitable for your testing framework of choice, you can
+override +buster.fail+ to make it do the right thing.
+
+For instance, to use buster-assert with JsTestDriver, you can simply configure
+it as follows:
+
+[source,javascript]
+buster.assert.fail = function (message) {
+    fail(message);
+};
+
+Where the global +fail+ function is the one provided by JsTestDriver.
