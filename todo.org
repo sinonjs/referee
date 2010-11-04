@@ -1,0 +1,13 @@
+* DONE Test for expected number of arguments in every assertion
+* DONE Test that assertions process arguments for fail message with assert.format(obj)
+* TODO assert.exception
+* TODO assert.noException
+* TODO assert.tagName
+* TODO assert.notTagName
+* TODO assert.hasClassName
+* TODO assert.notHasClassName
+* TODO assert.elementId
+* TODO assert.notElementId
+* TODO assert.instanceOf
+* TODO assert.notInstanceOf
+* TODO Documentation!
