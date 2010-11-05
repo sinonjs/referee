@@ -3,10 +3,9 @@ Buster Assert 0.1.0 documentation
 :Author: Christian Johansen
 :Email: christian@cjohansen.no
 
-A collection of assertions to be used with a unit testing
-framework. *buster-assert* works well with any CommonJS compliant testing
-framework out of the box, and can be easily configured to work with most any
-testing framework.
+A collection of assertions to be used with a unit testing framework.
+*buster-assert* works well with any CommonJS compliant testing framework out of
+the box, and can be easily configured to work with most any testing framework.
 
 *buster-assert* contains lots of assertions. I strongly believe that high-level
 assertions are essential in the interest of producing clear and intent-revealing
@@ -29,52 +28,155 @@ Assertions
 ----------
 
 All assertions live in the +buster.assert+ namespace. +buster.assert+ is itself
-a function, the most generic assertion. For brevity, the +buster.assert+ prefix
-is not included in the list below, see examples for how to use them.
+a function, the most generic assertion. For brevity, the +buster.assert+ has been
+omitted in the list below, see examples for how to use them.
 
 +buster.assert([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Fails if +actual+ is falsy (+0+, +""+, +null+, +undefined+, +NaN+).
+Fails if +actual+ is falsy (+0+, +""+, +null+, +undefined+, +NaN+). Fails with
+either the provided message or "Expected null to be truthy". This behavior
+differs from most other assertions, which prepend the failure message with the
+optional message argument.
 
 [source,javascript]
 assert("This will pass", { not: "Falsy" });
 assert("This will fail", null);
 assert(null); // Fails
-assert(34);  // Passes
+assert(34);   // Passes
 
 +isTrue([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Fails if the argument is not boolean +true+.
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.isTrue("This will fail", { not: "Falsy" });
+assert.isTrue("This will pass", true);
+assert.isTrue("Something"); // Fails
+assert.isTrue(true);        // Passes
+
 +isFalse([message,] actual)+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails if the argument is not boolean +false+.
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.isFalse("This will pass", false);
+assert.isFalse("This will fail", "");
+assert.isFalse({});    // Fails
+assert.isFalse(false); // Passes
 
 +same([message,] expected, actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Fails if +actual+ *is not* the same object (+===+) as +expected+. To compare
+similar objects, such as +{ name: "Chris", id: 42 }+ and +{ id: 42, name: "Chris"
+}+ (not the same instance), see <<equals,equals>>.
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+var obj = { id: 42, name: "Chris" };
+assert.same("This will pass", obj, obj);
+assert.same("This will fail", obj, { id: 42, name: "Chris" });
+assert.same(obj, obj);                       // Passes
+assert.same(obj, { id: 42, name: "Chris" }); // Fails
+
 +notSame([message,] expected, actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Fails if +actual+ *is* the same object (+===+) as +expected+. To compare
+similar objects, such as +{ name: "Chris", id: 42 }+ and +{ id: 42, name: "Chris"
+}+ (not the same instance), see <<notEquals,notEquals>>.
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+var obj = { id: 42, name: "Chris" };
+assert.notSame("This will pass", obj, { id: 42, name: "Chris" });
+assert.notSame("This will fail", obj, obj);
+assert.notSame(obj, { id: 42, name: "Chris" }); // Passes
+assert.notSame(obj, obj);                       // Fails
+
+[[equals]]
 +equals([message,] expected, actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.equals("This will pass", { name: "Professor Chaos" }, { name: "Professor Chaos" });
+assert.equals("This will fail", { name: "Professor Chaos" }, { name: "Dr Evil" });
+assert.equals({ name: "Professor Chaos" }, { name: "Professor Chaos" }); // Passes
+assert.equals({ name: "Professor Chaos" }, { name: "Dr Evil" });         // Fails
+
+[[notEquals]]
 +notEquals([message,] expected, actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.notEquals("This will pass", { name: "Professor Chaos" }, { name: "Dr Evil" });
+assert.notEquals("This will fail", { name: "Professor Chaos" }, { name: "Professor Chaos" });
+assert.notEquals({ name: "Professor Chaos" }, { name: "Dr Evil" });         // Passes
+assert.notEquals({ name: "Professor Chaos" }, { name: "Professor Chaos" }); // Fails
 
 +typeOf([message,] expected, object)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.typeOf("This will pass", "object", {});
+assert.typeOf("This will fail", "function", null);
+assert.typeOf("object", {});     // Passes
+assert.typeOf("function", null); // Fails
+
 +notTypeOf([message,] expected, object)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+isString([message,] actual)+
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.notTypeOf("This will pass", "function", null);
+assert.notTypeOf("This will fail", "object", {});
+assert.notTypeOf("function", null); // Passes
+assert.notTypeOf("object", {});     // Fails
+
++isString([message,] object)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+isObject([message,] actual)+
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.isString("This will pass", "Hey there");
+assert.isString("This will fail", {});
+assert.isString("function");     // Passes
+assert.isString(function () {}); // Fails
+
++isObject([message,] object)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+isFunction([message,] actual)+
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.isObject("This will pass", {});
+assert.isObject("This will fail", 42);
+assert.isObject([1, 2, 3]);      // Passes
+assert.isObject(function () {}); // Fails
+
++isFunction([message,] object)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.isFunction("This will pass", function () {});
+assert.isFunction("This will fail", 42);
+assert.isFunction(function () {}); // Passes
+assert.isFunction([1, 2, 3]);      // Fails
 
 +isBoolean([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -98,7 +200,6 @@ assert(34);  // Passes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 +isNotArrayLike([message,] actual)+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 +isUndefined([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
