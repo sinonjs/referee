@@ -17,7 +17,7 @@ developers looking to either customize failure messages or using *buster-assert*
 in other projects.
 
 Table of contents
-^^^^^^^^^^^^^^^^^
+-----------------
 * <<assertions,Assertions>>
 * <<browser-assertions,Browser and DOM-specific assertions >>
 * <<customize,Customizing and integrating with buster-assert>>
@@ -40,10 +40,12 @@ differs from most other assertions, which prepend the failure message with the
 optional message argument.
 
 [source,javascript]
+----
 assert("This will pass", { not: "Falsy" });
 assert("This will fail", null);
 assert(null); // Fails
 assert(34);   // Passes
+----
 
 +isTrue([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
