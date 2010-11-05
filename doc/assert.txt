@@ -183,40 +183,67 @@ assert.isFunction([1, 2, 3]);      // Fails
 +isBoolean([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The optional message is prepended to the failure message if provided.
+
 +isNumber([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The optional message is prepended to the failure message if provided.
 
 +isNaN([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The optional message is prepended to the failure message if provided.
+
 +isNotNaN([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The optional message is prepended to the failure message if provided.
 
 +isArray([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The optional message is prepended to the failure message if provided.
+
 +isNotArray([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The optional message is prepended to the failure message if provided.
 
 +isArrayLike([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The optional message is prepended to the failure message if provided.
+
 +isNotArrayLike([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The optional message is prepended to the failure message if provided.
 
 +isUndefined([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The optional message is prepended to the failure message if provided.
+
 +isNotUndefined([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The optional message is prepended to the failure message if provided.
 
 +isNull([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The optional message is prepended to the failure message if provided.
+
 +isNotNull([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The optional message is prepended to the failure message if provided.
+
 +match([message,] expected, actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The optional message is prepended to the failure message if provided.
 
 +noMatch([message,] expected, actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -224,6 +251,8 @@ assert.isFunction([1, 2, 3]);      // Fails
 [[dom-assertions]]
 Browser/DOM-specific assertions
 -------------------------------
+
+Kommer
 
 [[customize]]
 Customizing and integrating with buster-assert
@@ -236,8 +265,12 @@ drop *buster-assert* right in and immediately start using it.
 Customizing assertion messages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Assertion messages blabla.
+
 Customizing object formatting for assertion messages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Blabla
 
 Assertion failures
 ~~~~~~~~~~~~~~~~~~
