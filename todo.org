@@ -6,8 +6,6 @@
 * DONE assert.notTagName
 * TODO assert.hasClassName
 * TODO assert.notHasClassName
-* TODO assert.elementId
-* TODO assert.notElementId
 * TODO assert.instanceOf
 * TODO assert.notInstanceOf
 * TODO Documentation!

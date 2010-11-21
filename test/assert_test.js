@@ -1,4 +1,5 @@
-/*jslint onevar: false, browser: true, eqeqeq: false, nomen: false, plusplus: false*/
+/*jslint onevar: false, browser: true, eqeqeq: false, nomen: false,
+         plusplus: false, regexp: false*/
 /*global require, __dirname*/
 if (typeof require != "undefined") {
     require.paths.unshift(__dirname + "/../deps/buster-util/lib/");
@@ -3068,14 +3069,6 @@ if (typeof require != "undefined") {
         "should fail when callback throws": function () {
             assert.throws(function () {
                 buster.assert.noException(function () {
-                    throw new Error();
-                });
-            });
-        },
-
-        "should fail with custom message": function () {
-            assert.throws(function () {
-                buster.assert.noException("Okidoki", function () {
                     throw new Error();
                 });
             });
