@@ -7,4 +7,4 @@
 * DONE assert.hasClassName
 * DONE assert.notHasClassName
 * TODO Documentation!
-* TODO printf style error messages
+* DONE printf style error messages
