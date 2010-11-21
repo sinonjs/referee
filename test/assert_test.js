@@ -1,6 +1,5 @@
 /*jslint onevar: false, browser: true, eqeqeq: false, nomen: false, plusplus: false*/
 /*global require, __dirname*/
-
 if (typeof require != "undefined") {
     require.paths.unshift(__dirname + "/../deps/buster-util/lib/");
     var testCase = require("test_case").testCase;
@@ -2911,4 +2910,229 @@ if (typeof require != "undefined") {
         }
     });
 
+    testCase("AssertExceptionTest", {
+        "should pass when callback throws": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.exception(function () {
+                    throw new Error();
+                });
+            });
+        },
+
+        "should pass with custom message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.exception("Okidoki", function () {
+                    throw new Error();
+                });
+            });
+        },
+
+        "should fail when callback does not throw": function () {
+            assert.throws(function () {
+                buster.assert.exception(function () {});
+            });
+        },
+
+        "should fail with message when callback does not throw": function () {
+            assert.throws(function () {
+                buster.assert.exception("Oh noes", function () {});
+            });
+        },
+
+        "should fail with message": function () {
+            try {
+                buster.assert.exception(function () {});
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal("[assert.exception] Expected exception",
+                             e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.exception("Awww", function () {});
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal("[assert.exception] Awww: Expected exception",
+                             e.message);
+            }
+        },
+
+        "should pass when callback throws expected type": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.exception(function () {
+                    throw new TypeError("Oh hmm");
+                }, "TypeError");
+            });
+        },
+
+        "should pass with custom message and expected type": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.exception("Okidoki", function () {
+                    throw new TypeError();
+                }, "TypeError");
+            });
+        },
+
+        "should fail when callback does not throw expected type": function () {
+            assert.throws(function () {
+                buster.assert.exception(function () {
+                    throw new Error();
+                }, "TypeError");
+            });
+        },
+
+        "should fail when callback does not throw and specific type os expected": function () {
+            assert.throws(function () {
+                buster.assert.exception(function () {}, "TypeError");
+            });
+        },
+
+        "should fail with message when callback does not throw expected type": function () {
+            assert.throws(function () {
+                buster.assert.exception("Oh noes", function () {
+                    throw new Error();
+                }, "TypeError");
+            });
+        },
+
+        "should fail with message when callback does not throw and type is expected": function () {
+            assert.throws(function () {
+                buster.assert.exception("Oh noes", function () {}, "TypeError");
+            });
+        },
+
+        "should fail with message when not throwing": function () {
+            try {
+                buster.assert.exception(function () {}, "TypeError");
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal("[assert.exception] Expected TypeError but no exception was thrown",
+                             e.message);
+            }
+        },
+
+        "should fail with custom message when not throwing": function () {
+            try {
+                buster.assert.exception("Awww", function () {}, "TypeError");
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal("[assert.exception] Awww: Expected TypeError but no exception was thrown",
+                             e.message);
+            }
+        },
+
+        "should fail with message when throwing wrong kind of exception": function () {
+            try {
+                buster.assert.exception(function () {
+                    throw new Error();
+                }, "TypeError");
+
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal("[assert.exception] Expected TypeError but threw Error",
+                             e.message);
+            }
+        },
+
+        "should fail with custom message when throwing wrong kind of exception": function () {
+            try {
+                buster.assert.exception("Awww", function () {
+                    throw new Error();
+                }, "TypeError");
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal("[assert.exception] Awww: Expected TypeError but threw Error",
+                             e.message);
+            }
+        },
+
+        "should fail if not passed arguments": function () {
+            try {
+                buster.assert.exception();
+                throw new Error("Expected assert.exception to fail");
+            } catch (e) {
+                assert.equal("Expected to receive at least 1 argument", e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.exception, [function () {
+                throw new Error();
+            }], [function () {}]);
+        }
+    });
+
+    testCase("AssertNoExceptionTest", {
+        "should fail when callback throws": function () {
+            assert.throws(function () {
+                buster.assert.noException(function () {
+                    throw new Error();
+                });
+            });
+        },
+
+        "should fail with custom message": function () {
+            assert.throws(function () {
+                buster.assert.noException("Okidoki", function () {
+                    throw new Error();
+                });
+            });
+        },
+
+        "should pass when callback does not throw": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.noException(function () {});
+            });
+        },
+
+        "should pass with message when callback does not throw": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.noException("Oh noes", function () {});
+            });
+        },
+
+        "should fail with message": function () {
+            try {
+                buster.assert.noException(function () {
+                    throw new Error();
+                });
+
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal("[assert.noException] Expected not to throw but threw Error",
+                             e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.noException("Awww", function () {
+                    throw new Error();
+                });
+
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal("[assert.noException] Awww: Expected not to throw but threw Error",
+                             e.message);
+            }
+        },
+
+        "should fail if not passed arguments": function () {
+            try {
+                buster.assert.noException();
+                throw new Error("Expected assert.noException to fail");
+            } catch (e) {
+                assert.equal("Expected to receive at least 1 argument", e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.noException,
+                                   [function () {}], [function () {
+                throw new Error();
+            }]);
+        }
+    });
 }());
