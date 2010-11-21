@@ -2,8 +2,8 @@
 * DONE Test that assertions process arguments for fail message with assert.format(obj)
 * DONE assert.exception
 * DONE assert.noException
-* TODO assert.tagName
-* TODO assert.notTagName
+* DONE assert.tagName
+* DONE assert.notTagName
 * TODO assert.hasClassName
 * TODO assert.notHasClassName
 * TODO assert.elementId
@@ -11,3 +11,4 @@
 * TODO assert.instanceOf
 * TODO assert.notInstanceOf
 * TODO Documentation!
+* TODO printf style error messages

@@ -3135,4 +3135,226 @@ if (typeof require != "undefined") {
             }]);
         }
     });
+
+    testCase("AssertTagNameTest", {
+        "should pass for matching tag names": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.tagName("li", { tagName: "li" });
+            });
+        },
+
+        "should pass for case-insensitive matching tag names": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.tagName("li", { tagName: "LI" });
+                buster.assert.tagName("LI", { tagName: "li" });
+                buster.assert.tagName("LI", { tagName: "LI" });
+            });
+        },
+
+        "should pass for matching tag names with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.tagName("Yup", "li", { tagName: "li" });
+            });
+        },
+
+        "should fail for non-matching tag names": function () {
+            assert.throws(function () {
+                buster.assert.tagName("p", { tagName: "li" });
+            });
+
+            assert.throws(function () {
+                buster.assert.tagName("i", { tagName: "li" });
+            });
+        },
+
+        "should fail for non-matching with message": function () {
+            assert.throws(function () {
+                buster.assert.tagName("Aww", "p", { tagName: "li" });
+            });
+        },
+
+        "should fail with message": function () {
+            try {
+                buster.assert.tagName("p", { tagName: "li" });
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal("[assert.tagName] Expected tagName to be p but was li",
+                             e.message);
+            }
+        },
+
+        "should fail custom with message": function () {
+            try {
+                buster.assert.tagName("Awww", "p", { tagName: "li" });
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal("[assert.tagName] Awww: Expected tagName to be p but was li",
+                             e.message);
+            }
+        },
+
+        "should represent expected value in message": function () {
+            try {
+                buster.assert.tagName("Awww", {}, { tagName: "p" });
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal(
+                    "[assert.tagName] Awww: Expected tagName to be [object Object] but was p",
+                    e.message
+                );
+            }
+        },
+
+        "should fail if not passed arguments": function () {
+            try {
+                buster.assert.tagName();
+                throw new Error("Expected assert.tagName to fail");
+            } catch (e) {
+                assert.equal("Expected to receive at least 2 arguments", e.message);
+            }
+        },
+
+        "should fail if not passed object": function () {
+            try {
+                buster.assert.tagName("li");
+                throw new Error("Expected assert.tagName to fail");
+            } catch (e) {
+                assert.equal("Expected to receive at least 2 arguments", e.message);
+            }
+        },
+
+        "should fail if object does not have tagName property": function () {
+            try {
+                buster.assert.tagName("li", {});
+                throw new Error("Expected assert.tagName to fail");
+            } catch (e) {
+                assert.equal("[assert.tagName] Expected [object Object] to have tagName property", e.message);
+            }
+        },
+
+        "should pass for DOM elements": function () {
+            if (typeof document != "undefined") {
+                assert.doesNotThrow(function () {
+                    var li = document.createElement("li");
+                    buster.assert.tagName("li", li);
+                });
+            }
+        },
+
+        "should update assertion counter": function () {
+            var el = { tagName: "li" };
+
+            assertUpAssertionCount(buster.assert.tagName, ["li", el], ["p", el]);
+        }
+    });
+
+    testCase("AssertNotTagNameTest", {
+        "should fail for matching tag names": function () {
+            assert.throws(function () {
+                buster.assert.notTagName("li", { tagName: "li" });
+            });
+        },
+
+        "should fail for case-insensitive matching tag names": function () {
+            assert.throws(function () {
+                buster.assert.notTagName("li", { tagName: "LI" });
+            });
+
+            assert.throws(function () {
+                buster.assert.notTagName("LI", { tagName: "li" });
+            });
+
+            assert.throws(function () {
+                buster.assert.notTagName("LI", { tagName: "LI" });
+            });
+        },
+
+        "should fail for matching tag names with message": function () {
+            assert.throws(function () {
+                buster.assert.notTagName("Yup", "li", { tagName: "li" });
+            });
+        },
+
+        "should pass for non-matching tag names": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notTagName("p", { tagName: "li" });
+                buster.assert.notTagName("i", { tagName: "li" });
+            });
+        },
+
+        "should pass for case-insensitive non-matching tag names": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notTagName("P", { tagName: "li" });
+                buster.assert.notTagName("i", { tagName: "LI" });
+            });
+        },
+
+        "should pass for non-matching with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notTagName("Aww", "p", { tagName: "li" });
+            });
+        },
+
+        "should fail with message": function () {
+            try {
+                buster.assert.notTagName("li", { tagName: "li" });
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal("[assert.notTagName] Expected tagName not to be li",
+                             e.message);
+            }
+        },
+
+        "should fail with custom message": function () {
+            try {
+                buster.assert.notTagName("Awww", "p", { tagName: "p" });
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal("[assert.notTagName] Awww: Expected tagName not to be p",
+                             e.message);
+            }
+        },
+
+        "should fail if not passed arguments": function () {
+            try {
+                buster.assert.notTagName();
+                throw new Error("Expected assert.notTagName to fail");
+            } catch (e) {
+                assert.equal("Expected to receive at least 2 arguments", e.message);
+            }
+        },
+
+        "should fail if not passed object": function () {
+            try {
+                buster.assert.notTagName("li");
+                throw new Error("Expected assert.notTagName to fail");
+            } catch (e) {
+                assert.equal("Expected to receive at least 2 arguments", e.message);
+            }
+        },
+
+        "should fail if object does not have tagName property": function () {
+            try {
+                buster.assert.notTagName("li", {});
+                throw new Error("Expected assert.notTagName to fail");
+            } catch (e) {
+                assert.equal("[assert.notTagName] Expected [object Object] to have tagName property", e.message);
+            }
+        },
+
+        "should pass for DOM elements": function () {
+            if (typeof document != "undefined") {
+                assert.doesNotThrow(function () {
+                    var li = document.createElement("li");
+                    buster.assert.notTagName("p", li);
+                });
+            }
+        },
+
+        "should update assertion counter": function () {
+            var el = { tagName: "li" };
+
+            assertUpAssertionCount(buster.assert.notTagName, ["p", el], ["li", el]);
+        }
+    });
 }());
