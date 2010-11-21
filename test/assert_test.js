@@ -3350,4 +3350,221 @@ if (typeof require != "undefined") {
             assertUpAssertionCount(buster.assert.notTagName, ["p", el], ["li", el]);
         }
     });
+
+    testCase("AssertClassName", {
+        "should fail without arguments": function () {
+            try {
+                buster.assert.className();
+                throw new Error("assert.className did not fail");
+            } catch (e) {
+                assert.equal("Expected to receive at least 2 arguments", e.message);
+            }
+        },
+
+        "should fail without object": function () {
+            try {
+                buster.assert.className("item");
+                throw new Error("assert.className did not fail");
+            } catch (e) {
+                assert.equal("Expected to receive at least 2 arguments", e.message);
+            }
+        },
+
+        "should fail if object does not have className property": function () {
+            try {
+                buster.assert.className("item", {});
+                throw new Error("assert.className did not fail");
+            } catch (e) {
+                assert.equal("[assert.className] Expected object to have className property", e.message);
+            }
+        },
+
+        "should fail with message if object does not have className property": function () {
+            try {
+                buster.assert.className("Won't work", "item", {});
+                throw new Error("assert.className did not fail");
+            } catch (e) {
+                assert.equal("[assert.className] Won't work: Expected object to have className property", e.message);
+            }
+        },
+
+        "should fail when element does not include class name": function () {
+            try {
+                buster.assert.className("item", { className: "" });
+                throw new Error("assert.className did not fail");
+            } catch (e) {
+                assert.equal("[assert.className] Expected object's className to include item but was ", e.message);
+            }
+        },
+
+        "should pass when element's class name matches": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.className("item", { className: "item" });
+            });
+        },
+
+        "should pass when element includes class name": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.className("item", { className: "feed item" });
+            });
+        },
+
+        "should fail when element does not include all class names": function () {
+            assert.throws(function () {
+                buster.assert.className("item post", { className: "feed item" });
+            });
+        },
+
+        "should pass when element includes all class names": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.className("item post", { className: "feed item post" });
+            });
+        },
+
+        "should pass when element includes all class names in different order": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.className("e a d", { className: "a b c d e" });
+            });
+        },
+
+        "should pass with class names as array": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.className(["e", "a", "d"], { className: "a b c d e" });
+            });
+        },
+
+        "should pass for DOM elements": function () {
+            if (typeof document != "undefined") {
+                assert.doesNotThrow(function () {
+                    var li = document.createElement("li");
+                    li.className = "some thing in here";
+
+                    buster.assert.className("thing some", li);
+                });
+            }
+        },
+
+        "should update assertion counter": function () {
+            var el = { className: "item" };
+
+            assertUpAssertionCount(buster.assert.className, ["item", el], ["eh", el]);
+        }
+    });
+
+    testCase("AssertClassName", {
+        "should fail without arguments": function () {
+            try {
+                buster.assert.notClassName();
+                throw new Error("assert.notClassName did not fail");
+            } catch (e) {
+                assert.equal("Expected to receive at least 2 arguments", e.message);
+            }
+        },
+
+        "should fail without object": function () {
+            try {
+                buster.assert.notClassName("item");
+                throw new Error("assert.notClassName did not fail");
+            } catch (e) {
+                assert.equal("Expected to receive at least 2 arguments", e.message);
+            }
+        },
+
+        "should fail if object does not have className property": function () {
+            try {
+                buster.assert.notClassName("item", {});
+                throw new Error("assert.notClassName did not fail");
+            } catch (e) {
+                assert.equal("[assert.notClassName] Expected object to have className property", e.message);
+            }
+        },
+
+        "should fail with message if object does not have className property": function () {
+            try {
+                buster.assert.notClassName("Won't work", "item", {});
+                throw new Error("assert.notClassName did not fail");
+            } catch (e) {
+                assert.equal("[assert.notClassName] Won't work: Expected object to have className property", e.message);
+            }
+        },
+
+        "should pass when element does not include class name": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notClassName("item", { className: "" });
+            });
+        },
+
+        "should fail when element's class name matches": function () {
+            try {
+                buster.assert.notClassName("item", { className: "item" });
+                throw new Error("assert.notClassName did not throw");
+            } catch (e) {
+                assert.equal("[assert.notClassName] Expected object's className " +
+                             "not to include item", e.message);
+            }
+        },
+
+        "should fail with message when element's class name matches": function () {
+            try {
+                buster.assert.notClassName("Aww", "item", { className: "item" });
+                throw new Error("assert.notClassName did not throw");
+            } catch (e) {
+                assert.equal("[assert.notClassName] Aww: Expected object's " +
+                             "className not to include item", e.message);
+            }
+        },
+
+        "should fail when element includes class name": function () {
+            assert.throws(function () {
+                buster.assert.notClassName("item", { className: "feed item" });
+            });
+        },
+
+        "should pass when element does not include all class names": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notClassName("item post", { className: "feed item" });
+            });
+        },
+
+        "should fail when element includes all class names": function () {
+            assert.throws(function () {
+                buster.assert.notClassName("item post", { className: "feed item post" });
+            });
+        },
+
+        "should fail when element includes all class names in different order": function () {
+            assert.throws(function () {
+                buster.assert.notClassName("e a d", { className: "a b c d e" });
+            });
+        },
+
+        "should fail with class names as array": function () {
+            assert.throws(function () {
+                buster.assert.notClassName(["e", "a", "d"], { className: "a b c d e" });
+            });
+        },
+
+        "should pass with class names as array": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notClassName(["f", "a", "d"], { className: "a b c d e" });
+            });
+        },
+
+        "should pass for DOM elements": function () {
+            if (typeof document != "undefined") {
+                assert.doesNotThrow(function () {
+                    var li = document.createElement("li");
+                    li.className = "some thing in here";
+
+                    buster.assert.notClassName("something", li);
+                });
+            }
+        },
+
+        "should update assertion counter": function () {
+            var el = { className: "item" };
+
+            assertUpAssertionCount(buster.assert.notClassName, ["eh", el], ["item", el]);
+        }
+    });
 }());

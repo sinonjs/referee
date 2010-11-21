@@ -4,8 +4,8 @@
 * DONE assert.noException
 * DONE assert.tagName
 * DONE assert.notTagName
-* TODO assert.hasClassName
-* TODO assert.notHasClassName
+* DONE assert.hasClassName
+* DONE assert.notHasClassName
 * TODO assert.instanceOf
 * TODO assert.notInstanceOf
 * TODO Documentation!
