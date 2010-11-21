@@ -5,7 +5,7 @@ Buster Assert 0.1.0 documentation
 
 A collection of assertions to be used with a unit testing framework.
 *buster-assert* works well with any CommonJS compliant testing framework out of
-the box, and can be easily configured to work with most any testing framework.
+the box, and can easily be configured to work with most any testing framework.
 
 *buster-assert* contains lots of assertions. I strongly believe that high-level
 assertions are essential in the interest of producing clear and intent-revealing
@@ -28,8 +28,12 @@ Assertions
 ----------
 
 All assertions live in the +buster.assert+ namespace. +buster.assert+ is itself
-a function, the most generic assertion. For brevity, the +buster.assert+ has been
+a function, the most generic assertion. For brevity, +buster.assert+ has been
 omitted in the list below, see examples for how to use them.
+
+The default assertion messages can be overridden per assertion. The properties
+to overwrite are listed with each assertion along with the arguments the string
+is fed. For more customization options see the bottom of this document.
 
 +buster.assert([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -59,6 +63,17 @@ assert.isTrue("This will pass", true);
 assert.isTrue("Something"); // Fails
 assert.isTrue(true);        // Passes
 
+Message
+^^^^^^^
+
++assert.isTrue.msgFail = "$\{0\}Expected $\{1\} to be true";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The value
+
 +isFalse([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -70,6 +85,17 @@ assert.isFalse("This will pass", false);
 assert.isFalse("This will fail", "");
 assert.isFalse({});    // Fails
 assert.isFalse(false); // Passes
+
+Message
+^^^^^^^
+
++assert.isFalse.msgFail = "$\{0\}Expected $\{1\} to be false";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The value
 
 +same([message,] expected, actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -86,6 +112,19 @@ assert.same("This will fail", obj, { id: 42, name: "Chris" });
 assert.same(obj, obj);                       // Passes
 assert.same(obj, { id: 42, name: "Chris" }); // Fails
 
+Message
+^^^^^^^
+
++assert.same.msgFail = "$\{0\}Expected $\{1\} to be the same object as $\{2\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The expected object
++$\{2\}+::
+    The actual object
+
 +notSame([message,] expected, actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -101,9 +140,34 @@ assert.notSame("This will fail", obj, obj);
 assert.notSame(obj, { id: 42, name: "Chris" }); // Passes
 assert.notSame(obj, obj);                       // Fails
 
+Message
+^^^^^^^
+
++assert.notSame.msgFail = "$\{0\}Expected $\{1\} not to be the same object as $\{2\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The expected object
++$\{2\}+::
+    The actual object
+
 [[equals]]
 +equals([message,] expected, actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Compares +actual+ to +expected+ property for property. If the property count
+does not match, or if any of +actual+'s properties does not match the
+corresponding property in +expected+ the assertion fails.
+
+If +actual+ is +null+ or +undefined+, an exact match is required. Date objects
+are compared by their +getTime+ methods+. Regular expressions are compare by
+their string representations. Primitives are compared using +==+, i.e., with
+coercion.
+
++equals+ passes when comparing an +arguments+ object to an array if the both
+contain the same elements.
 
 The optional message is prepended to the failure message if provided.
 
@@ -113,9 +177,24 @@ assert.equals("This will fail", { name: "Professor Chaos" }, { name: "Dr Evil" }
 assert.equals({ name: "Professor Chaos" }, { name: "Professor Chaos" }); // Passes
 assert.equals({ name: "Professor Chaos" }, { name: "Dr Evil" });         // Fails
 
+Message
+^^^^^^^
+
++assert.equals.msgFail = "$\{0\}Expected $\{1\} to be equal to $\{2\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The expected object
++$\{2\}+::
+    The actual object
+
 [[notEquals]]
 +notEquals([message,] expected, actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Passes in any case where <<equals,equals>> fails.
 
 The optional message is prepended to the failure message if provided.
 
@@ -125,9 +204,23 @@ assert.notEquals("This will fail", { name: "Professor Chaos" }, { name: "Profess
 assert.notEquals({ name: "Professor Chaos" }, { name: "Dr Evil" });         // Passes
 assert.notEquals({ name: "Professor Chaos" }, { name: "Professor Chaos" }); // Fails
 
+Message
+^^^^^^^
+
++assert.notEquals.msgFail = "$\{0\}Expected $\{1\} not to be equal to $\{2\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The expected object
++$\{2\}+::
+    The actual object
+
 +typeOf([message,] expected, object)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Fails if +typeof object+ is not +expected+.
 The optional message is prepended to the failure message if provided.
 
 [source,javascript]
@@ -136,9 +229,25 @@ assert.typeOf("This will fail", "function", null);
 assert.typeOf("object", {});     // Passes
 assert.typeOf("function", null); // Fails
 
+Message
+^^^^^^^
+
++assert.typeOf.msgFail = "$\{0\}Expected typeof $\{2\} ($\{3\}) to be $\{1\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The expected type, a string
++$\{2\}+::
+    The actual object
++$\{3\}+::
+    +typeof object+
+
 +notTypeOf([message,] expected, object)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Fails if +typeof object+ is +expected+.
 The optional message is prepended to the failure message if provided.
 
 [source,javascript]
@@ -147,9 +256,23 @@ assert.notTypeOf("This will fail", "object", {});
 assert.notTypeOf("function", null); // Passes
 assert.notTypeOf("object", {});     // Fails
 
+Message
+^^^^^^^
+
++assert.notTypeOf.msgFail = "$\{0\}Expected typeof $\{2\} not to be $\{1\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The expected type, a string
++$\{2\}+::
+    The actual object
+
 +isString([message,] object)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Fails if +object+ is not a string.
 The optional message is prepended to the failure message if provided.
 
 [source,javascript]
@@ -158,9 +281,23 @@ assert.isString("This will fail", {});
 assert.isString("function");     // Passes
 assert.isString(function () {}); // Fails
 
+Message
+^^^^^^^
+
++assert.isString.msgFail = "$\{0\}Expected typeof $\{1\} ($\{2\}) to be string";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual object
++$\{2\}+::
+    +typeof object+
+
 +isObject([message,] object)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Fails if +object+ is not an object or if it is +null+.
 The optional message is prepended to the failure message if provided.
 
 [source,javascript]
@@ -169,9 +306,23 @@ assert.isObject("This will fail", 42);
 assert.isObject([1, 2, 3]);      // Passes
 assert.isObject(function () {}); // Fails
 
+Message
+^^^^^^^
+
++assert.isObject.msgFail = "$\{0\}Expected typeof $\{1\} ($\{2\}) to be object";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual object
++$\{2\}+::
+    +typeof object+
+
 +isFunction([message,] object)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Fails if +object+ is not a function.
 The optional message is prepended to the failure message if provided.
 
 [source,javascript]
@@ -180,65 +331,306 @@ assert.isFunction("This will fail", 42);
 assert.isFunction(function () {}); // Passes
 assert.isFunction([1, 2, 3]);      // Fails
 
+Message
+^^^^^^^
+
++assert.isFunction.msgFail = "$\{0\}Expected typeof $\{1\} ($\{2\}) to be function";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual object
++$\{2\}+::
+    +typeof object+
+
 +isBoolean([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Fails if +object+ is not a boolean.
 The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.isBoolean("This will pass", false);
+assert.isBoolean("This will fail", 42);
+assert.isBoolean(true);      // Passes
+assert.isBoolean([1, 2, 3]); // Fails
+
+Message
+^^^^^^^
+
++assert.isBoolean.msgFail = "$\{0\}Expected typeof $\{1\} ($\{2\}) to be boolean";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual object
++$\{2\}+::
+    +typeof object+
 
 +isNumber([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Fails if +object+ is not a number.
 The optional message is prepended to the failure message if provided.
 
-+isNaN([message,] actual)+
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+[source,javascript]
+assert.isNumber("This will pass", 42);
+assert.isNumber("This will fail", {});
+assert.isNumber(1423);      // Passes
+assert.isNumber([1, 2, 3]); // Fails
 
-The optional message is prepended to the failure message if provided.
+Message
+^^^^^^^
 
-+isNotNaN([message,] actual)+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++assert.isNumber.msgFail = "$\{0\}Expected typeof $\{1\} ($\{2\}) to be number";+
 
-The optional message is prepended to the failure message if provided.
-
-+isArray([message,] actual)+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The optional message is prepended to the failure message if provided.
-
-+isNotArray([message,] actual)+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The optional message is prepended to the failure message if provided.
-
-+isArrayLike([message,] actual)+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The optional message is prepended to the failure message if provided.
-
-+isNotArrayLike([message,] actual)+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The optional message is prepended to the failure message if provided.
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual object
++$\{2\}+::
+    +typeof object+
 
 +isUndefined([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Fails if +object+ is not +undefined+.
 The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+var a;
+assert.isUndefined("This will pass", undefined);
+assert.isUndefined("This will fail", {});
+assert.isUndefined(a);  // Passes
+assert.isUndefined({}); // Fails
+
+Message
+^^^^^^^
+
++assert.isUndefined.msgFail = "$\{0\}Expected typeof $\{1\} ($\{2\}) to undefined";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual object
++$\{2\}+::
+    +typeof object+
 
 +isNotUndefined([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Fails if +object+ is +undefined+.
 The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+var a;
+assert.isNotUndefined("This will pass", {});
+assert.isNotUndefined("This will fail", undefined);
+assert.isNotUndefined({});  // Passes
+assert.isNotUndefined(a); // Fails
+
+Message
+^^^^^^^
+
++assert.isNotUndefined.msgFail = "$\{0\}Expected typeof $\{1\} ($\{2\}) not to be undefined";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual object
++$\{2\}+::
+    +typeof object+
 
 +isNull([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Fails if +object+ is not +null+.
 The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.isNull("This will pass", null);
+assert.isNull("This will fail", {});
+assert.isNull(null); // Passes
+assert.isNull({});   // Fails
+
+Message
+^^^^^^^
+
++assert.isNull.msgFail = "$\{0\}Expected $\{1\} to be null";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual object
 
 +isNotNull([message,] actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Fails if +object+ is +null+.
 The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.isNotNull("This will pass", {});
+assert.isNotNull("This will fail", null);
+assert.isNotNull({});   // Passes
+assert.isNotNull(null); // Fails
+
+Message
+^^^^^^^
+
++assert.isNotNull.msgFail = "$\{0\}Expected not to be null";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
+
++isNaN([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails if +object+ is not +NaN+.
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.isNaN("This will pass", NaN);
+assert.isNaN("This will fail", 24);
+assert.isNaN(NaN);    // Passes
+assert.isNaN([1, 3]); // Fails
+
+Message
+^^^^^^^
+
++assert.isNaN.msgFail = "$\{0\}Expected $\{1\} to be NaN";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual object
+
++isNotNaN([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails if +object+ is +NaN+.
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.isNotNaN("This will pass", 24);
+assert.isNotNaN("This will fail", NaN);
+assert.isNotNaN({});  // Passes
+assert.isNotNaN(NaN); // Fails
+
+Message
+^^^^^^^
+
++assert.isNotNaN.msgFail = "$\{0\}Expected $\{1\} not to be NaN";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual object
+
++isArray([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails if +object+ is not a true array.
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.isArray("This will pass", [1, ""]);
+assert.isArray("This will fail", 42);
+assert.isArray([]);  // Passes
+assert.isArray({});  // Fails
+
+Message
+^^^^^^^
+
++assert.isArray.msgFail = "$\{0\}Expected $\{1\} to be array";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual object
+
++isNotArray([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails if +object+ is a true array.
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.isNotArray("This will pass", 42);
+assert.isNotArray("This will fail", [1, ""]);
+assert.isNotArray({});  // Passes
+assert.isNotArray([]);  // Fails
+
+Message
+^^^^^^^
+
++assert.isNotArray.msgFail = "$\{0\}Expected $\{1\} not to be array";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual object
+
++isArrayLike([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails if +object+ is not array-like. Array-like objects include true arrays,
++arguments+ objects and objects that have both a numeric +length+ property and a
++slice+ method.
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.isArrayLike("This will pass", { length: 1, slice: function () {}, "0": 6 });
+assert.isArrayLike("This will fail", { length: 1 }); // Misses slice method
+assert.isArrayLike([1, 2, 3]); // Passes
+assert.isArrayLike(42);        // Fails
+
+Message
+^^^^^^^
+
++assert.isArrayLike.msgFail = "$\{0\}Expected $\{1\} to be array like";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual object
+
++isNotArrayLike([message,] actual)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails if +object+ is array-like. Array-like objects include true arrays,
++arguments+ objects and objects that have both a numeric +length+ property and a
++slice+ method.
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.isNotArrayLike("This will pass", { length: 1 }); // Misses slice method
+assert.isNotArrayLike("This will fail", { length: 1, slice: function () {}, "0": 6 });
+assert.isNotArrayLike(42);        // Passes
+assert.isNotArrayLike([1, 2, 3]); // Fails
+
+Message
+^^^^^^^
+
++assert.isNotArrayLike.msgFail = "$\{0\}Expected $\{1\} not to be array like";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual object
 
 +match([message,] expected, actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
