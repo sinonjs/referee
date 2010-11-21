@@ -1242,8 +1242,8 @@ if (typeof require != "undefined") {
                 buster.assert.typeOf("string", false);
             });
 
-            assert.equal(false, calls[0][0]);
-            assert.equal("string", calls[1][0]);
+            assert.equal(false, calls[1][0]);
+            assert.equal("string", calls[0][0]);
         },
 
         "should not format objects if assertion does not fail": function () {
@@ -1313,8 +1313,8 @@ if (typeof require != "undefined") {
                 buster.assert.notTypeOf("boolean", false);
             });
 
-            assert.equal(false, calls[0][0]);
-            assert.equal("boolean", calls[1][0]);
+            assert.equal(false, calls[1][0]);
+            assert.equal("boolean", calls[0][0]);
         },
 
         "should not format objects if assertion passes": function () {
@@ -1373,10 +1373,6 @@ if (typeof require != "undefined") {
 
         "should update assertion counter": function () {
             assertUpAssertionCount(buster.assert.isString, [""], [{}]);
-        },
-
-        "should format value with assert.format": function () {
-            assertFormatWithFormat(buster.assert.isString, {});
         }
     });
 
@@ -1433,10 +1429,6 @@ if (typeof require != "undefined") {
 
         "should update assertion counter": function () {
             assertUpAssertionCount(buster.assert.isObject, [{}], [""]);
-        },
-
-        "should format value with assert.format": function () {
-            assertFormatWithFormat(buster.assert.isObject, "");
         }
     });
 
@@ -1487,10 +1479,6 @@ if (typeof require != "undefined") {
 
         "should update assertion counter": function () {
             assertUpAssertionCount(buster.assert.isFunction, [function () {}], [""]);
-        },
-
-        "should format value with assert.format": function () {
-            assertFormatWithFormat(buster.assert.isFunction, {});
         }
     });
 
@@ -1547,10 +1535,6 @@ if (typeof require != "undefined") {
 
         "should update assertion counter": function () {
             assertUpAssertionCount(buster.assert.isBoolean, [true], [""]);
-        },
-
-        "should format value with assert.format": function () {
-            assertFormatWithFormat(buster.assert.isBoolean, {});
         }
     });
 
@@ -1607,10 +1591,6 @@ if (typeof require != "undefined") {
 
         "should update assertion counter": function () {
             assertUpAssertionCount(buster.assert.isNumber, [42], [""]);
-        },
-
-        "should format value with assert.format": function () {
-            assertFormatWithFormat(buster.assert.isNumber, "Oh my");
         }
     });
 
@@ -2131,10 +2111,6 @@ if (typeof require != "undefined") {
 
         "should update assertion counter": function () {
             assertUpAssertionCount(buster.assert.isUndefined, [undefined], [""]);
-        },
-
-        "should format value with assert.format": function () {
-            assertFormatWithFormat(buster.assert.isUndefined, null);
         }
     });
 
@@ -2593,7 +2569,7 @@ if (typeof require != "undefined") {
                 buster.assert.match(null, "Assertions 123");
             });
 
-            assert.equal(1, calls.length);
+            assert.equal(2, calls.length);
             assert.equal(null, calls[0][0]);
         },
 
@@ -2894,7 +2870,7 @@ if (typeof require != "undefined") {
                 buster.assert.noMatch(null, "Assertions 123");
             });
 
-            assert.equal(1, calls.length);
+            assert.equal(2, calls.length);
             assert.equal(null, calls[0][0]);
         },
 
