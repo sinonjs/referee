@@ -157,7 +157,7 @@ if (typeof require != "undefined") {
                 buster.assert();
                 throw new Error("Expected assert to fail");
             } catch (e) {
-                assert.equal("Expected to receive at least 1 argument", e.message);
+                assert.equal("[assert] Expected to receive at least 1 argument", e.message);
             }
         }
     });
@@ -232,7 +232,7 @@ if (typeof require != "undefined") {
                 buster.assert.isTrue();
                 throw new Error("Expected assert.isTrue to fail");
             } catch (e) {
-                assert.equal("Expected to receive at least 1 argument", e.message);
+                assert.equal("[assert.isTrue] Expected to receive at least 1 argument", e.message);
             }
         },
 
@@ -3054,7 +3054,7 @@ if (typeof require != "undefined") {
                 buster.assert.exception();
                 throw new Error("Expected assert.exception to fail");
             } catch (e) {
-                assert.equal("Expected to receive at least 1 argument", e.message);
+                assert.equal("[assert.exception] Expected to receive at least 1 argument", e.message);
             }
         },
 
@@ -3117,7 +3117,7 @@ if (typeof require != "undefined") {
                 buster.assert.noException();
                 throw new Error("Expected assert.noException to fail");
             } catch (e) {
-                assert.equal("Expected to receive at least 1 argument", e.message);
+                assert.equal("[assert.noException] Expected to receive at least 1 argument", e.message);
             }
         },
 
@@ -3203,7 +3203,7 @@ if (typeof require != "undefined") {
                 buster.assert.tagName();
                 throw new Error("Expected assert.tagName to fail");
             } catch (e) {
-                assert.equal("Expected to receive at least 2 arguments", e.message);
+                assert.equal("[assert.tagName] Expected to receive at least 2 arguments", e.message);
             }
         },
 
@@ -3212,7 +3212,7 @@ if (typeof require != "undefined") {
                 buster.assert.tagName("li");
                 throw new Error("Expected assert.tagName to fail");
             } catch (e) {
-                assert.equal("Expected to receive at least 2 arguments", e.message);
+                assert.equal("[assert.tagName] Expected to receive at least 2 arguments", e.message);
             }
         },
 
@@ -3313,7 +3313,7 @@ if (typeof require != "undefined") {
                 buster.assert.notTagName();
                 throw new Error("Expected assert.notTagName to fail");
             } catch (e) {
-                assert.equal("Expected to receive at least 2 arguments", e.message);
+                assert.equal("[assert.notTagName] Expected to receive at least 2 arguments", e.message);
             }
         },
 
@@ -3322,7 +3322,7 @@ if (typeof require != "undefined") {
                 buster.assert.notTagName("li");
                 throw new Error("Expected assert.notTagName to fail");
             } catch (e) {
-                assert.equal("Expected to receive at least 2 arguments", e.message);
+                assert.equal("[assert.notTagName] Expected to receive at least 2 arguments", e.message);
             }
         },
 
@@ -3357,7 +3357,7 @@ if (typeof require != "undefined") {
                 buster.assert.className();
                 throw new Error("assert.className did not fail");
             } catch (e) {
-                assert.equal("Expected to receive at least 2 arguments", e.message);
+                assert.equal("[assert.className] Expected to receive at least 2 arguments", e.message);
             }
         },
 
@@ -3366,7 +3366,7 @@ if (typeof require != "undefined") {
                 buster.assert.className("item");
                 throw new Error("assert.className did not fail");
             } catch (e) {
-                assert.equal("Expected to receive at least 2 arguments", e.message);
+                assert.equal("[assert.className] Expected to receive at least 2 arguments", e.message);
             }
         },
 
@@ -3457,7 +3457,7 @@ if (typeof require != "undefined") {
                 buster.assert.notClassName();
                 throw new Error("assert.notClassName did not fail");
             } catch (e) {
-                assert.equal("Expected to receive at least 2 arguments", e.message);
+                assert.equal("[assert.notClassName] Expected to receive at least 2 arguments", e.message);
             }
         },
 
@@ -3466,7 +3466,7 @@ if (typeof require != "undefined") {
                 buster.assert.notClassName("item");
                 throw new Error("assert.notClassName did not fail");
             } catch (e) {
-                assert.equal("Expected to receive at least 2 arguments", e.message);
+                assert.equal("[assert.notClassName] Expected to receive at least 2 arguments", e.message);
             }
         },
 

@@ -6,7 +6,5 @@
 * DONE assert.notTagName
 * DONE assert.hasClassName
 * DONE assert.notHasClassName
-* TODO assert.instanceOf
-* TODO assert.notInstanceOf
 * TODO Documentation!
 * TODO printf style error messages
