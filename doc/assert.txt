@@ -635,16 +635,376 @@ Message
 +match([message,] expected, actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The optional message is prepended to the failure message if provided.
+Fails if +expected+ is not a partial match about +actual+. Accepts a wide range
+of input combinations. The +expected+ value is referred to as a "matcher" in the
+description below.
+
+String matcher
+^^^^^^^^^^^^^^
+
+In its simplest form, +assert.match+ performs a case insensitive substring
+match. When the matcher is a string, the +actual+ object is converted to a
+string, and the assertion passes if +actual+ is a case-insensitive substring of
++expected+ as a string.
+
+[source,javascript]
+assert.match("This will pass", "Give", "Give me something");
+assert.match("This will fail", "sumptn", "Give me something");
+assert.match("Yeah", { toString: function () { return "yeah!"; } }); // Passes
+assert.match("Oh no", /[a-z]/); // Fails
+
+Regular expression matcher
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When the matcher is a regular expression, the assertion will pass if
++expected.test(actual)+ is true. +assert.match+ is written in a generic way, so
+any object with a +test+ method will be used as a matcher this way.
+
+[source,javascript]
+assert.match("This will pass", /^[a-z\s]$/i, "Give me something");
+assert.match("This will fail", /[0-9]/, "Give me something");
+assert.match(/yeah/, { toString: function () { return "yeah!"; } }); // Passes
+assert.match(/[a-z]/, 234); // Fails
+
+Number matcher
+^^^^^^^^^^^^^^
+
+When the matcher is a number, the assertion will pass if +expected == actual+.
+
+[source,javascript]
+assert.match("This will pass", 123, "123");
+assert.match("This will fail", 425, "Give me something");
+assert.match(42, { toString: function () { return "42"; } }); // Passes
+assert.match(1234, 234); // Fails
+
+Function matcher
+^^^^^^^^^^^^^^^^
+
+When the matcher is a function, it is called with +actual+ as its only
+argument. The assertion will pass if the function returns +true+. A strict match
+is performed against the return value, so a boolean +true+ is required, truthy
+is not enough.
+
+[source,javascript]
+assert.match("This will pass", function (exp) { return exp == "123"; }, "123");
+assert.match("This will fail", function () { return "ok"; }, "Give me something");
+assert.match(function () { return true; }, { toString: function () { return "42"; } }); // Passes
+assert.match(function () {}, 234); // Fails
+
+Object matcher
+^^^^^^^^^^^^^^
+
+As mentioned above, if an object matcher defines a +test+ method the assertion
+will pass if +expected.test(actual+ returns truthy. If the object does not have
+a +test+ method, a recursive match is performed. If all properties of +expected+
+matches coresponding properties in +actual+, the assertion passes.
+
+[source,javascript]
+assert.match("This will pass", {
+    test: function (arg) {
+        return arg == 123;
+    }
+}, "123");
+
+[source,javascript]
+assert.match("This will fail", { prop: 42 }, {});
+
+[source,javascript]
+assert.match({
+    name: "Chris"
+}, {
+    name: "Chris",
+    profession: "Programmer"
+}); // Passes
+
+[source,javascript]
+assert.match({
+    name: "Chris"
+}, 234); // Fails
+
+Messages
+^^^^^^^^
+
++assert.match.msgException = "$\{0\}$\{1\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    Message from exception thrown by matcher function. An exception is thrown if
+    the matcher if not any of the accepted types, such as a boolean.
+
++assert.match.msgFail = "$\{0\}Expected $\{2\} to match $\{1\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The expected object
++$\{2\}+::
+    The actual object
 
 +noMatch([message,] expected, actual)+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails in cases where +assert.match+ passes. Please refer to the above
+documentation for an explanation of how this works.
+
+Messages
+^^^^^^^^
+
++assert.noMatch.msgException = "$\{0\}$\{1\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    Message from exception thrown by matcher function. An exception is thrown if
+    the matcher if not any of the accepted types, such as a boolean.
+
++assert.noMatch.msgFail = "$\{0\}Expected $\{2\} not to match $\{1\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The expected object
++$\{2\}+::
+    The actual object
+
++exception([message,] callback[, type])+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails if +callback+ does not throw an exception. If the optional +type+ is
+provided, the assertion fails if the callback either does not throw an
+exception, *or* if the exception is not of the given type (determined by its
++name+ property).
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.exception("This will pass", function () {
+    throw new Error("Ooops!");
+});
+
+[source,javascript]
+assert.exception("This will fail", function () {});
+
+[source,javascript]
+assert.exception(function () {
+    throw new Error("Ooops!");
+}); // Passes
+
+[source,javascript]
+assert.exception(function () {}); // Fails
+
+[source,javascript]
+assert.exception("This will pass", function () {
+    throw new TypeError("Ooops!");
+}, "TypeError");
+
+[source,javascript]
+assert.exception("This will fail, wrong exception type", function () {
+    throw new Error("Aww");
+}, "TypeError");
+
+[source,javascript]
+assert.exception(function () {
+    throw new Error("Ooops!");
+}, "Error"); // Passes
+
+[source,javascript]
+assert.exception(function () {}, "TypeError"); // Fails
+
+Messages
+^^^^^^^^
+
++assert.exception.msgTypeNoException = "$\{0\}Expected $\{1\} but no exception was thrown";+
+
++assert.exception.msgFail = "$\{0\}Expected exception";+
+
++assert.exception.msgTypeFail = "$\{0\}Expected $\{1\} but threw $\{2\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The expected exception type (if provided)
++$\{2\}+::
+    The type of exception thrown (if any)
+
++noException([message,] callback)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails if +callback+ throws an exception.
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.noException("This will pass", function () {
+    // Exercise code...
+});
+
+[source,javascript]
+assert.noException("This will fail", function () {
+    throw new Error("Ooops!");
+});
+
+[source,javascript]
+assert.noException(function () {
+    // Exercise code...
+}); // Passes
+
+[source,javascript]
+assert.noException(function () {
+    throw new TypeError("Ooops!");
+}); // Fails
+
+Message
+^^^^^^^
+
++assert.noException.msgFail = "$\{0\}Expected not to throw but threw $\{1\}";+
+
++assert.exception.msgTypeFail = "$\{0\}Expected $\{1\} but threw $\{2\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The type of exception thrown (if any)
 
 [[dom-assertions]]
 Browser/DOM-specific assertions
 -------------------------------
 
-Kommer
++tagName([message,] tagName, object)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails if the +object+ either does not specify a +tagName+ property, or if its
+value is not a case-insensitive match with the expected +tagName+.
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.tagName("This will pass", "p", document.createElement("p"));
+assert.tagName("This will fail", "li", document.createElement("p"));
+assert.tagName("H2", document.createElement("h2")); // Passes
+assert.tagName("li", document.createElement("p"));  // Fails
+
+Message
+^^^^^^^
+
++assert.tagName.msgNoTagName = "$\{0\}Expected $\{2\} to have tagName property";+
+
++assert.tagName.msgFail = "$\{0\}Expected tagName to be $\{1\} but was $\{2\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The expected +tagName+
++$\{2\}+::
+    If the object does not have a +tagName+ property, this is the
+    object. Otherwise, it is the value of +object.tagName+.
+
++notTagName([message,] tagName, object)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails if the +object+ either does not specify a +tagName+ property, or if its
+value *is* a case-insensitive match with the expected +tagName+.
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+assert.notTagName("This will pass", "LI", document.createElement("p"));
+assert.notTagName("This will fail", "p", document.createElement("p"));
+assert.notTagName("H3", document.createElement("h2")); // Passes
+assert.notTagName("p", document.createElement("p"));   // Fails
+
+Message
+^^^^^^^
+
++assert.notTagName.msgNoTagName = "$\{0\}Expected $\{2\} to have tagName property";+
+
++assert.notTagName.msgFail = "$\{0\}Expected tagName not to be $\{1\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The expected +tagName+
++$\{2\}+::
+    If the object does not have a +tagName+ property, this is the
+    object.
+
++className([message,] classNames, object)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails if the +object+ either does not specify a +className+ property, or if its
+value is not a space-separated list of all class names in +classNames+.
+
++classNames+ can be either a space-delimited string or an array of class
+names. Every class specified by +classNames+ must be found in the object's
++className+ property for the assertion to pass, but order does not matter.
+
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+var el = document.createElement("p");
+el.className = "feed item blog-post";
+assert.className("This will pass", "item", el);
+assert.className("This will fail", "news", el);
+assert.className("blog-post feed", el); // Passes
+assert.className("feed items", el);     // Fails, "items" is not a match
+assert.className(["item", "feed"], el); // Passes
+
+Message
+^^^^^^^
+
++assert.className.msgNoClassName = "$\{0\}Expected object to have className property";+
+
++assert.className.msgFail = "$\{0\}Expected object's className to include $\{1\} but was $\{2\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The expected +classNames+
++$\{2\}+::
+    The value of the object's +className+ property, if any.
+
++notClassName([message,] classNames, object)+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fails if the +object+ either does not specify a +className+ property, or if its
+value *is* a space-separated list of all class names in +classNames+.
+
++classNames+ can be either a space-delimited string or an array of class
+names. If any class specified by +classNames+ is not found in the object's
++className+ property the assertion passes. Order does not matter.
+
+The optional message is prepended to the failure message if provided.
+
+[source,javascript]
+var el = document.createElement("p");
+el.className = "feed item blog-post";
+assert.notClassName("This will pass", "chicken", el);
+assert.notClassName("This will fail", "news", el);
+assert.notClassName("blog-post rss", el);  // Passes
+assert.notClassName("feed item", el);      // Fails
+assert.notClassName(["item", "feed"], el); // Passes
+
+Message
+^^^^^^^
+
++assert.notClassName.msgNoClassName = "$\{0\}Expected object to have className property";+
+
++assert.notClassName.msgFail = "$\{0\}Expected object's className not to include $\{1\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The expected +classNames+
++$\{2\}+::
+    The value of the object's +className+ property, if any. Otherwise, the
+    object itself.
 
 [[customize]]
 Customizing and integrating with buster-assert
@@ -657,12 +1017,36 @@ drop *buster-assert* right in and immediately start using it.
 Customizing assertion messages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Assertion messages blabla.
+Every assertion gets its messages from properties on the function itself, and
+they are all listed above. If you don't like a specific message, simply
+overwrite them:
+
+[source,javascript]
+buster.assert.equals.msgFail = "They didn't match!!!";
+
+Most messages can reference the actual and expected values along with the
+user-provided message. These arguments are available as switches like +\{n\}+,
+where +n+ is the numbered argument. See each assertion for what values are
+available.
 
 Customizing object formatting for assertion messages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Blabla
+Values inserted into assertion messages using the +\{n\}+ switches are formatted
+using +buster.assert.format(obj)+. By default this method simply coerces the
+object to a string. In most cases, that is not very useful. A better option is
+to use +buster.format.ascii+, which is a generic function for formatting objects
+nicely as ascii. For nice ascii formatting of objects (including DOM elements) do:
+
+[source,javascript]
+buster.assert.format = buster.format.ascii;
+
+Assertion counter
+~~~~~~~~~~~~~~~~~
+
+*buster-assert* keeps an internal assertion counter, +buster.assert.count+ which
+is incremented anytime an assertion is called. The assertion counter can be
+reset to any number at your convenience.
 
 Assertion failures
 ~~~~~~~~~~~~~~~~~~
@@ -682,6 +1066,22 @@ buster.assert.fail = function (message) {
 };
 
 Where the global +fail+ function is the one provided by JsTestDriver.
+
+Assertion passes
+~~~~~~~~~~~~~~~~
+
+Much like the failure hook, buster-assert also provides a hook for when
+assertions pass: +buster.assert.pass+. This hook is called with the name of the
+assertion followed by the arguments passed to the assertion. If no custom
+message was passed to the assertion, an empty string is sent in its place:
+
+[source,javascript]
+buster.assert.pass = function (assertion, msg/*, expected, actual, ...*/) {
+    console.log.apply(console, arguments);
+}
+
+Note that the arguments passed to +buster.assert.pass+ varies for each
+assertion beyond the assertion name and custom message.
 
 [[license]]
 buster-assert license
