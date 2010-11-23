@@ -129,7 +129,7 @@ if (typeof require != "undefined") {
                 buster.assert(false);
                 throw new Error("Didn't fail");
             } catch (e) {
-                assert.equal("AssertionError", e.type);
+                assert.equal("AssertionError", e.name);
                 assert.equal("[assert] Expected false to be truthy", e.message);
             }
         },
@@ -139,7 +139,7 @@ if (typeof require != "undefined") {
                 buster.assert("False FTW", false);
                 throw new Error("Didn't fail");
             } catch (e) {
-                assert.equal("AssertionError", e.type);
+                assert.equal("AssertionError", e.name);
                 assert.equal("False FTW", e.message);
             }
         },
@@ -409,7 +409,7 @@ if (typeof require != "undefined") {
                 buster.assert.same(obj1, obj2);
                 throw new Error("Did not fail");
             } catch (e) {
-                assert.equal("AssertionError", e.type);
+                assert.equal("AssertionError", e.name);
                 assert.equal("[assert.same] Expected [object Object] to be the " +
                              "same object as [object Object]", e.message);
             }
@@ -423,7 +423,7 @@ if (typeof require != "undefined") {
                 buster.assert.same("Oh noes", obj1, obj2);
                 throw new Error("Did not fail");
             } catch (e) {
-                assert.equal("AssertionError", e.type);
+                assert.equal("AssertionError", e.name);
                 assert.equal("[assert.same] Oh noes: Expected [object Object] to " +
                              "be the same object as [object Object]", e.message);
             }
@@ -523,7 +523,7 @@ if (typeof require != "undefined") {
                 buster.assert.notSame(obj, obj);
                 throw new Error("Did not fail");
             } catch (e) {
-                assert.equal("AssertionError", e.type);
+                assert.equal("AssertionError", e.name);
                 assert.equal("[assert.notSame] Expected [object Object] not to be " +
                              "the same object as [object Object]", e.message);
             }
@@ -536,7 +536,7 @@ if (typeof require != "undefined") {
                 buster.assert.notSame("Oh noes", obj, obj);
                 throw new Error("Did not fail");
             } catch (e) {
-                assert.equal("AssertionError", e.type);
+                assert.equal("AssertionError", e.name);
                 assert.equal("[assert.notSame] Oh noes: Expected [object Object] " +
                              "not to be the same object as [object Object]",
                              e.message);
