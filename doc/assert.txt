@@ -106,11 +106,14 @@ similar objects, such as +{ name: "Chris", id: 42 }+ and +{ id: 42, name: "Chris
 The optional message is prepended to the failure message if provided.
 
 [source,javascript]
+----
 var obj = { id: 42, name: "Chris" };
+
 assert.same("This will pass", obj, obj);
 assert.same("This will fail", obj, { id: 42, name: "Chris" });
 assert.same(obj, obj);                       // Passes
 assert.same(obj, { id: 42, name: "Chris" }); // Fails
+----
 
 Message
 ^^^^^^^
@@ -427,11 +430,14 @@ Fails if +object+ is +undefined+.
 The optional message is prepended to the failure message if provided.
 
 [source,javascript]
+----
 var a;
+
 assert.isNotUndefined("This will pass", {});
 assert.isNotUndefined("This will fail", undefined);
 assert.isNotUndefined({});  // Passes
 assert.isNotUndefined(a); // Fails
+----
 
 Message
 ^^^^^^^
@@ -700,16 +706,15 @@ a +test+ method, a recursive match is performed. If all properties of +expected+
 matches coresponding properties in +actual+, the assertion passes.
 
 [source,javascript]
+----
 assert.match("This will pass", {
     test: function (arg) {
         return arg == 123;
     }
 }, "123");
 
-[source,javascript]
 assert.match("This will fail", { prop: 42 }, {});
 
-[source,javascript]
 assert.match({
     name: "Chris"
 }, {
@@ -717,10 +722,10 @@ assert.match({
     profession: "Programmer"
 }); // Passes
 
-[source,javascript]
 assert.match({
     name: "Chris"
 }, 234); // Fails
+----
 
 Messages
 ^^^^^^^^
@@ -782,38 +787,33 @@ exception, *or* if the exception is not of the given type (determined by its
 The optional message is prepended to the failure message if provided.
 
 [source,javascript]
+----
 assert.exception("This will pass", function () {
     throw new Error("Ooops!");
 });
 
-[source,javascript]
 assert.exception("This will fail", function () {});
 
-[source,javascript]
 assert.exception(function () {
     throw new Error("Ooops!");
 }); // Passes
 
-[source,javascript]
 assert.exception(function () {}); // Fails
 
-[source,javascript]
 assert.exception("This will pass", function () {
     throw new TypeError("Ooops!");
 }, "TypeError");
 
-[source,javascript]
 assert.exception("This will fail, wrong exception type", function () {
     throw new Error("Aww");
 }, "TypeError");
 
-[source,javascript]
 assert.exception(function () {
     throw new Error("Ooops!");
 }, "Error"); // Passes
 
-[source,javascript]
 assert.exception(function () {}, "TypeError"); // Fails
+----
 
 Messages
 ^^^^^^^^
@@ -839,24 +839,23 @@ Fails if +callback+ throws an exception.
 The optional message is prepended to the failure message if provided.
 
 [source,javascript]
+----
 assert.noException("This will pass", function () {
     // Exercise code...
 });
 
-[source,javascript]
 assert.noException("This will fail", function () {
     throw new Error("Ooops!");
 });
 
-[source,javascript]
 assert.noException(function () {
     // Exercise code...
 }); // Passes
 
-[source,javascript]
 assert.noException(function () {
     throw new TypeError("Ooops!");
 }); // Fails
+----
 
 Message
 ^^^^^^^
@@ -946,13 +945,16 @@ names. Every class specified by +classNames+ must be found in the object's
 The optional message is prepended to the failure message if provided.
 
 [source,javascript]
+----
 var el = document.createElement("p");
 el.className = "feed item blog-post";
+
 assert.className("This will pass", "item", el);
 assert.className("This will fail", "news", el);
 assert.className("blog-post feed", el); // Passes
 assert.className("feed items", el);     // Fails, "items" is not a match
 assert.className(["item", "feed"], el); // Passes
+----
 
 Message
 ^^^^^^^
@@ -982,13 +984,16 @@ names. If any class specified by +classNames+ is not found in the object's
 The optional message is prepended to the failure message if provided.
 
 [source,javascript]
+----
 var el = document.createElement("p");
 el.className = "feed item blog-post";
+
 assert.notClassName("This will pass", "chicken", el);
 assert.notClassName("This will fail", "news", el);
 assert.notClassName("blog-post rss", el);  // Passes
 assert.notClassName("feed item", el);      // Fails
 assert.notClassName(["item", "feed"], el); // Passes
+----
 
 Message
 ^^^^^^^
