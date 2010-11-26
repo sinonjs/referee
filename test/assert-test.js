@@ -2,10 +2,9 @@
          plusplus: false, regexp: false*/
 /*global require, __dirname*/
 if (typeof require != "undefined") {
-    require.paths.unshift(__dirname + "/../deps/buster-util/lib/");
-    var testCase = require("test_case").testCase;
+    var testCase = require("buster-util/test-case").testCase;
     var assert = require("assert");
-    var buster = { assert: require("../lib/assert") };
+    var buster = { assert: require("buster-assert") };
 }
 
 (function () {
