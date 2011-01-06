@@ -1,19 +1,10 @@
 * DONE Test for expected number of arguments in every assertion
 * DONE Test that assertions process arguments for fail message with assert.format(obj)
-* TODO assert.exception
-* TODO assert.noException
-* TODO assert.tagName
-* TODO assert.notTagName
-* TODO assert.hasClassName
-* TODO assert.notHasClassName
-* TODO assert.elementId
-* TODO assert.notElementId
-* TODO assert.instanceOf
-* TODO assert.notInstanceOf
-* TODO Documentation!
-* TODO assert.messages should contain printf-style messages:
-buster.assert.messages: {
-  equals: "Expected %1 to be equal to %2"
-}
-
-This way, messages can be easily overwritten.
+* DONE assert.exception
+* DONE assert.noException
+* DONE assert.tagName
+* DONE assert.notTagName
+* DONE assert.hasClassName
+* DONE assert.notHasClassName
+* DONE Documentation!
+* DONE printf style error messages
