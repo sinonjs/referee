@@ -1,0 +1,8 @@
+{
+    "name": "buster-assert",
+    "version": "0.0.1",
+    "main": "./lib/buster-assert",
+    "dependencies": {
+        "buster-util": "*"
+    }
+}

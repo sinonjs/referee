@@ -2,9 +2,9 @@
          plusplus: false, regexp: false*/
 /*global require, __dirname*/
 if (typeof require != "undefined") {
-    var testCase = require("buster-util/test-case").testCase;
+    var testCase = require("buster-util").testCase;
     var assert = require("assert");
-    var buster = { assert: require("buster-assert") };
+    var buster = { assert: require("./../lib/buster-assert") };
 }
 
 (function () {

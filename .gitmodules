@@ -1,3 +1,0 @@
-[submodule "deps/buster-util"]
-	path = deps/buster-util
-	url = git@git.shortcut.no:buster-js/buster-util.git
