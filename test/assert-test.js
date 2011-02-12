@@ -79,16 +79,6 @@ if (typeof require != "undefined") {
         previous = passCount;
     }
 
-    testCase("AssertionErrorTest", {
-        "should provide AssertionError": function () {
-            assert.ok(typeof buster.assert.AssertionError == "function");
-
-            var error = new buster.assert.AssertionError();
-            assert.ok(Error.prototype.isPrototypeOf(error));
-            assert.ok(error instanceof Error);
-        }
-    });
-
     testCase("AssertTest", {
         "should allow true": function () {
             assert.doesNotThrow(function () {
