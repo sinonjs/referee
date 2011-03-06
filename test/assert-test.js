@@ -3800,7 +3800,7 @@ if (typeof require != "undefined") {
         }
     });
 
-    testCase("AssertClassName", {
+    testCase("AssertNotClassName", {
         "should fail without arguments": function () {
             resetAssertPassCounter();
 
