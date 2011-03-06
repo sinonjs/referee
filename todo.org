@@ -8,3 +8,5 @@
 * DONE assert.notHasClassName
 * DONE Documentation!
 * DONE printf style error messages
+* DONE buster.assert(actual, expected) -> do it
+* TODO buster.assert(actual).assertionName(arg1, arg2, ...)
