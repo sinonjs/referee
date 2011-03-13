@@ -3940,4 +3940,134 @@ if (typeof require != "undefined") {
             assertUpAssertionCount(buster.assert.notClassName, [el, "eh"], [el, "item"]);
         }
     });
+
+    testCase("AssertInDeltaTest", {
+        "should pass for equal numbers": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.inDelta(3, 3, 0);
+            });
+
+            assertAssertPassCalled("inDelta");
+        },
+
+        "should pass for equal numbers with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.inDelta(3, 3, 0, "Yup");
+            });
+
+            assertAssertPassCalled("inDelta");
+        },
+
+        "should fail for numbers out of delta range": function () {
+            assert.throws(function () {
+                buster.assert.inDelta(2, 3, 0.5);
+            });
+
+            assertAssertPassNotCalled();
+        },
+
+        "should fail for numbers out of delta range with message": function () {
+            assert.throws(function () {
+                buster.assert.inDelta(3, 2, 0.5, "Awww");
+            });
+
+            assertAssertPassNotCalled();
+        },
+
+        "should fail with message": function () {
+            try {
+                buster.assert.inDelta(3, 2, 0.6, "Awww");
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal("[assert.inDelta] Awww: Expected 3 to be equal to 2 +/- 0.6",
+                             e.message);
+            }
+        },
+
+        "should pass for numbers in delta range": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.inDelta(2, 3, 1);
+            });
+        },
+
+        "should fail if not passed arguments": function () {
+            try {
+                buster.assert.inDelta();
+                throw new Error("Expected assert.inDelta to fail");
+            } catch (e) {
+                assert.equal("[assert.inDelta] Expected to receive at least 3 arguments", e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.inDelta, [2, 2, 0], [2, 1, 0]);
+        }
+    });
+
+    testCase("AssertNotInDeltaTest", {
+        setUp: function () {
+            resetAssertPassCounter();
+        },
+
+        "should fail for equal numbers": function () {
+            assert.throws(function () {
+                buster.assert.notInDelta(3, 3, 0);
+            });
+
+            assertAssertPassNotCalled();
+        },
+
+        "should fail for equal numbers with message": function () {
+            assert.throws(function () {
+                buster.assert.notInDelta(3, 3, 0, "Yup");
+            });
+
+            assertAssertPassNotCalled();
+        },
+
+        "should pass for numbers out of delta range": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notInDelta(2, 3, 0.5);
+            });
+
+            assertAssertPassCalled("notInDelta");
+        },
+
+        "should pass for numbers out of delta range with message": function () {
+            assert.doesNotThrow(function () {
+                buster.assert.notInDelta(3, 2, 0.5, "Awww");
+            });
+
+            assertAssertPassCalled("notInDelta");
+        },
+
+        "should fail with message": function () {
+            try {
+                buster.assert.notInDelta(3, 3, 0, "Awww");
+                throw new Error("Didn't fail");
+            } catch (e) {
+                assert.equal("[assert.notInDelta] Awww: Expected 3 not to be equal to 3 +/- 0",
+                             e.message);
+            }
+        },
+
+        "should fail for numbers in delta range": function () {
+            assert.throws(function () {
+                buster.assert.notInDelta(2, 3, 1);
+            });
+        },
+
+        "should fail if not passed arguments": function () {
+            try {
+                buster.assert.notInDelta();
+                throw new Error("Expected assert.notInDelta to fail");
+            } catch (e) {
+                assert.equal("[assert.notInDelta] Expected to receive at least 3 arguments", e.message);
+            }
+        },
+
+        "should update assertion counter": function () {
+            assertUpAssertionCount(buster.assert.notInDelta, [2, 4, 1], [2, 2, 0]);
+        }
+    });
 }());

@@ -1,4 +1,4 @@
-Buster Evented logger 0.1.0 documentation
+Buster Evented logger 0.2.2 documentation
 =========================================
 :Author: Christian Johansen
 :Email: christian@cjohansen.no
@@ -849,6 +849,64 @@ Message
     The custom message, if any
 +$\{1\}+::
     The type of exception thrown (if any)
+
++buster.assert.inDelta(actual, expected, delta[, message])+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Compares numbers with a delta. Fails if the +actual+ number differs from the
++expected+ number by more than +/- +delta+.
+
+[source,javascript]
+----
+buster.assert.inDelta(3, 2.9, 0.1, "This will pass");
+buster.assert.inDelta(3, 2.9, 0.01, "This will fail");
+buster.assert.inDelta(1, 1, 0); // Passes
+buster.assert.inDelta(1, 1.2, 0.1); // Fails
+----
+
+Message
+^^^^^^^
+
++buster.assert.inDelta.msgFail = "$\{0\}Expected $\{1\} to be equal to $\{2\} +/- $\{3\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual number
++$\{2\}+::
+    The expected number
++$\{3\}+::
+    The delta
+
++buster.assert.notInDelta(actual, expected, delta[, message])+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Compares numbers with a delta. Fails if the +actual+ number does not differ from
+the +expected+ number by more than +/- +delta+.
+
+[source,javascript]
+----
+buster.assert.notInDelta(3, 2.5, 0.1, "This will pass");
+buster.assert.notInDelta(3, 3, 0.01, "This will fail");
+buster.assert.notInDelta(1, 0.9, 0); // Passes
+buster.assert.notInDelta(1, 1.2, 0.2); // Fails
+----
+
+Message
+^^^^^^^
+
++buster.assert.inDelta.msgFail = "$\{0\}Expected $\{1\} not to be equal to $\{2\} +/- $\{3\}";+
+
+[horizontal]
++$\{0\}+::
+    The custom message, if any
++$\{1\}+::
+    The actual number
++$\{2\}+::
+    The expected number
++$\{3\}+::
+    The delta
 
 [[dom-assertions]]
 Browser/DOM-specific assertions
