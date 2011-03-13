@@ -1,8 +1,24 @@
 {
     "name": "buster-assert",
-    "version": "0.2.1",
+    "version": "0.2.2",
+    "description": "Assertions for any JavaScript test framework and environment"
+    "homepage": "http://busterjs.org/buster-assert",
+    "author": {
+        "name": "Christian Johansen",
+        "email": "christian@cjohansen.no",
+        "url": "http://cjohansen.no"
+    },
+    "contributors": [{
+        "name": "August Lilleaas",
+        "email": "august.lilleaas@gmail.com",
+        "url": "http://augustl.com"
+    }],
     "main": "./lib/buster-assert",
+    "repository": {
+        "type": "git",
+        "url": "http://git.gitorious.org/buster-js/buster-assert.git"
+    },
     "dependencies": {
-        "buster-core": "*"
+        "buster-core": "~0.1"
     }
 }

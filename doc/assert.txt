@@ -3,8 +3,6 @@ Buster Evented logger 0.1.0 documentation
 :Author: Christian Johansen
 :Email: christian@cjohansen.no
 
-
-
 Table of contents
 -----------------
 * <<api,API>>
@@ -15,7 +13,6 @@ Table of contents
 [[api]]
 API
 ---
-
 
 +buster.eventedLogger.create([opt])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
