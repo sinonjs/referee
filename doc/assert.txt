@@ -1,21 +1,41 @@
-Buster Evented logger 0.2.2 documentation
-=========================================
+Buster Assert 0.3.0 documentation
+=================================
 :Author: Christian Johansen
 :Email: christian@cjohansen.no
 
+A collection of assertions to be used with a unit testing framework.
+*buster-assert* works well with any CommonJS compliant testing framework out of
+the box, and can easily be configured to work with most any testing framework.
+
+*buster-assert* contains lots of assertions. I strongly believe that high-level
+assertions are essential in the interest of producing clear and intent-revealing
+tests, and they also give you to-the-point failure messages even if you don't
+specify custom assertion messages.
+
+This document describes each assertion as well as extension points for
+developers looking to either customize failure messages or using *buster-assert*
+in other projects.
+
 Table of contents
 -----------------
-* <<api,API>>
-* <<custom,Creating custom loggers>>
-* <<formatters,Formatting logged data>>
+* <<assertions,Assertions>>
+* <<browser-assertions,Browser and DOM-specific assertions >>
+* <<customize,Customizing and integrating with buster-assert>>
 * <<license,License (BSD)>>
 
-[[api]]
-API
----
+[[assertions]]
+Assertions
+----------
 
-+buster.eventedLogger.create([opt])+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+All assertions live in the +buster.assert+ namespace. +buster.assert+ is itself
+a function, the most generic assertion.
+
+The default assertion messages can be overridden per assertion. The properties
+to overwrite are listed with each assertion along with the arguments the string
+is fed. For more customization options see the bottom of this document.
+
++buster.assert(actual[, message])+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Fails if +actual+ is falsy (+0+, +""+, +null+, +undefined+, +NaN+). Fails with
 either the provided message or "Expected null to be truthy". This behavior
