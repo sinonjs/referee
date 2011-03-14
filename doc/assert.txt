@@ -1,4 +1,4 @@
-Buster Assert 0.3.0 documentation
+Buster Assert 0.3.1 documentation
 =================================
 :Author: Christian Johansen
 :Email: christian@cjohansen.no
