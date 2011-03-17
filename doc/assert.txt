@@ -18,15 +18,15 @@ in other projects.
 
 Table of contents
 -----------------
-* <<assertion-list,List of assertions>>
+* <<assertion-list,Assertions quick reference>>
 * <<assertions,Assertions in details>>
 * <<browser-assertions,Browser and DOM-specific assertions >>
 * <<customize,Customizing and integrating with buster-assert>>
 * <<license,License (BSD)>>
 
 [[assertions]]
-Assertions
-----------
+Assertions quick reference
+--------------------------
 
 This is a quick-reference of Buster assertions. Click on an assertion (or scroll
 way down) for more detailed information and examples.
