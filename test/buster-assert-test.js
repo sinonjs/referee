@@ -1692,6 +1692,14 @@ if (typeof require != "undefined") {
             assertAssertPassCalled("isNumber");
         },
 
+        "should fail for NaN (sic)": function () {
+            assert.throws(function () {
+                buster.assert.isNumber(NaN);
+            });
+
+            assertAssertPassNotCalled();
+        },
+
         "should pass for number with message": function () {
             assert.doesNotThrow(function () {
                 buster.assert.isNumber(32, "Whatup?");
@@ -1731,8 +1739,8 @@ if (typeof require != "undefined") {
                 buster.assert.isNumber("Hey");
                 throw new Error("Expected isNumber to fail");
             } catch (e) {
-                assert.equal("[assert.isNumber] Expected typeof Hey " +
-                             "(string) to be number", e.message);
+                assert.equal("[assert.isNumber] Expected Hey (string) " +
+                             "to be a non-NaN number", e.message);
             }
         },
 
@@ -1741,8 +1749,8 @@ if (typeof require != "undefined") {
                 buster.assert.isNumber(true, "OMG!!");
                 throw new Error("Expected isNumber to fail");
             } catch (e) {
-                assert.equal("[assert.isNumber] OMG!! Expected typeof " +
-                             "true (boolean) to be number", e.message);
+                assert.equal("[assert.isNumber] OMG!! Expected true " +
+                             "(boolean) to be a non-NaN number", e.message);
             }
         },
 

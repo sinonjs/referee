@@ -1,4 +1,4 @@
-Buster Assert 0.3.1 documentation
+Buster Assert 0.3.2 documentation
 =================================
 :Author: Christian Johansen
 :Email: christian@cjohansen.no
@@ -376,19 +376,22 @@ Message
 +buster.assert.isNumber(object[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Fails if +object+ is not a number.
-The optional message is prepended to the failure message if provided.
+Fails if +object+ is not a number *or if it's NaN*. NaN is rarely an expected
+value, even when expecting numbers. Use +isNaN+ to check explicitly for NaN, or
+in those cases where you actually expect *any* number (including NaN), use
++assert.typeOf+. The optional message is prepended to the failure message if
+provided.
 
 [source,javascript]
 buster.assert.isNumber(42, "This will pass");
 buster.assert.isNumber({}, "This will fail");
-buster.assert.isNumber(1423);      // Passes
-buster.assert.isNumber([1, 2, 3]); // Fails
+buster.assert.isNumber(1423); // Passes
+buster.assert.isNumber(NaN);  // Fails
 
 Message
 ^^^^^^^
 
-+buster.assert.isNumber.msgFail = "$\{0\}Expected typeof $\{1\} ($\{2\}) to be number";+
++buster.assert.isNumber.msgFail = "$\{0\}Expected $\{1\} ($\{2\}) to be a non-NaN number";+
 
 [horizontal]
 +$\{0\}+::
