@@ -18,10 +18,53 @@ in other projects.
 
 Table of contents
 -----------------
-* <<assertions,Assertions>>
+* <<assertion-list,List of assertions>>
+* <<assertions,Assertions in details>>
 * <<browser-assertions,Browser and DOM-specific assertions >>
 * <<customize,Customizing and integrating with buster-assert>>
 * <<license,License (BSD)>>
+
+[[assertions]]
+Assertions
+----------
+
+This is a quick-reference of Buster assertions. Click on an assertion (or scroll
+way down) for more detailed information and examples.
+
+* <<assert,+buster.assert(actual[&#44; message])+>>
+* <<assert-isTrue,+buster.assert.isTrue(actual[&#44; message])+>>
+* <<assert-isFalse,+buster.assert.isFalse(actual[&#44; message])+>>
+* <<assert-same,+buster.assert.same(expected&#44; actual[&#44; message])+>>
+* <<assert-notSame,+buster.assert.notSame(expected&#44; actual[&#44; message])+>>
+* <<assert-equals,+buster.assert.equals(actual&#44; expected[&#44; message])+>>
+* <<assert-notEquals,+buster.assert.notEquals(actual&#44; expected[&#44; message])+>>
+* <<assert-typeOf,+buster.assert.typeOf(object&#44; expected[&#44; message])+>>
+* <<assert-notTypeOf,+buster.assert.notTypeOf(object&#44; expected[&#44; message])+>>
+* <<assert-isString,+buster.assert.isString(object[&#44; message])+>>
+* <<assert-isObject,+buster.assert.isObject(object[&#44; message])+>>
+* <<assert-isFunction,+buster.assert.isFunction(object[&#44; message])+>>
+* <<assert-isBoolean,+buster.assert.isBoolean(object[&#44; message])+>>
+* <<assert-isNumber,+buster.assert.isNumber(object[&#44; message])+>>
+* <<assert-isUndefined,+buster.assert.isUndefined(object[&#44; message])+>>
+* <<assert-isNotUndefined,+buster.assert.isNotUndefined(object[&#44; message])+>>
+* <<assert-isNull,+buster.assert.isNull(object[&#44; message])+>>
+* <<assert-isNotNull,+buster.assert.isNotNull(object[&#44; message])+>>
+* <<assert-isNaN,+buster.assert.isNaN(object[&#44; message])+>>
+* <<assert-isNotNaN,+buster.assert.isNotNaN(object[&#44; message])+>>
+* <<assert-isArray,+buster.assert.isArray(object[&#44; message])+>>
+* <<assert-isNotArray,+buster.assert.isNotArray(actual[&#44; message])+>>
+* <<assert-isArrayLike,+buster.assert.isArrayLike(actual[&#44; message])+>>
+* <<assert-isNotArrayLike,+buster.assert.isNotArrayLike(actual[&#44; message])+>>
+* <<assert-match,+buster.assert.match(actual&#44; matcher[&#44; message])+>>
+* <<assert-noMatch,+buster.assert.noMatch(actual&#44; pattern[&#44; message])+>>
+* <<assert-exception,+buster.assert.exception(callback[&#44; type[&#44; message]])+>>
+* <<assert-noException,+buster.assert.noException(callback[&#44; message])+>>
+* <<assert-isDelta,+buster.assert.inDelta(actual&#44; expected&#44; delta[&#44; message])+>>
+* <<assert-notInDelta,+buster.assert.notInDelta(actual&#44; expected&#44; delta[&#44; message])+>>
+* <<assert-tagName,+buster.assert.tagName(element&#44; tagName[&#44; message])+>>
+* <<assert-notTagName,+buster.assert.notTagName(element&#44; tagName[&#44; message])+>>
+* <<assert-className,+buster.assert.className(element&#44; tagName[&#44; message])+>>
+* <<assert-notClassName,+buster.assert.notClassName(element&#44; tagName[&#44; message])+>>
 
 [[assertions]]
 Assertions
@@ -34,6 +77,7 @@ The default assertion messages can be overridden per assertion. The properties
 to overwrite are listed with each assertion along with the arguments the string
 is fed. For more customization options see the bottom of this document.
 
+[[assert]]
 +buster.assert(actual[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -50,6 +94,7 @@ buster.assert(null); // Fails
 buster.assert(34);   // Passes
 ----
 
+[[assert-isTrue]]
 +buster.assert.isTrue(actual[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -73,6 +118,7 @@ Message
 +$\{1\}+::
     The value
 
+[[assert-isFalse]]
 +buster.assert.isFalse(actual[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -96,12 +142,13 @@ Message
 +$\{1\}+::
     The value
 
+[[assert-same]]
 +buster.assert.same(expected, actual[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Fails if +actual+ *is not* the same object (+===+) as +expected+. To compare
 similar objects, such as +{ name: "Chris", id: 42 }+ and +{ id: 42, name: "Chris"
-}+ (not the same instance), see <<equals,equals>>.
+}+ (not the same instance), see <<assert-equals,equals>>.
 The optional message is prepended to the failure message if provided.
 
 [source,javascript]
@@ -127,12 +174,13 @@ Message
 +$\{2\}+::
     The expected object
 
+[[assert-notSame]]
 +buster.assert.notSame(expected, actual[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Fails if +actual+ *is* the same object (+===+) as +expected+. To compare
 similar objects, such as +{ name: "Chris", id: 42 }+ and +{ id: 42, name: "Chris"
-}+ (not the same instance), see <<notEquals,notEquals>>.
+}+ (not the same instance), see <<assert-notEquals,notEquals>>.
 The optional message is prepended to the failure message if provided.
 
 [source,javascript]
@@ -155,7 +203,7 @@ Message
 +$\{2\}+::
     The expected object
 
-[[equals]]
+[[assert-equals]]
 +buster.assert.equals(actual, expected[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -193,11 +241,11 @@ Message
 +$\{2\}+::
     The expected object
 
-[[notEquals]]
+[[assert-notEquals]]
 +buster.assert.notEquals(actual, expected[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Passes in any case where <<equals,equals>> fails.
+Passes in any case where <<assert-equals,equals>> fails.
 
 The optional message is prepended to the failure message if provided.
 
@@ -221,6 +269,7 @@ Message
 +$\{2\}+::
     The expected object
 
+[[assert-typeOf]]
 +buster.assert.typeOf(object, expected[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -248,6 +297,7 @@ Message
 +$\{3\}+::
     +typeof object+
 
+[[assert-notTypeOf]]
 +buster.assert.notTypeOf(object, expected[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -273,6 +323,7 @@ Message
 +$\{2\}+::
     The expected type, a string
 
+[[assert-isString]]
 +buster.assert.isString(object[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -298,6 +349,7 @@ Message
 +$\{2\}+::
     +typeof object+
 
+[[assert-isObject]]
 +buster.assert.isObject(object[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -323,6 +375,7 @@ Message
 +$\{2\}+::
     +typeof object+
 
+[[assert-isFunction]]
 +buster.assert.isFunction(object[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -348,6 +401,7 @@ Message
 +$\{2\}+::
     +typeof object+
 
+[[assert-isBoolean]]
 +buster.assert.isBoolean(object[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -373,6 +427,7 @@ Message
 +$\{2\}+::
     +typeof object+
 
+[[assert-isNumber]]
 +buster.assert.isNumber(object[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -401,6 +456,7 @@ Message
 +$\{2\}+::
     +typeof object+
 
+[[assert-isUndefined]]
 +buster.assert.isUndefined(object[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -427,6 +483,7 @@ Message
 +$\{2\}+::
     +typeof object+
 
+[[assert-isNotUndefined]]
 +buster.assert.isNotUndefined(object[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -456,6 +513,7 @@ Message
 +$\{2\}+::
     +typeof object+
 
+[[assert-isNull]]
 +buster.assert.isNull(object[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -479,6 +537,7 @@ Message
 +$\{1\}+::
     The actual object
 
+[[assert-isNotNull]]
 +buster.assert.isNotNull(object[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -500,6 +559,7 @@ Message
 +$\{0\}+::
     The custom message, if any
 
+[[assert-isNaN]]
 +buster.assert.isNaN(object[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -523,6 +583,7 @@ Message
 +$\{1\}+::
     The actual object
 
+[[assert-isNotNaN]]
 +buster.assert.isNotNaN(object[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -546,6 +607,7 @@ Message
 +$\{1\}+::
     The actual object
 
+[[assert-isArray]]
 +buster.assert.isArray(object[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -569,6 +631,7 @@ Message
 +$\{1\}+::
     The actual object
 
+[[assert-isNotArray]]
 +buster.assert.isNotArray(actual[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -592,6 +655,7 @@ Message
 +$\{1\}+::
     The actual object
 
+[[assert-isArrayLike]]
 +buster.assert.isArrayLike(actual[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -617,6 +681,7 @@ Message
 +$\{1\}+::
     The actual object
 
+[[assert-isNotArrayLike]]
 +buster.assert.isNotArrayLike(actual[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -642,6 +707,7 @@ Message
 +$\{1\}+::
     The actual object
 
+[[assert-match]]
 +buster.assert.match(actual, matcher[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -752,6 +818,7 @@ Messages
 +$\{2\}+::
     The expected object
 
+[[assert-noMatch]]
 +buster.assert.noMatch(actual, pattern[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -780,6 +847,7 @@ Messages
 +$\{2\}+::
     The expected object
 
+[[assert-exception]]
 +buster.assert.exception(callback[, type[, message]])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -835,6 +903,7 @@ Messages
 +$\{2\}+::
     The type of exception thrown (if any)
 
+[[assert-noException]]
 +buster.assert.noException(callback[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -873,6 +942,7 @@ Message
 +$\{1\}+::
     The type of exception thrown (if any)
 
+[[assert-isDelta]]
 +buster.assert.inDelta(actual, expected, delta[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -902,6 +972,7 @@ Message
 +$\{3\}+::
     The delta
 
+[[assert-notInDelta]]
 +buster.assert.notInDelta(actual, expected, delta[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -935,6 +1006,7 @@ Message
 Browser/DOM-specific assertions
 -------------------------------
 
+[[assert-tagName]]
 +buster.assert.tagName(element, tagName[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -964,6 +1036,7 @@ Message
     If the object does not have a +tagName+ property, this is the
     object. Otherwise, it is the value of +object.tagName+.
 
+[[assert-notTagName]]
 +buster.assert.notTagName(element, tagName[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -993,6 +1066,7 @@ Message
     If the object does not have a +tagName+ property, this is the
     object.
 
+[[assert-className]]
 +buster.assert.className(element, tagName[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1032,6 +1106,7 @@ Message
 +$\{2\}+::
     The value of the object's +className+ property, if any.
 
+[[assert-notClassName]]
 +buster.assert.notClassName(element, tagName[, message])+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
