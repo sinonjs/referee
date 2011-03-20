@@ -19,8 +19,9 @@ in other projects.
 Table of contents
 -----------------
 * <<assertion-list,Assertions quick reference>>
-* <<assertions,Assertions in details>>
+* <<assertions,Assertion API>>
 * <<browser-assertions,Browser and DOM-specific assertions >>
+* <<events,Events>>
 * <<customize,Customizing and integrating with buster-assert>>
 * <<license,License (BSD)>>
 
@@ -67,8 +68,8 @@ way down) for more detailed information and examples.
 * <<assert-notClassName,+buster.assert.notClassName(element&#44; tagName[&#44; message])+>>
 
 [[assertions]]
-Assertions
-----------
+Assertions API
+--------------
 
 All assertions live in the +buster.assert+ namespace. +buster.assert+ is itself
 a function, the most generic assertion.
@@ -1147,6 +1148,36 @@ Message
     The value of the object's +className+ property, if any. Otherwise, the
     object itself.
 
+[[events]]
+Events
+------
+
+*buster-assert* emits an event every time an assertion is called. The event is
+one of the following.
+
+Event: +"pass"+
+~~~~~~~~~~~~~~~
+
+[source,javascript]
+----
+function (assertion) {}
+----
+
+Assertion passed. The callback is invoked with the assertion name,
+e.g. "isString", as its only argument.
+
+Event: +"failure"+
+~~~~~~~~~~~~~~~~~~
+
+[source,javascript]
+----
+function (error) {}
+----
+
+Assertion failed. The callback is invoked with an +AssertionError+ object, which
+has the regular error object properties, i.e. +name+, +message+, +stack+ and
+possibly others (platform dependent).
+
 [[customize]]
 Customizing and integrating with buster-assert
 ----------------------------------------------
@@ -1193,10 +1224,11 @@ Assertion failures
 ~~~~~~~~~~~~~~~~~~
 
 When an assertion fails, it calls +buster.assert.fail+ with the failure message
-as the only argument. The built-in +buster.assert.fail+ function throws an
-+AssertionError+ which can be caught and handled by the testing framework. If
-this behavior is not suitable for your testing framework of choice, you can
-override +buster.fail+ to make it do the right thing.
+as the only argument. The built-in +buster.assert.fail+ function both throws an
++AssertionError+ and emits it to the <<events,"failure" event>>. The error can
+be caught and handled by the testing framework. If this behavior is not suitable
+for your testing framework of choice, you can override +buster.fail+ to make it
+do the right thing.
 
 For instance, to use *buster-assert* with JsTestDriver, you can simply configure
 it as follows:
@@ -1208,21 +1240,21 @@ buster.assert.fail = function (message) {
 
 Where the global +fail+ function is the one provided by JsTestDriver.
 
+It is possible to make the default +assert.fail+ method only emit an event and
+not throw an error. This may be suitable in asynchronous test runners, where you
+might not be able to catch exceptions. To silence exceptions, set the
++throwOnFailure+ property to +false+:
+
+[source,javascript]
+----
+buster.assert.throwOnFailure = false;
+----
+
 Assertion passes
 ~~~~~~~~~~~~~~~~
 
-Much like the failure hook, buster-assert also provides a hook for when
-assertions pass: +buster.assert.pass+. This hook is called with the name of the
-assertion followed by the arguments passed to the assertion. If no custom
-message was passed to the assertion, an empty string is sent in its place:
-
-[source,javascript]
-buster.assert.pass = function (assertion, msg/*, expected, actual, ...*/) {
-    console.log.apply(console, arguments);
-}
-
-Note that the arguments passed to +buster.assert.pass+ varies for each
-assertion beyond the assertion name and custom message.
+You can be notified of assertion passes by subscribing to the <<events,"pass"
+event>>.
 
 [[license]]
 buster-assert license

@@ -1,6 +1,6 @@
 {
     "name": "buster-assert",
-    "version": "0.3.2",
+    "version": "0.4.0",
     "description": "Assertions for any JavaScript test framework and environment",
     "homepage": "http://busterjs.org/buster-assert",
     "author": {
