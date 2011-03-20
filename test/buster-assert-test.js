@@ -5,81 +5,134 @@ if (typeof require != "undefined") {
     var testCase = require("buster-util").testCase;
     var assert = require("assert");
     var buster = { assert: require("./../lib/buster-assert") };
+    var sinon = require("sinon");
 }
 
 (function () {
-    function spy(obj, method, callback) {
-        var saved = obj[method];
-        var calls = [];
+    function assertAssertPassCalled(assertion) {
+        assert.ok(buster.assert.pass.called);
+        assert.ok(buster.assert.pass.alwaysCalledWith(assertion));
+    }
 
-        obj[method] = function () {
-            calls.push(Array.prototype.slice.call(arguments));
-            return saved.apply(obj, arguments);
+    var assertionUnderTest;
+
+    function assertionTests(assertion, callback) {
+        assertionUnderTest = assertion;
+        var tests = {
+            setUp: setUp,
+            tearDown: tearDown
         };
 
-        try {
-            callback();
-        } catch (e) {}
+        var pass = function (message) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            tests["should pass when " + message] = assertPass.apply(null, args);
+        };
 
-        obj[method] = saved;
+        var fail = function (message, test) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            tests["should fail when " + message] = assertFail.apply(null, args);
+        };
 
-        return calls;
+        var msg = function (message, msg) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return tests["should " + message] = assertMessage.apply(null, args);
+        };
+
+        callback.call(tests, pass, fail, msg);
+
+        return testCase("Assert" + assertion + "Test", tests);
     }
 
-    function assertUpAssertionCount(assertion, passing, failing) {
-        buster.assert.count = 0;
-        assertion.apply(buster.assert, passing);
-        assert.equal(1, buster.assert.count);
+    function assertFail() {
+        var args = Array.prototype.slice.call(arguments);
 
-        try {
-            assertion.apply(buster.assert, passing);
-        } catch (e) {}
+        return function () {
+            sinon.spy(buster.assert, "fail");
 
-        assert.equal(2, buster.assert.count);
+            try {
+                buster.assert[assertionUnderTest].apply(buster.assert, args);
+            } catch (e) {}
 
-        delete buster.assert.count;
-        assertion.apply(buster.assert, passing);
-        assert.equal(1, buster.assert.count);
+            assert.ok(buster.assert.fail.calledOnce);
+            assert.equal(1, buster.assert.count);
+            assert.ok(!buster.assert.pass.called);
+        };
     }
 
-    function assertFormatWithFormat(assertion) {
+    function assertPass() {
+        var args = Array.prototype.slice.call(arguments);
+
+        return function () {
+            sinon.spy(buster.assert, "fail");
+
+            try {
+                buster.assert[assertionUnderTest].apply(buster.assert, args);
+            } catch(e) {}
+
+            assert.ok(buster.assert.pass.calledOnce);
+            assert.equal(1, buster.assert.count);
+            assert.ok(buster.assert.pass.calledWith(assertionUnderTest));
+            assert.ok(!buster.assert.fail.calledOnce);
+        };
+    }
+
+    function assertMessage(message) {
         var args = Array.prototype.slice.call(arguments, 1);
 
-        var calls = spy(buster.assert, "format", function () {
-            assertion.apply(buster.assert, args);
-        });
+        var test = function () {
+            sinon.spy(buster.assert, "format");
 
-        assert.equal(args.length, calls.length);
+            try {
+                buster.assert[assertionUnderTest].apply(buster.assert, args);
+                throw new Error(assertionUnderTest + " expected to fail");
+            } catch(e) {
+                assert.equal(e.name, "AssertionError", e.name + ": " + e.message);
+                assert.equal(e.message, message);
+            }
 
-        for (var i = 0, l = args.length; i < l; ++i) {
-            assert.equal(args[i], calls[i][0]);
+            var expected = test.expectedFormats;
+
+            if (typeof expected != "number") {
+                expected = args.length;
+
+                if (typeof args[args.length - 1] == "string") {
+                    expected -= 1;
+                }
+            }
+
+            assert.ok(buster.assert.format.callCount >= expected);
+
+            for (var i = 0, l = expected; i < l; ++i) {
+                if (isNaN(args[i]) && isNaN(buster.assert.format.args[i][0])) {
+                    continue;
+                }
+
+                assert.ok(buster.assert.format.calledWith(args[i]));
+            }
+        };
+
+        return test;
+    }
+
+    function setUp() {
+        buster.assert.count = 0;
+        buster.assert.pass = sinon.spy();
+
+        buster.assert.format = function (object) {
+            return "" + object;
+        };
+    }
+
+    function tearDown() {
+        if (buster.assert.fail.restore) {
+            buster.assert.fail.restore();
         }
     }
 
-    var passCount = 0, previous = 0, previousPassed = "";
-
-    buster.assert.pass = function (assertion) {
-        passCount++;
-        previousPassed = assertion;
-    };
-
-    function assertAssertPassCalled(assertion) {
-        var passed = passCount > previous;
-        previous = passCount;
-
-        assert.ok(passed);
-        assert.ok(assertion == previousPassed);
-    }
-
-    function assertAssertPassNotCalled() {
-        assert.ok(passCount == previous);
-    }
-
-    function resetAssertPassCounter() {
-        previous = passCount;
-    }
-
     testCase("AssertTest", {
+        setUp: setUp,
+        tearDown: tearDown,
+
         "should allow true": function () {
             assert.doesNotThrow(function () {
                 buster.assert(true);
@@ -111,7 +164,7 @@ if (typeof require != "undefined") {
                 buster.assert(false);
             });
 
-            assertAssertPassNotCalled();
+            assert.ok(!buster.assert.pass.called);
         },
 
         "should not allow falsy values": function () {
@@ -141,7 +194,7 @@ if (typeof require != "undefined") {
                 buster.assert(false, "Some message");
             });
 
-            assertAssertPassNotCalled();
+            assert.ok(!buster.assert.pass.called);
         },
 
         "should fail with generated message": function () {
@@ -182,752 +235,192 @@ if (typeof require != "undefined") {
         }
     });
 
-    testCase("AssertIsTrueTest", {
-        "should pass for true": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isTrue(true);
-            });
-
-            assertAssertPassCalled("isTrue");
-        },
-
-        "should pass for true with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isTrue(true, "Yup");
-            });
-
-            assertAssertPassCalled("isTrue");
-        },
-
-        "should fail for false": function () {
-            assert.throws(function () {
-                buster.assert.isTrue(false);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for false with message": function () {
-            assert.throws(function () {
-                buster.assert.isTrue(false, "Awww");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail with message": function () {
-            try {
-                buster.assert.isTrue(false, "Awww");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.isTrue] Awww: Expected false to be true",
-                             e.message);
-            }
-        },
-
-        "should represent expected value in message": function () {
-            try {
-                buster.assert.isTrue({}, "Awww");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal(
-                    "[assert.isTrue] Awww: Expected [object Object] to be true",
-                    e.message
-                );
-            }
-        },
-
-        "should fail for truthy values": function () {
-            assert.throws(function () {
-                buster.assert.isTrue({});
-            });
-
-            assert.throws(function () {
-                buster.assert.isTrue([]);
-            });
-
-            assert.throws(function () {
-                buster.assert.isTrue("Oh hai");
-            });
-
-            assert.throws(function () {
-                buster.assert.isTrue(32);
-            });
-        },
-
-        "should fail if not passed arguments": function () {
-            try {
-                buster.assert.isTrue();
-                throw new Error("Expected assert.isTrue to fail");
-            } catch (e) {
-                assert.equal("[assert.isTrue] Expected to receive at least 1 argument", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isTrue, [true], [false]);
-        },
-
-        "should format value with assert.format": function () {
-            assertFormatWithFormat(buster.assert.isTrue, false);
-        }
+    assertionTests("isTrue", function (pass, fail, msg) {
+        pass("for true", true);
+        pass("for true with message", true, "Yup");
+        fail("for false", false);
+        fail("for false with message", false, "Aww");
+        msg("fail with message",
+            "[assert.isTrue] Awww: Expected false to be true", false, "Awww");
+        msg("represent expected value in message",
+            "[assert.isTrue] Awww: Expected [object Object] to be true", {}, "Awww");
+        fail("for object", {});
+        fail("for array", []);
+        fail("for string", "32");
+        fail("for number", 32);
+        msg("fail if not passed arguments",
+            "[assert.isTrue] Expected to receive at least 1 argument");
     });
 
-    testCase("AssertIsFalseTest", {
-        "should pass for false": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isFalse(false);
-            });
-
-            assertAssertPassCalled("isFalse");
-        },
-
-        "should pass for false with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isFalse(false, "Yup");
-            });
-
-            assertAssertPassCalled("isFalse");
-        },
-
-        "should fail for true": function () {
-            assert.throws(function () {
-                buster.assert.isFalse(true);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for true with message": function () {
-            assert.throws(function () {
-                buster.assert.isFalse(true, "Awww");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail with message": function () {
-            try {
-                buster.assert.isFalse(true, "Ah, sucks");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.isFalse] Ah, sucks: Expected true to be false",
-                             e.message);
-            }
-        },
-
-        "should represent expected value in message": function () {
-            try {
-                buster.assert.isFalse({}, "Sucker");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal(
-                    "[assert.isFalse] Sucker: Expected [object Object] to be false",
-                    e.message
-                );
-            }
-        },
-
-        "should fail for falsy values": function () {
-            assert.throws(function () {
-                buster.assert.isFalse("");
-            });
-
-            assert.throws(function () {
-                buster.assert.isFalse(0);
-            });
-
-            assert.throws(function () {
-                buster.assert.isFalse(NaN);
-            });
-
-            assert.throws(function () {
-                buster.assert.isFalse(null);
-            });
-
-            assert.throws(function () {
-                buster.assert.isFalse(undefined);
-            });
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isFalse, [false], [true]);
-        },
-
-        "should format value with assert.format": function () {
-            assertFormatWithFormat(buster.assert.isFalse, true);
-        }
+    assertionTests("isFalse", function (pass, fail, msg) {
+        pass("for false", false);
+        pass("for false with message", false, "Yup");
+        fail("for true", true);
+        fail("for true with message", true, "Awww");
+        msg("fail with message",
+            "[assert.isFalse] Sucks: Expected true to be false", true, "Sucks");
+        msg("represent expected value in message",
+            "[assert.isFalse] Sucker: Expected [object Object] to be false",
+            {}, "Sucker");
+        fail("for empty string", "");
+        fail("for 0", 0);
+        fail("for NaN", NaN);
+        fail("for null", null);
+        fail("for undefined", undefined);
     });
 
-    testCase("AssertSameTest", {
-        "should pass when comparing object to itself": function () {
-            assert.doesNotThrow(function () {
-                var obj = { id: 42 };
+    var obj = { id: 42 };
+    var obj2 = { id: 42 };
 
-                buster.assert.same(obj, obj);
-            });
-
-            assertAssertPassCalled("same");
-        },
-
-        "should pass when comparing object to itself with message": function () {
-            assert.doesNotThrow(function () {
-                var obj = { id: 42 };
-
-                buster.assert.same(obj, obj, "These should be the same");
-            });
-
-            assertAssertPassCalled("same");
-        },
-
-        "should fail when comparing different objects": function () {
-            assert.throws(function () {
-                var obj1 = { id: 42 };
-                var obj2 = { id: 42 };
-
-                buster.assert.same(obj1, obj2);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass when comparing different primitives": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.same("Hey", "Hey");
-                buster.assert.same(true, true);
-                buster.assert.same(32, 32);
-                buster.assert.same(Infinity, Infinity);
-            });
-        },
-
-        "should fail when comparing primitives without coercion": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.same(666, "666");
-            });
-
-            assert.throws(function () {
-                buster.assert.same(0, "");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass when comparing null to null": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.same(null, null);
-            });
-        },
-
-        "should pass when comparing undefined to undefined": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.same(undefined, undefined);
-            });
-        },
-
-        "should pass when comparing Infinity to Infinity": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.same(Infinity, Infinity);
-            });
-        },
-
-        "should fail when comparing NaN to NaN": function () {
-            assert.throws(function () {
-                buster.assert.same(NaN, NaN);
-            });
-        },
-
-        "should fail when comparing different objects with message": function () {
-            assert.throws(function () {
-                var obj1 = { id: 42 };
-                var obj2 = { id: 42 };
-
-                buster.assert.same(obj1, obj2, "How d'ya like that?");
-            });
-        },
-
-        "should include objects in message": function () {
-            try {
-                buster.assert.same("Obj", {});
-                throw new Error("Did not fail");
-            } catch (e) {
-                assert.equal("AssertionError", e.name);
-                assert.equal("[assert.same] Expected Obj to be the " +
-                             "same object as [object Object]", e.message);
-            }
-        },
-
-        "should include custom message": function () {
-            var obj1 = {};
-            var obj2 = {};
-
-            try {
-                buster.assert.same(obj1, obj2, "Oh noes");
-                throw new Error("Did not fail");
-            } catch (e) {
-                assert.equal("AssertionError", e.name);
-                assert.equal("[assert.same] Oh noes: Expected [object Object] to " +
-                             "be the same object as [object Object]", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            var obj = {};
-            assertUpAssertionCount(buster.assert.same, [obj, obj], [{}, {}]);
-        },
-
-        "should format value with assert.format": function () {
-            assertFormatWithFormat(buster.assert.same, {}, {});
-        }
+    assertionTests("same", function (pass, fail, msg) {
+        pass("when comparing object to itself", obj, obj);
+        pass("when comparing object to itself with message",
+             obj, obj, "These should be the same");
+        fail("when comparing different objects", obj, obj2);
+        pass("when comparing strings", "Hey", "Hey");
+        pass("when comparing booleans", true, true);
+        pass("when comparing numbers", 32, 32);
+        pass("when comparing infinity", Infinity, Infinity);
+        fail("when comparing without coercion", 666, "666");
+        fail("when comparing falsy values without coercion", 0, "");
+        pass("when comparing null to null", null, null);
+        pass("when comparing undefined to undefined", undefined, undefined);
+        fail("when comparing NaN to NaN", NaN, NaN);
+        fail("when comparing different objects with message",
+             obj, obj2, "How d'ya like that?");
+        msg("include objects in message",
+            "[assert.same] Expected Obj to be the same object as [object Object]",
+            "Obj", {});
+        msg("include custom message",
+            "[assert.same] Oh noes: Expected [object Object] to be the same object as [object Object]", obj, obj2, "Oh noes");
     });
 
-    testCase("AssertNotSameTest", {
-        "should fail when comparing object to itself": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                var obj = { id: 42 };
-
-                buster.assert.notSame(obj, obj);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail when comparing object to itself with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                var obj = { id: 42 };
-
-                buster.assert.notSame(obj, obj, "These should not be the same");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass when comparing different objects": function () {
-            assert.doesNotThrow(function () {
-                var obj1 = { id: 42 };
-                var obj2 = { id: 42 };
-
-                buster.assert.notSame(obj1, obj2);
-            });
-
-            assertAssertPassCalled("notSame");
-        },
-
-        "should pass when comparing different objects with message": function () {
-            assert.doesNotThrow(function () {
-                var obj1 = { id: 42 };
-                var obj2 = { id: 42 };
-
-                buster.assert.notSame(obj1, obj2, "These should not be the same");
-            });
-
-            assertAssertPassCalled("notSame");
-        },
-
-        "should fail when comparing different primitives": function () {
-            assert.throws(function () {
-                buster.assert.notSame("Hey", "Hey");
-            });
-
-            assert.throws(function () {
-                buster.assert.notSame(true, true);
-            });
-
-            assert.throws(function () {
-                buster.assert.notSame(32, 32);
-            });
-
-            assert.throws(function () {
-                buster.assert.notSame(Infinity, Infinity);
-            });
-        },
-
-        "should fail when comparing null to null": function () {
-            assert.throws(function () {
-                buster.assert.notSame(null, null);
-            });
-        },
-
-        "should fail when comparing undefined to undefined": function () {
-            assert.throws(function () {
-                buster.assert.notSame(undefined, undefined);
-            });
-        },
-
-        "should fail when comparing Infinity to Infinity": function () {
-            assert.throws(function () {
-                buster.assert.notSame(Infinity, Infinity);
-            });
-        },
-
-        "should pass when comparing NaN to NaN": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notSame(NaN, NaN);
-            });
-        },
-
-        "should include objects in message": function () {
-            var obj = {};
-
-            try {
-                buster.assert.notSame(obj, obj);
-                throw new Error("Did not fail");
-            } catch (e) {
-                assert.equal("AssertionError", e.name);
-                assert.equal("[assert.notSame] Expected [object Object] not to be " +
-                             "the same object as [object Object]", e.message);
-            }
-        },
-
-        "should include custom message": function () {
-            var obj = {};
-
-            try {
-                buster.assert.notSame(obj, obj, "Oh noes");
-                throw new Error("Did not fail");
-            } catch (e) {
-                assert.equal("AssertionError", e.name);
-                assert.equal("[assert.notSame] Oh noes: Expected [object Object] " +
-                             "not to be the same object as [object Object]",
-                             e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            var obj = {};
-            assertUpAssertionCount(buster.assert.notSame, [{}, {}], [obj, obj]);
-        },
-
-        "should format value with assert.format": function () {
-            var obj = {};
-            assertFormatWithFormat(buster.assert.notSame, obj, obj);
-        }
+    assertionTests("notSame", function (pass, fail, msg) {
+        fail("comparing object to itsel", obj, obj);
+        fail("with message", obj, obj, "Aww");
+        pass("when comparing different objects", obj, obj2);
+        pass("with message", obj, obj2, "Aww");
+        fail("when comparing strings", "Hey", "Hey");
+        fail("when comparing booleans", true, true);
+        fail("when comparing numbers", 32, 32);
+        fail("when comparing infinity", Infinity, Infinity);
+        pass("when comparing NaN", NaN, NaN);
+        fail("when comparing null to null", null, null);
+        fail("when comparing undefined to undefined", undefined, undefined);
+        msg("include objects in message",
+            "[assert.notSame] Expected [object Object] not to be the same object as [object Object]", obj, obj);
+        msg("include custom message",
+            "[assert.notSame] Aww: Expected [object Object] not to be the same object as [object Object]", obj, obj, "Aww");
     });
 
-    testCase("AssertEqualsTest", {
-        "should pass when comparing object to itself": function () {
-            assert.doesNotThrow(function () {
-                var obj = { id: 42 };
-                buster.assert.equals(obj, obj);
-            });
+    assertionTests("equals", function (pass, fail, msg) {
+        var func = function () {};
+        var arr = [];
+        var date = new Date();
+        var sameDate = new Date(date.getTime());
+        var anotherDate = new Date(date.getTime() - 10);
 
-            assertAssertPassCalled("equals");
-        },
+        pass("when comparing object to itself", obj, obj);
+        pass("when comparing object to itself with message", obj, obj, "Msg");
+        pass("when comparing strings", "Hey", "Hey");
+        pass("when comparing numbers", 32, 32);
+        pass("when comparing booleans", false, false);
+        pass("when comparing null", null, null);
+        pass("when comparing undefined", undefined, undefined);
+        pass("when comparing function to itself", func, func);
+        fail("when comparing functions", function () {}, function () {});
+        pass("when comparing array to itself", arr, arr);
+        pass("when comparing date objects with same date", date, sameDate);
+        fail("when comparing date objects with different dates", date, anotherDate);
+        fail("when comparing date objects to null", date, null);
+        pass("when comparing strings and numbers with coercion", "4", 4);
+        pass("when comparing numbers and strings with coercion", 4, "4");
+        pass("when comparing number object with coercion", 32, new Number(32));
+        pass("when comparing number object reverse with coercion", new Number(32), 32);
+        pass("when comparing falsy values with coercion", 0, "");
+        pass("when comparing falsy values reverse with coercion", "", 0);
+        pass("when comparing string boxing with coercion", "4", new String("4"));
+        pass("when comparing string boxing reverse with coercion", new String("4"), "4");
+        fail("when comparing objects with different own properties",
+             { id: 42 }, { id: 42, di: 24 });
+        fail("when comparing objects with different own properties #2",
+             { id: undefined }, { di: 24 });
+        fail("when comparing objects with different own properties #2",
+             { id: 24 }, { di: undefined });
+        pass("when comparing objects with one property", { id: 42 }, { id: 42 });
+        pass("when comparing objects with one object property",
+             { obj: { id: 42 } }, { obj: { id: 42 } });
+        fail("when comparing objects with one property with different values",
+             { id: 42 }, { id: 24 });
 
-        "should pass when comparing object to itself with message": function () {
-            assert.doesNotThrow(function () {
-                var obj = { id: 42 };
-                buster.assert.equals(obj, obj, "These should be equal");
-            });
+        var deepObject = {
+            id: 42,
+            name: "Hey",
+            sayIt: function () {
+                return this.name;
+            },
 
-            assertAssertPassCalled("equals");
-        },
-
-        "should pass when comparing primitives": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.equals("Hey", "Hey");
-                buster.assert.equals(32, 32);
-                buster.assert.equals(false, false);
-                buster.assert.equals(null, null);
-                buster.assert.equals(undefined, undefined);
-            });
-        },
-
-        "should pass when comparing function to itself": function () {
-            assert.doesNotThrow(function () {
-                var func = function () {};
-                buster.assert.equals(func, func);
-            });
-        },
-
-        "should fail when comparing functions": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.equals(function () {}, function () {});
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass when comparing array to itself": function () {
-            assert.doesNotThrow(function () {
-                var obj = [];
-                buster.assert.equals(obj, obj);
-            });
-        },
-
-        "should pass when comparing date objects with same date": function () {
-            var date = new Date();
-            var anotherDate = new Date(date.getTime());
-
-            assert.doesNotThrow(function () {
-                buster.assert.equals(date, anotherDate);
-            });
-        },
-
-        "should fail when comparing date objects with different dates": function () {
-            var date = new Date();
-            var anotherDate = new Date(date.getTime() - 10);
-
-            assert.throws(function () {
-                buster.assert.equals(date, anotherDate);
-            });
-        },
-
-        "should fail when comparing date objects to null": function () {
-            assert.throws(function () {
-                buster.assert.equals(new Date(), null);
-            });
-        },
-
-        "should pass when comparing primitives with coercion": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.equals("4", 4);
-                buster.assert.equals(4, "4");
-                buster.assert.equals(32, "32");
-                buster.assert.equals("32", 32);
-                buster.assert.equals(32, new Number(32));
-                buster.assert.equals(new Number(32), 32);
-                buster.assert.equals(0, "");
-                buster.assert.equals("", 0);
-                buster.assert.equals("4", new String("4"));
-                buster.assert.equals(new String("4"), "4");
-            });
-        },
-
-        "should fail when comparing objects with different own properties": function () {
-            assert.throws(function () {
-                buster.assert.equals({ id: 42 }, { id: 42, di: 24 });
-            });
-
-            assert.throws(function () {
-                buster.assert.equals({ id: undefined }, { di: 24 });
-            });
-
-            assert.throws(function () {
-                buster.assert.equals({ id: 24 }, { di: undefined });
-            });
-        },
-
-        "should pass when comparing objects with one property": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.equals({ id: 42 }, { id: 42 });
-            });
-        },
-
-        "should pass when comparing objects with one object property": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.equals({ obj: { id: 42 } }, { obj: { id: 42 } });
-            });
-        },
-
-        "should fail when comparing objects with one property with different values": function () {
-            assert.throws(function () {
-                buster.assert.equals({ id: 42 }, { id: 24 });
-            });
-        },
-
-        "should pass when comparing complex objects": function () {
-            assert.doesNotThrow(function () {
-                var obj1 = {
-                    id: 42,
-                    name: "Hey",
-                    sayIt: function () {
-                        return this.name;
-                    },
-
-                    child: {
-                        speaking: function () {}
-                    }
-                };
-
-                var obj2 = {
-                    sayIt: obj1.sayIt,
-                    child: { speaking: obj1.child.speaking },
-                    id: 42,
-                    name: "Hey"
-                };
-
-                buster.assert.equals(obj1, obj2);
-            });
-        },
-
-        "should pass when comparing arrays": function () {
-            function func() {}
-            var arr1 = [1, 2, "Hey there", func, { id: 42, prop: [2, 3] }];
-            var arr2 = [1, 2, "Hey there", func, { id: 42, prop: [2, 3] }];
-
-            assert.doesNotThrow(function () {
-                buster.assert.equals(arr1, arr2);
-            });
-        },
-
-        "should pass when comparing regexp literals": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.equals(/a/, /a/);
-            });
-        },
-
-        "should pass when comparing regexp objects": function () {
-            assert.doesNotThrow(function () {
-                var obj1 = new RegExp("[a-z]+");
-                var obj2 = new RegExp("[a-z]+");
-
-                buster.assert.equals(obj1, obj2);
-            });
-        },
-
-        "should fail when comparing regexp objects with custom properties": function () {
-            assert.throws(function () {
-                var obj1 = new RegExp("[a-z]+");
-                var obj2 = new RegExp("[a-z]+");
-                obj2.id = 42;
-
-                buster.assert.equals(obj1, obj2);
-            });
-        },
-
-        "should fail when comparing different objects": function () {
-            assert.throws(function () {
-                var obj = { id: 42 };
-                buster.assert.equals(obj, {});
-            });
-        },
-
-        "should fail when comparing different objects with message": function () {
-            assert.throws(function () {
-                var obj = { id: 42 };
-                buster.assert.equals(obj, {}, "This is a message");
-            });
-        },
-
-        "should fail when comparing to null": function () {
-            assert.throws(function () {
-                buster.assert.equals({}, null);
-            });
-
-            assert.throws(function () {
-                buster.assert.equals(null, {});
-            });
-        },
-
-        "should fail when comparing to undefined": function () {
-            assert.throws(function () {
-                buster.assert.equals({}, undefined);
-            });
-
-            assert.throws(function () {
-                buster.assert.equals(undefined, {});
-            });
-        },
-
-        "should fail when comparing to booleans": function () {
-            assert.throws(function () {
-                buster.assert.equals({}, false);
-            });
-
-            assert.throws(function () {
-                buster.assert.equals(false, {});
-            });
-
-            assert.throws(function () {
-                buster.assert.equals({}, true);
-            });
-
-            assert.throws(function () {
-                buster.assert.equals(true, {});
-            });
-        },
-
-        "should fail when comparing 'empty' objects": function () {
-            assert.throws(function () {
-                buster.assert.equals({}, new Date());
-            });
-
-            assert.throws(function () {
-                buster.assert.equals({}, new String());
-            });
-
-            assert.throws(function () {
-                buster.assert.equals({}, []);
-            });
-
-            assert.throws(function () {
-                buster.assert.equals({}, new Number());
-            });
-        },
-
-        "should pass when comparing arguments to array": function () {
-            function gather() {
-                return arguments;
+            child: {
+                speaking: function () {}
             }
+        };
 
-            assert.doesNotThrow(function () {
-                var array = [1, 2, {}, []];
-                var args = gather(1, 2, {}, []);
+        pass("when comparing complex objects", deepObject, {
+            sayIt: deepObject.sayIt,
+            child: { speaking: deepObject.child.speaking },
+            id: 42,
+            name: "Hey"
+        });
 
-                buster.assert.equals(array, args);
-                buster.assert.equals([], gather());
-            });
-        },
+        function func() {}
 
-        "should pass when comparing arguments to array like object": function () {
-            function gather() {
-                return arguments;
-            }
+        pass("when comparing arrays",
+             [1, 2, "Hey there", func, { id: 42, prop: [2, 3] }],
+             [1, 2, "Hey there", func, { id: 42, prop: [2, 3] }]);
 
-            assert.doesNotThrow(function () {
-                var object = {
-                    length: 4,
-                    "0": 1,
-                    "1": 2,
-                    "2": {},
-                    "3": []
-                };
+        pass("when comparing regexp literals", /a/, /a/);
+        pass("when comparing regexp objects", new RegExp("[a-z]+"), new RegExp("[a-z]+"));
 
-                var args = gather(1, 2, {}, []);
+        var re1 = new RegExp("[a-z]+");
+        var re2 = new RegExp("[a-z]+");
+        re2.id = 42;
 
-                buster.assert.equals(object, args);
-            });
-        },
+        fail("when comparing regexp objects with custom properties", re1, re2);
+        fail("when comparing different objects", { id: 42 }, {});
+        fail("when comparing different objects with message", { id: 42 }, {}, "Hmm");
+        fail("when comparing object to null", {}, null);
+        fail("when comparing object to undefined", {}, undefined);
+        fail("when comparing object to false", {}, false);
+        fail("when comparing false to object", false, {});
+        fail("when comparing object to true", {}, true);
+        fail("when comparing true to object", true, {});
+        fail("when comparing 'empty' object to date", {}, new Date());
+        fail("when comparing 'empty' object to string object", {}, new String());
+        fail("when comparing 'empty' object to number object", {}, new Number());
+        fail("when comparing 'empty' object to empty array", {}, []);
 
-        "should fail with understandable message": function () {
-            try {
-                buster.assert.equals({}, "Hey");
-                throw new Error("Did not fail");
-            } catch (e) {
-                assert.equal("[assert.equals] Expected [object Object] to be equal " +
-                             "to Hey", e.message);
-            }
-        },
+        function gather() { return arguments; }
+        var arrayLike = { length: 4, "0": 1, "1": 2, "2": {}, "3": [] };
 
-        "should fail with custom message": function () {
-            try {
-                buster.assert.equals({}, "Hey", "Is they, uhm, equals?");
-                throw new Error("Did not fail");
-            } catch (e) {
-                assert.equal("[assert.equals] Is they, uhm, equals? Expected " +
-                             "[object Object] to be equal to Hey", e.message);
-            }
-        },
+        pass("when comparing arguments to array", [1,2,{},[]], gather(1, 2, {}, []));
+        pass("when comparing array to arguments", gather(), []);
 
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.equals, [{}, {}], [{ id: 42 }, {}]);
-        },
+        pass("when comparing arguments to array like object",
+             arrayLike, gather(1, 2, {}, []));
 
-        "should format value with assert.format": function () {
-            assertFormatWithFormat(buster.assert.equals, {}, { id: 42 });
-        }
+        msg("fail with understandable message",
+            "[assert.equals] Expected [object Object] to be equal to Hey", {}, "Hey");
+
+        msg("fail with custom message",
+            "[assert.equals] Aww! Expected [object Object] to be equal to Hey",
+            {}, "Hey", "Aww!");
     });
 
     if (typeof document != "undefined") {
         testCase("AssertEqualsHostObjectTest", {
+            setUp: setUp,
+            tearDown: tearDown,
+
             "should pass when comparing DOM element to itself": function () {
                 var element = document.createElement("div");
 
@@ -947,3135 +440,956 @@ if (typeof require != "undefined") {
         });
     }
 
-    testCase("AssertNotEqualsTest", {
-        "should fail when comparing object to itself": function () {
-            resetAssertPassCounter();
+    assertionTests("notEquals", function (pass, fail, msg) {
+        fail("when comparing object to itself", obj, obj);
+        fail("when comparing object to itself with message", obj, obj, "No!");
+        fail("when comparing strings", "Hey", "Hey");
+        fail("when comparing numbers", 32, 32);
+        fail("when comparing booleans", false, false);
+        fail("when comparing null", null, null);
+        fail("when comparing undefined", undefined, undefined);
 
-            assert.throws(function () {
-                var obj = { id: 42 };
-                buster.assert.notEquals(obj, obj);
-            });
+        var func = function () {};
+        var arr = [];
+        var date = new Date();
+        var sameDate = new Date(date.getTime());
+        var anotherDate = new Date(date.getTime() - 10);
 
-            assertAssertPassNotCalled();
-        },
+        fail("when comparing function to itself", func, func);
+        pass("when comparing functions", function () {}, function () {});
+        fail("when comparing array to itself", arr, arr);
+        fail("when comparing date objects with same date", date, sameDate);
+        pass("when comparing date objects with different dates", date, anotherDate);
+        pass("when comparing date objects to null", new Date(), null);
+        fail("when comparing string with number with coercion", "4", 4);
+        fail("when comparing number with string with coercion", 32, "32");
+        fail("when comparing with coercion", 0, "");
+        pass("when comparing objects with different own properties",
+             { id: 42 }, { id: 42, di: 24 });
 
-        "should fail when comparing object to itself with message": function () {
-            resetAssertPassCounter();
+        pass("when comparing objects with different own properties #2",
+             { id: undefined }, { di: 24 });
 
-            assert.throws(function () {
-                var obj = { id: 42 };
-                buster.assert.notEquals(obj, obj, "These should be equal");
-            });
+        pass("when comparing objects with different own properties #3",
+             { id: 24 }, { di: undefined });
 
-            assertAssertPassNotCalled();
-        },
+        fail("when comparing objects with one property", { id: 42 }, { id: 42 });
 
-        "should fail when comparing primitives": function () {
-            assert.throws(function () {
-                buster.assert.notEquals("Hey", "Hey");
-            });
+        fail("when comparing objects with one object property",
+             { obj: { id: 42 } }, { obj: { id: 42 } });
 
-            assert.throws(function () {
-                buster.assert.notEquals(32, 32);
-            });
+        pass("when comparing objects with one property with different values",
+             { id: 42 }, { id: 24 });
 
-            assert.throws(function () {
-                buster.assert.notEquals(false, false);
-            });
+        var deepObject = {
+            id: 42,
+            name: "Hey",
+            sayIt: function () {
+                return this.name;
+            },
 
-            assert.throws(function () {
-                buster.assert.notEquals(null, null);
-            });
-
-            assert.throws(function () {
-                buster.assert.notEquals(undefined, undefined);
-            });
-        },
-
-        "should fail when comparing function to itself": function () {
-            assert.throws(function () {
-                var func = function () {};
-                buster.assert.notEquals(func, func);
-            });
-        },
-
-        "should pass when comparing functions": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notEquals(function () {}, function () {});
-            });
-
-            assertAssertPassCalled("notEquals");
-        },
-
-        "should fail when comparing array to itself": function () {
-            assert.throws(function () {
-                var obj = [];
-                buster.assert.notEquals(obj, obj);
-            });
-        },
-
-        "should fail when comparing date objects with same date": function () {
-            var date = new Date();
-            var anotherDate = new Date(date.getTime());
-
-            assert.throws(function () {
-                buster.assert.notEquals(date, anotherDate);
-            });
-        },
-
-        "should pass when comparing date objects with different dates": function () {
-            var date = new Date();
-            var anotherDate = new Date(date.getTime() - 10);
-
-            assert.doesNotThrow(function () {
-                buster.assert.notEquals(date, anotherDate);
-            });
-        },
-
-        "should pass when comparing date objects to null": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notEquals(new Date(), null);
-            });
-        },
-
-        "should fail when comparing primitives with coercion": function () {
-            assert.throws(function () {
-                buster.assert.notEquals("4", 4);
-            });
-
-            assert.throws(function () {
-                buster.assert.notEquals(32, "32");
-            });
-
-            assert.throws(function () {
-                buster.assert.notEquals(0, "");
-            });
-        },
-
-        "should pass when comparing objects with different own properties": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notEquals({ id: 42 }, { id: 42, di: 24 });
-            });
-
-            assert.doesNotThrow(function () {
-                buster.assert.notEquals({ id: undefined }, { di: 24 });
-            });
-
-            assert.doesNotThrow(function () {
-                buster.assert.notEquals({ id: 24 }, { di: undefined });
-            });
-        },
-
-        "should fail when comparing objects with one property": function () {
-            assert.throws(function () {
-                buster.assert.notEquals({ id: 42 }, { id: 42 });
-            });
-        },
-
-        "should fail when comparing objects with one object property": function () {
-            assert.throws(function () {
-                buster.assert.notEquals({ obj: { id: 42 } }, { obj: { id: 42 } });
-            });
-        },
-
-        "should pass when comparing objects with one property with different values": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notEquals({ id: 42 }, { id: 24 });
-            });
-        },
-
-        "should fail when comparing complex objects": function () {
-            assert.throws(function () {
-                var obj1 = {
-                    id: 42,
-                    name: "Hey",
-                    sayIt: function () {
-                        return this.name;
-                    },
-
-                    child: {
-                        speaking: function () {}
-                    }
-                };
-
-                var obj2 = {
-                    sayIt: obj1.sayIt,
-                    child: { speaking: obj1.child.speaking },
-                    id: 42,
-                    name: "Hey"
-                };
-
-                buster.assert.notEquals(obj1, obj2);
-            });
-        },
-
-        "should fail when comparing arrays": function () {
-            function func() {}
-            var arr1 = [1, 2, "Hey there", func, { id: 42, prop: [2, 3] }];
-            var arr2 = [1, 2, "Hey there", func, { id: 42, prop: [2, 3] }];
-
-            assert.throws(function () {
-                buster.assert.notEquals(arr1, arr2);
-            });
-        },
-
-        "should fail when comparing regexp literals": function () {
-            assert.throws(function () {
-                buster.assert.notEquals(/a/, /a/);
-            });
-        },
-
-        "should fail when comparing regexp objects": function () {
-            assert.throws(function () {
-                var obj1 = new RegExp("[a-z]+");
-                var obj2 = new RegExp("[a-z]+");
-
-                buster.assert.notEquals(obj1, obj2);
-            });
-        },
-
-        "should pass when comparing regexp objects with custom properties": function () {
-            assert.doesNotThrow(function () {
-                var obj1 = new RegExp("[a-z]+");
-                var obj2 = new RegExp("[a-z]+");
-                obj2.id = 42;
-
-                buster.assert.notEquals(obj1, obj2);
-            });
-        },
-
-        "should pass when comparing different objects": function () {
-            assert.doesNotThrow(function () {
-                var obj = { id: 42 };
-                buster.assert.notEquals(obj, {});
-            });
-        },
-
-        "should pass when comparing different objects with message": function () {
-            assert.doesNotThrow(function () {
-                var obj = { id: 42 };
-                buster.assert.notEquals(obj, {}, "This is a message");
-            });
-        },
-
-        "should pass when comparing to null": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notEquals({}, null);
-                buster.assert.notEquals(null, {});
-            });
-        },
-
-        "should pass when comparing to undefined": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notEquals({}, undefined);
-                buster.assert.notEquals(undefined, {});
-            });
-        },
-
-        "should pass when comparing to booleans": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notEquals({}, false);
-                buster.assert.notEquals(false, {});
-                buster.assert.notEquals({}, true);
-                buster.assert.notEquals(true, {});
-            });
-        },
-
-        "should pass when comparing 'empty' objects": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notEquals({}, new Date());
-                buster.assert.notEquals({}, new String());
-                buster.assert.notEquals({}, []);
-                buster.assert.notEquals({}, new Number());
-            });
-        },
-
-        "should fail when comparing arguments to array": function () {
-            function gather() {
-                return arguments;
+            child: {
+                speaking: function () {}
             }
+        };
 
-            var array = [1, 2, {}, []];
-            var args = gather(1, 2, {}, []);
+        fail("when comparing complex objects", deepObject, {
+            sayIt: deepObject.sayIt,
+            child: { speaking: deepObject.child.speaking },
+            id: 42,
+            name: "Hey"
+        });
 
-            assert.throws(function () {
-                buster.assert.notEquals(array, args);
-            });
+        var arr1 = [1, 2, "Hey there", func, { id: 42, prop: [2, 3] }];
+        var arr2 = [1, 2, "Hey there", func, { id: 42, prop: [2, 3] }];
 
-            assert.throws(function () {
-                buster.assert.notEquals([], gather());
-            });
-        },
+        fail("when comparing arrays", arr1, arr2);
+        fail("when comparing regexp literals", /a/, /a/);
 
-        "should fail when comparing arguments to array like object": function () {
-            function gather() {
-                return arguments;
-            }
+        fail("when comparing regexp objects", new RegExp("[a-z]+"), new RegExp("[a-z]+"));
 
-            assert.throws(function () {
-                var object = {
-                    length: 4,
-                    "0": 1,
-                    "1": 2,
-                    "2": {},
-                    "3": []
-                };
+        var re1 = new RegExp("[a-z]+");
+        var re2 = new RegExp("[a-z]+");
+        re2.id = 42;
 
-                var args = gather(1, 2, {}, []);
+        pass("when comparing regexp objects with custom properties", re1, re2);
 
-                buster.assert.notEquals(object, args);
-            });
-        },
+        pass("when comparing different objects", obj, {});
+        pass("when comparing different objects with message", obj, {}, "Hmm");
+        pass("when comparing object to null", {}, null);
+        pass("when comparing null to object", {}, null);
+        pass("when comparing object to undefined", {}, undefined);
+        pass("when comparing undefined to object", undefined, {});
+        pass("when comparing object to false", {}, false);
+        pass("when comparing false to object", false, {});
+        pass("when comparing object to true", {}, true);
+        pass("when comparing true to object", true, {});
+        pass("when comparing 'empty' object to date", {}, new Date());
+        pass("when comparing 'empty' object to string object", {}, new String());
+        pass("when comparing 'empty' object to number object", {}, new Number());
+        pass("when comparing 'empty' object to empty array", {}, []);
 
-        "should fail with understandable message": function () {
-            try {
-                buster.assert.notEquals({}, {});
-                throw new Error("Did not fail");
-            } catch (e) {
-                assert.equal("[assert.notEquals] Expected [object Object] not to " +
-                             "be equal to [object Object]", e.message);
-            }
-        },
+        function gather() { return arguments; }
+        var arrayLike = { length: 4, "0": 1, "1": 2, "2": {}, "3": [] };
 
-        "should fail with custom message": function () {
-            try {
-                buster.assert.notEquals({}, {}, "Is they, uhm, equals?");
-                throw new Error("Did not fail");
-            } catch (e) {
-                assert.equal("[assert.notEquals] Is they, uhm, equals? Expected " +
-                             "[object Object] not to be equal to [object Object]",
-                             e.message);
-            }
-        },
+        fail("when comparing arguments to array", [1,2,{},[]], gather(1, 2, {}, []));
+        fail("when comparing array to arguments", gather(), []);
+        fail("when comparing arguments to array like object",
+             arrayLike, gather(1, 2, {}, []));
 
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.notEquals, [{}, { id: 42 }], [{}, {}]);
-        },
+        msg("fail with understandable message",
+            "[assert.notEquals] Expected [object Object] not to be equal to [object Object]", {}, {});
 
-        "should format value with assert.format": function () {
-            assertFormatWithFormat(buster.assert.notEquals, "Hmm", "Hmm");
-        }
+        msg("fail with understandable message",
+            "[assert.notEquals] Holy cow! Expected [object Object] not to be equal to [object Object]", {}, {}, "Holy cow!");
     });
 
-    testCase("AssertTypeOfTest", {
-        "should pass when types match": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.typeOf(function () {}, "function");
-            });
+    assertionTests("typeOf", function (pass, fail, msg) {
+        pass("when types match", function () {}, "function");
+        pass("when types match with message", function () {}, "function", "OMG!");
+        fail("when types don't match", {}, "function");
+        fail("when types don't match with message", {}, "function", "OMG!");
+        msg("generate failure message",
+            "[assert.typeOf] Expected typeof [object Object] (object) to be function",
+            {}, "function");
 
-            assertAssertPassCalled("typeOf");
-        },
-
-        "should pass when types match with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.typeOf(function () {}, "function", "OMG!");
-            });
-
-            assertAssertPassCalled("typeOf");
-        },
-
-        "should fail when types don't match": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.typeOf({}, "function");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail when types don't match with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.typeOf({}, "function", "OMG!");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should generate failure message": function () {
-            try {
-                buster.assert.typeOf({}, "function");
-                throw new Error("Expected assert.typeOf to fail");
-            } catch (e) {
-                assert.equal(
-                    "[assert.typeOf] Expected typeof [object Object] (object) to " +
-                    "be function", e.message
-                );
-            }
-        },
-
-        "should generate failure message with custom message": function () {
-            try {
-                buster.assert.typeOf("Hey", "boolean", "OMG!");
-                throw new Error("Expected assert.typeOf to fail");
-            } catch (e) {
-                assert.equal(
-                    "[assert.typeOf] OMG! Expected typeof Hey " +
-                    "(string) to be boolean", e.message
-                );
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.typeOf, ["", "string"], [{}, "string"]);
-        },
-
-        "should format value with assert.format": function () {
-            var calls = spy(buster.assert, "format", function () {
-                buster.assert.typeOf(false, "string");
-            });
-
-            assert.equal(false, calls[0][0]);
-            assert.equal("string", calls[1][0]);
-        },
-
-        "should not format objects if assertion does not fail": function () {
-            var calls = spy(buster.assert, "format", function () {
-                buster.assert.typeOf("Oh noes!", "string");
-            });
-
-            assert.equal(0, calls.length);
-        }
+        msg("generate custom failure message",
+            "[assert.typeOf] Crep: Expected typeof [object Object] (object) to be function",
+            {}, "function", "Crep");
     });
 
-    testCase("AssertNotTypeOfTest", {
-        "should fail when types match": function () {
-            resetAssertPassCounter();
+    assertionTests("notTypeOf", function (pass, fail, msg) {
+        fail("when types match", function () {}, "function");
+        fail("when types match with message", function () {}, "function", "OMG!");
+        pass("when types don't match", {}, "function");
+        pass("when types don't match with message", {}, "function", "OMG!");
+        msg("generate failure message",
+            "[assert.notTypeOf] Expected typeof [object Object] not to be object",
+            {}, "object");
 
-            assert.throws(function () {
-                buster.assert.notTypeOf(function () {}, "function");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail when types match with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.notTypeOf(function () {}, "function", "OMG!");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass when types don't match": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notTypeOf({}, "function");
-            });
-
-            assertAssertPassCalled("notTypeOf");
-        },
-
-        "should pass when types don't match with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notTypeOf({}, "function", "OMG!");
-            });
-
-            assertAssertPassCalled("notTypeOf");
-        },
-
-        "should generate failure message": function () {
-            try {
-                buster.assert.notTypeOf({}, "object");
-                throw new Error("Expected assert.notTypeOf to fail");
-            } catch (e) {
-                assert.equal(
-                    "[assert.notTypeOf] Expected typeof [object Object] not to " +
-                    "be object", e.message
-                );
-            }
-        },
-
-        "should generate failure message with custom message": function () {
-            try {
-                buster.assert.notTypeOf(true, "boolean", "OMG!");
-                throw new Error("Expected assert.notTypeOf to fail");
-            } catch (e) {
-                assert.equal(
-                    "[assert.notTypeOf] OMG! Expected typeof true " +
-                    "not to be boolean", e.message
-                );
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.notTypeOf, [true, "string"], [{}, "object"]);
-        },
-
-        "should format value with assert.format": function () {
-            var calls = spy(buster.assert, "format", function () {
-                buster.assert.notTypeOf(false, "boolean");
-            });
-
-            assert.equal(false, calls[0][0]);
-            assert.equal("boolean", calls[1][0]);
-        },
-
-        "should not format objects if assertion passes": function () {
-            var calls = spy(buster.assert, "format", function () {
-                buster.assert.notTypeOf("Oh noes!", "object");
-            });
-
-            assert.equal(0, calls.length);
-        }
+        msg("generate custom failure message",
+            "[assert.notTypeOf] Oops: Expected typeof [object Object] not to be object",
+            {}, "object", "Oops");
     });
 
-    testCase("AssertStringTest", {
-        "should pass for string": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isString("Hey");
-            });
+    assertionTests("isString", function (pass, fail, msg) {
+        pass("for string", "Hey");
+        pass("for string with message", "Hey", "Whatup?");
+        fail("for object", {});
+        fail("for object with message", {}, "Whatup?");
 
-            assertAssertPassCalled("isString");
-        },
+        msg("fail with descriptive message",
+            "[assert.isString] Expected typeof [object Object] (object) to be string",
+            {});
 
-        "should pass for string with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isString("Hey", "Whatup?");
-            });
-
-            assertAssertPassCalled("isString");
-        },
-
-        "should fail for object": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isString({});
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for object with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isString({}, "Whatup?");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isString({});
-                throw new Error("Expected isString to fail");
-            } catch (e) {
-                assert.equal("[assert.isString] Expected typeof [object Object] " +
-                             "(object) to be string", e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.isString({}, "OMG!!");
-                throw new Error("Expected isString to fail");
-            } catch (e) {
-                assert.equal("[assert.isString] OMG!! Expected typeof " +
-                             "[object Object] (object) to be string", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isString, [""], [{}]);
-        }
+        msg("fail with custom descriptive message",
+            "[assert.isString] No go: Expected typeof [object Object] (object) to be string",
+            {}, "No go");
     });
 
-    testCase("AssertObjectTest", {
-        "should pass for object": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isObject({});
-            });
+    assertionTests("isObject", function (pass, fail, msg) {
+        pass("for object", {});
+        pass("for object with message", {}, "Whatup?");
+        fail("for function", function () {});
+        fail("for null", null);
+        fail("for function with message", function () {}, "Whatup?");
+        msg("fail with descriptive message",
+            "[assert.isObject] Expected typeof Hey (string) to be object and not null",
+            "Hey");
 
-            assertAssertPassCalled("isObject");
-        },
-
-        "should pass for object with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isObject({}, "Whatup?");
-            });
-
-            assertAssertPassCalled("isObject");
-        },
-
-        "should fail for function": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isObject(function () {});
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for null": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isObject(null);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for function with message": function () {
-            assert.throws(function () {
-                buster.assert.isObject(function () {}, "Whatup?");
-            });
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isObject("Hey");
-                throw new Error("Expected isObject to fail");
-            } catch (e) {
-                assert.equal("[assert.isObject] Expected typeof Hey " +
-                             "(string) to be object and not null", e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.isObject(true, "OMG!!");
-                throw new Error("Expected isObject to fail");
-            } catch (e) {
-                assert.equal("[assert.isObject] OMG!! Expected typeof " +
-                             "true (boolean) to be object and not null", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isObject, [{}], [""]);
-        }
+        msg("fail with custom message",
+            "[assert.isObject] Whoa: Expected typeof Hey (string) to be object and not null",
+            "Hey", "Whoa");
     });
 
-    testCase("AssertFunctionTest", {
-        "should pass for function": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isFunction(function () {});
-            });
+    assertionTests("isFunction", function (pass, fail, msg) {
+        pass("for function", function () {});
+        pass("for function with message", function () {}, "Whatup?");
+        fail("for object", {});
+        fail("for object with message", {}, "Whatup?");
+        msg("fail with descriptive message",
+            "[assert.isFunction] Expected typeof Hey (string) to be function",
+            "Hey");
 
-            assertAssertPassCalled("isFunction");
-        },
-
-        "should pass for function with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isFunction(function () {}, "Whatup?");
-            });
-
-            assertAssertPassCalled("isFunction");
-        },
-
-        "should fail for object": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isFunction({});
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for object with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isFunction({}, "Whatup?");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isFunction("Hey");
-                throw new Error("Expected isFunction to fail");
-            } catch (e) {
-                assert.equal("[assert.isFunction] Expected typeof Hey " +
-                             "(string) to be function", e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.isFunction(true, "OMG!!");
-                throw new Error("Expected isFunction to fail");
-            } catch (e) {
-                assert.equal("[assert.isFunction] OMG!! Expected typeof " +
-                             "true (boolean) to be function", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isFunction, [function () {}], [""]);
-        }
+        msg("fail with custom message",
+            "[assert.isFunction] Err: Expected typeof Hey (string) to be function",
+            "Hey", "Err");
     });
 
-    testCase("AssertBooleanTest", {
-        "should pass for boolean": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isBoolean(true);
-            });
+    assertionTests("isBoolean", function (pass, fail, msg) {
+        pass("for boolean", true);
+        pass("for boolean with message", true, "Whatup?");
+        fail("for function", function () {});
+        fail("for null", null);
+        fail("for function with message", function () {}, "Whatup?");
+        msg("fail with descriptive message",
+            "[assert.isBoolean] Expected typeof Hey (string) to be boolean", "Hey");
 
-            assertAssertPassCalled("isBoolean");
-        },
-
-        "should pass for boolean with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isBoolean(true, "Whatup?");
-            });
-
-            assertAssertPassCalled("isBoolean");
-        },
-
-        "should fail for function": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isBoolean(function () {});
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for null": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isBoolean(null);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for function with message": function () {
-            assert.throws(function () {
-                buster.assert.isBoolean(function () {}, "Whatup?");
-            });
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isBoolean("Hey");
-                throw new Error("Expected isBoolean to fail");
-            } catch (e) {
-                assert.equal("[assert.isBoolean] Expected typeof Hey " +
-                             "(string) to be boolean", e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.isBoolean("Hey", "OMG!!");
-                throw new Error("Expected isBoolean to fail");
-            } catch (e) {
-                assert.equal("[assert.isBoolean] OMG!! Expected typeof " +
-                             "Hey (string) to be boolean", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isBoolean, [true], [""]);
-        }
+        msg("fail with custom message",
+            "[assert.isBoolean] No: Expected typeof Hey (string) to be boolean",
+            "Hey", "No");
     });
 
-    testCase("AssertNumberTest", {
-        "should pass for number": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNumber(32);
-            });
+    assertionTests("isNumber", function (pass, fail, msg) {
+        pass("for number", 32);
+        fail("for NaN (sic)", NaN);
+        pass("for number with message", 32, "Whatup?");
+        fail("for function", function () {});
+        fail("for null", null);
+        fail("for function with message", function () {}, "Whatup?");
+        msg("fail with descriptive message", 
+            "[assert.isNumber] Expected Hey (string) to be a non-NaN number",
+            "Hey");
 
-            assertAssertPassCalled("isNumber");
-        },
-
-        "should fail for NaN (sic)": function () {
-            assert.throws(function () {
-                buster.assert.isNumber(NaN);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass for number with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNumber(32, "Whatup?");
-            });
-
-            assertAssertPassCalled("isNumber");
-        },
-
-        "should fail for function": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isNumber(function () {});
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for null": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isNumber(null);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for function with message": function () {
-            assert.throws(function () {
-                buster.assert.isNumber(function () {}, "Whatup?");
-            });
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isNumber("Hey");
-                throw new Error("Expected isNumber to fail");
-            } catch (e) {
-                assert.equal("[assert.isNumber] Expected Hey (string) " +
-                             "to be a non-NaN number", e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.isNumber(true, "OMG!!");
-                throw new Error("Expected isNumber to fail");
-            } catch (e) {
-                assert.equal("[assert.isNumber] OMG!! Expected true " +
-                             "(boolean) to be a non-NaN number", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isNumber, [42], [""]);
-        }
+        msg("fail with descriptive message", 
+            "[assert.isNumber] Hola: Expected Hey (string) to be a non-NaN number",
+            "Hey", "Hola");
     });
 
-    testCase("AssertNaNTest", {
-        "should pass for NaN": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNaN(NaN);
-            });
-
-            assertAssertPassCalled("isNaN");
-        },
-
-        "should pass for NaN with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNaN(NaN, "Whatup?");
-            });
-
-            assertAssertPassCalled("isNaN");
-        },
-
-        "should fail for number": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isNaN(32);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for number with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isNaN(32, "Whatup?");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass for function": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNaN(function () {});
-            });
-        },
-
-        "should pass for function with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNaN(function () {}, "Whatup?");
-            });
-        },
-
-        "should pass for object": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNaN(function () {});
-            });
-        },
-
-        "should fail for null": function () {
-            assert.throws(function () {
-                buster.assert.isNaN(null);
-            });
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isNaN(32);
-                throw new Error("Expected isNaN to fail");
-            } catch (e) {
-                assert.equal("[assert.isNaN] Expected 32 to be NaN", e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.isNaN(32, "OMG!");
-                throw new Error("Expected isNaN to fail");
-            } catch (e) {
-                assert.equal("[assert.isNaN] OMG! Expected 32 to be NaN", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isNaN, [NaN], [42]);
-        },
-
-        "should format value with assert.format": function () {
-            assertFormatWithFormat(buster.assert.isNaN, 32);
-        }
+    assertionTests("isNaN", function (pass, fail, msg) {
+        pass("for NaN", NaN);
+        pass("for NaN with message", NaN, "Whatup?");
+        fail("for number", 32);
+        fail("for number with message", 32, "Whatup?");
+        fail("for function", function () {});
+        fail("for function with message", function () {}, "Whatup?");
+        fail("for object", {});
+        fail("for null", null);
+        msg("fail with descriptive message", "[assert.isNaN] Expected 32 to be NaN", 32);
+        msg("fail with custom message",
+            "[assert.isNaN] Crap: Expected 32 to be NaN", 32, "Crap");
     });
 
-    testCase("AssertNotNaNTest", {
-        "should fail for NaN": function () {
-            resetAssertPassCounter();
+    assertionTests("isNotNaN", function (pass, fail, msg) {
+        fail("for NaN", NaN);
+        fail("for NaN with message", NaN, "Whatup?");
+        pass("for number", 32);
+        pass("for number with message", 32, "Whatup?");
+        pass("for function", function () {});
+        pass("for function with message", function () {}, "Whatup?");
+        pass("for object", {});
+        pass("for null", null);
 
-            assert.throws(function () {
-                buster.assert.isNotNaN(NaN);
-            });
+        msg("fail with descriptive message",
+            "[assert.isNotNaN] Expected not to be NaN", NaN);
 
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for NaN with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isNotNaN(NaN, "Whatup?");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass for number": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNotNaN(32);
-            });
-
-            assertAssertPassCalled("isNotNaN");
-        },
-
-        "should pass for number with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNotNaN(32, "Whatup?");
-            });
-
-            assertAssertPassCalled("isNotNaN");
-        },
-
-        "should fail for function": function () {
-            assert.throws(function () {
-                buster.assert.isNotNaN(function () {});
-            });
-        },
-
-        "should fail for function with message": function () {
-            assert.throws(function () {
-                buster.assert.isNotNaN(function () {}, "Whatup?");
-            });
-        },
-
-        "should fail for object": function () {
-            assert.throws(function () {
-                buster.assert.isNotNaN(function () {});
-            });
-        },
-
-        "should pass for null": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNotNaN(null);
-            });
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isNotNaN(NaN);
-                throw new Error("Expected isNotNaN to fail");
-            } catch (e) {
-                assert.equal("[assert.isNotNaN] Expected not to be NaN", e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.isNotNaN(NaN, "OMG!");
-                throw new Error("Expected isNotNaN to fail");
-            } catch (e) {
-                assert.equal("[assert.isNotNaN] OMG! Expected not to be NaN", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isNotNaN, [42], [NaN]);
-        }
+        msg("fail with custom message",
+            "[assert.isNotNaN] See? Expected not to be NaN", NaN, "See?");
     });
 
-    testCase("AssertArray", {
-        "should pass for array": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isArray([]);
-            });
+    assertionTests("isArray", function (pass, fail, msg) {
+        pass("for array", []);
+        pass("for array with message", [1, 2, 3], "Message");
+        fail("for object", {});
+        fail("for object with message", {}, "Is it an array?");
 
-            assertAssertPassCalled("isArray");
-        },
-
-        "should pass for array with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isArray([1, 2, 3], "Message");
-            });
-
-            assertAssertPassCalled("isArray");
-        },
-
-        "should fail for object": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isArray({});
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for object with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isArray({}, "Is it an array?");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for arguments": function () {
-            var args;
-
-            function captureArgs() {
-                args = arguments;
-            }
-
-            captureArgs();
-
-            assert.throws(function () {
-                buster.assert.isArray(args);
-            });
-        },
-
-        "should fail for array like": function () {
-            var arrayLike = {
-                length: 4,
-                "0": "One",
-                "1": "Two",
-                "2": "Three",
-                "3": "Four",
-                splice: function () {}
-            };
-
-            assert.throws(function () {
-                buster.assert.isArray(arrayLike);
-            });
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isArray({});
-                throw new Error("Expected isArray to fail");
-            } catch (e) {
-                assert.equal("[assert.isArray] Expected [object Object] to be array",
-                             e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.isArray(NaN, "OMG!");
-                throw new Error("Expected isArray to fail");
-            } catch (e) {
-                assert.equal("[assert.isArray] OMG! Expected NaN to be array",
-                             e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isArray, [[]], [NaN]);
+        function captureArgs() {
+            return arguments;
         }
+
+        var arrayLike = {
+            length: 4,
+            "0": "One",
+            "1": "Two",
+            "2": "Three",
+            "3": "Four",
+            splice: function () {}
+        };
+
+        fail("for arguments", captureArgs());
+        fail("for array like", arrayLike);
+
+        msg("fail with descriptive message",
+            "[assert.isArray] Expected [object Object] to be array", {});
+
+        msg("fail with custom message",
+            "[assert.isArray] No: Expected [object Object] to be array", {}, "No");
     });
 
-    testCase("AssertNotArray", {
-        "should fail for array": function () {
-            resetAssertPassCounter();
+    assertionTests("isNotArray", function (pass, fail, msg) {
+        fail("for array", []);
+        fail("for array with message", [1, 2, 3], "Message");
+        pass("for object", {});
+        pass("for object with message", {}, "Is it an array?");
 
-            assert.throws(function () {
-                buster.assert.isNotArray([]);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for array with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isNotArray([1, 2, 3], "Message");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass for object": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNotArray({});
-            });
-
-            assertAssertPassCalled("isNotArray");
-        },
-
-        "should pass for object with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNotArray({}, "Is it an array?");
-            });
-
-            assertAssertPassCalled("isNotArray");
-        },
-
-        "should pass for arguments": function () {
-            var args;
-
-            function captureArgs() {
-                args = arguments;
-            }
-
-            captureArgs();
-
-            assert.doesNotThrow(function () {
-                buster.assert.isNotArray(args);
-            });
-        },
-
-        "should pass for array like": function () {
-            var arrayLike = {
-                length: 4,
-                "0": "One",
-                "1": "Two",
-                "2": "Three",
-                "3": "Four",
-                splice: function () {}
-            };
-
-            assert.doesNotThrow(function () {
-                buster.assert.isNotArray(arrayLike);
-            });
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isNotArray([1, 2]);
-                throw new Error("Expected isNotArray to fail");
-            } catch (e) {
-                assert.equal("[assert.isNotArray] Expected 1,2 not to be array",
-                             e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.isNotArray([1, 2], "OMG!");
-                throw new Error("Expected isNotArray to fail");
-            } catch (e) {
-                assert.equal("[assert.isNotArray] OMG! Expected 1,2 not to be array",
-                             e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isNotArray, [NaN], [[]]);
+        function captureArgs() {
+            return arguments;
         }
+
+        var arrayLike = {
+            length: 4,
+            "0": "One",
+            "1": "Two",
+            "2": "Three",
+            "3": "Four",
+            splice: function () {}
+        };
+
+        pass("for arguments", captureArgs());
+        pass("for array like", arrayLike);
+
+        msg("fail with descriptive message",
+            "[assert.isNotArray] Expected 1,2 not to be array", [1, 2]);
+
+        msg("fail with custom message",
+            "[assert.isNotArray] Hmm: Expected 1,2 not to be array", [1, 2], "Hmm");
     });
 
-    testCase("AssertArrayLike", {
-        "should pass for array": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isArrayLike([]);
-            });
+    assertionTests("isArrayLike", function (pass, fail, msg) {
+        pass("for array", []);
+        pass("for array with message", [1, 2, 3], "Message");
+        fail("for object", {});
+        fail("for object with message", {}, "Is it an array?");
 
-            assertAssertPassCalled("isArrayLike");
-        },
+        function captureArgs() { return arguments; }
 
-        "should pass for array with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isArrayLike([1, 2, 3], "Message");
-            });
+        var arrayLike = {
+            length: 4,
+            "0": "One",
+            "1": "Two",
+            "2": "Three",
+            "3": "Four",
+            splice: function () {}
+        };
 
-            assertAssertPassCalled("isArrayLike");
-        },
+        pass("for arguments", captureArgs());
+        pass("for array like", arrayLike);
 
-        "should fail for object": function () {
-            resetAssertPassCounter();
+        msg("fail with descriptive message",
+            "[assert.isArrayLike] Expected [object Object] to be array like", {});
 
-            assert.throws(function () {
-                buster.assert.isArrayLike({});
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for object with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isArrayLike({}, "Is it an array?");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass for arguments": function () {
-            var args;
-
-            function captureArgs() {
-                args = arguments;
-            }
-
-            captureArgs();
-
-            assert.doesNotThrow(function () {
-                buster.assert.isArrayLike(args);
-            });
-        },
-
-        "should pass for array like": function () {
-            var arrayLike = {
-                length: 4,
-                "0": "One",
-                "1": "Two",
-                "2": "Three",
-                "3": "Four",
-                splice: function () {}
-            };
-
-            assert.doesNotThrow(function () {
-                buster.assert.isArrayLike(arrayLike);
-            });
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isArrayLike({});
-                throw new Error("Expected isArrayLike to fail");
-            } catch (e) {
-                assert.equal("[assert.isArrayLike] Expected [object Object] to be " +
-                             "array like", e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.isArrayLike(NaN, "OMG!");
-                throw new Error("Expected isArrayLike to fail");
-            } catch (e) {
-                assert.equal("[assert.isArrayLike] OMG! Expected NaN to be array like",
-                             e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isArrayLike, [[]], [NaN]);
-        }
+        msg("fail with custom message",
+            "[assert.isArrayLike] No: Expected [object Object] to be array like",
+            {}, "No");
     });
 
-    testCase("AssertNotArrayLike", {
-        "should fail for array": function () {
-            resetAssertPassCounter();
+    assertionTests("isNotArrayLike", function (pass, fail, msg) {
+        fail("for array", []);
+        fail("for array with message", [1, 2, 3], "Message");
+        pass("for object", {});
+        pass("for object with message", {}, "Is it an array?");
 
-            assert.throws(function () {
-                buster.assert.isNotArrayLike([]);
-            });
+        function captureArgs() { return arguments; }
 
-            assertAssertPassNotCalled();
-        },
+        var arrayLike = {
+            length: 4,
+            "0": "One",
+            "1": "Two",
+            "2": "Three",
+            "3": "Four",
+            splice: function () {}
+        };
 
-        "should fail for array with message": function () {
-            resetAssertPassCounter();
+        fail("for arguments", captureArgs());
+        fail("for array like", arrayLike);
 
-            assert.throws(function () {
-                buster.assert.isNotArrayLike([1, 2, 3], "Message");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass for object": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNotArrayLike({});
-            });
-
-            assertAssertPassCalled("isNotArrayLike");
-        },
-
-        "should pass for object with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNotArrayLike({}, "Is it an array?");
-            });
-
-            assertAssertPassCalled("isNotArrayLike");
-        },
-
-        "should fail for arguments": function () {
-            var args;
-
-            function captureArgs() {
-                args = arguments;
-            }
-
-            captureArgs();
-
-            assert.throws(function () {
-                buster.assert.isNotArrayLike(args);
-            });
-        },
-
-        "should fail for array like": function () {
-            var arrayLike = {
-                length: 4,
-                "0": "One",
-                "1": "Two",
-                "2": "Three",
-                "3": "Four",
-                splice: function () {}
-            };
-
-            assert.throws(function () {
-                buster.assert.isNotArrayLike(arrayLike);
-            });
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isNotArrayLike([1, 2]);
-                throw new Error("Expected isNotArrayLike to fail");
-            } catch (e) {
-                assert.equal("[assert.isNotArrayLike] Expected 1,2 not to be array like",
-                             e.message);
-            }
-        },
-
-        "should pass with custom message": function () {
-            try {
-                buster.assert.isNotArrayLike([1, 2], "OMG!");
-                throw new Error("Expected isNotArrayLike to fail");
-            } catch (e) {
-                assert.equal("[assert.isNotArrayLike] OMG! Expected 1,2 not to be " +
-                             "array like", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isNotArrayLike, [NaN], [[]]);
-        }
+        msg("fail with descriptive message",
+            "[assert.isNotArrayLike] Expected 1,2 not to be array like", [1, 2]); 
+        
+        msg("fail with custom message",
+            "[assert.isNotArrayLike] Hmm: Expected 1,2 not to be array like",
+            [1, 2], "Hmm"); 
     });
 
-    testCase("AssertUndefinedTest", {
-        "should pass for undefined": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isUndefined(undefined);
-            });
+    assertionTests("isUndefined", function (pass, fail, msg) {
+        pass("for undefined", undefined);
+        pass("for undefined with message", undefined, "Whatup?");
+        fail("for function", function () {});
+        fail("for null", null);
+        fail("for function with message", function () {}, "Whatup?");
 
-            assertAssertPassCalled("isUndefined");
-        },
+        msg("fail with descriptive message",
+            "[assert.isUndefined] Expected typeof Hey (string) to be undefined",
+            "Hey");
 
-        "should pass for undefined with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isUndefined(undefined, "Whatup?");
-            });
-
-            assertAssertPassCalled("isUndefined");
-        },
-
-        "should fail for function": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isUndefined(function () {});
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for null": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isUndefined(null);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for function with message": function () {
-            assert.throws(function () {
-                buster.assert.isUndefined(function () {}, "Whatup?");
-            });
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isUndefined("Hey");
-                throw new Error("Expected isUndefined to fail");
-            } catch (e) {
-                assert.equal("[assert.isUndefined] Expected typeof Hey " +
-                             "(string) to be undefined", e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.isUndefined(true, "OMG!!");
-                throw new Error("Expected isUndefined to fail");
-            } catch (e) {
-                assert.equal("[assert.isUndefined] OMG!! Expected typeof " +
-                             "true (boolean) to be undefined", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isUndefined, [undefined], [""]);
-        }
+        msg("fail with custom message",
+            "[assert.isUndefined] No! Expected typeof Hey (string) to be undefined",
+            "Hey", "No!");
     });
 
-    testCase("AssertNotUndefinedTest", {
-        "should fail for undefined": function () {
-            resetAssertPassCounter();
+    assertionTests("isNotUndefined", function (pass, fail, msg) {
+        fail("for undefined", undefined);
+        fail("for undefined with message", undefined, "Whatup?");
+        pass("for function", function () {});
+        pass("for null", null);
+        pass("for function with message", function () {}, "Whatup?");
 
-            assert.throws(function () {
-                buster.assert.isNotUndefined(undefined);
-            });
+        msg("fail with descriptive message",
+            "[assert.isNotUndefined] Expected not to be undefined", undefined);
 
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for undefined with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isNotUndefined(undefined, "Whatup?");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass for function": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNotUndefined(function () {});
-            });
-
-            assertAssertPassCalled("isNotUndefined");
-        },
-
-        "should pass for null": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNotUndefined(null);
-            });
-
-            assertAssertPassCalled("isNotUndefined");
-        },
-
-        "should pass for function with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNotUndefined(function () {}, "Whatup?");
-            });
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isNotUndefined(undefined);
-                throw new Error("Expected isNotUndefined to fail");
-            } catch (e) {
-                assert.equal("[assert.isNotUndefined] Expected not to be undefined",
-                             e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.isNotUndefined(undefined, "OMG!!");
-                throw new Error("Expected isNotUndefined to fail");
-            } catch (e) {
-                assert.equal("[assert.isNotUndefined] OMG!! Expected not to be " +
-                             "undefined", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isNotUndefined, [""], [undefined]);
-        }
+        msg("fail with custom message",
+            "[assert.isNotUndefined] A: Expected not to be undefined",
+            undefined, "A");
     });
 
-    testCase("AssertNullTest", {
-        "should pass for null": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNull(null);
-            });
+    assertionTests("isNull", function (pass, fail, msg) {
+        pass("for null", null);
+        pass("for null with message", null, "Whatup?");
+        fail("for function", function () {});
+        fail("for undefined", undefined);
+        fail("for function with message", function () {}, "Whatup?");
+        
+        msg("fail with descriptive message",
+            "[assert.isNull] Expected Hey to be null", "Hey").expectedFormats = 0;;
 
-            assertAssertPassCalled("isNull");
-        },
-
-        "should pass for null with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNull(null, "Whatup?");
-            });
-
-            assertAssertPassCalled("isNull");
-        },
-
-        "should fail for function": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isNull(function () {});
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for undefined": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isNull(undefined);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for function with message": function () {
-            assert.throws(function () {
-                buster.assert.isNull(function () {}, "Whatup?");
-            });
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isNull("Hey");
-                throw new Error("Expected isNull to fail");
-            } catch (e) {
-                assert.equal("[assert.isNull] Expected Hey to be null", e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.isNull(true, "OMG!!");
-                throw new Error("Expected isNull to fail");
-            } catch (e) {
-                assert.equal("[assert.isNull] OMG!! Expected true to be null",
-                             e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isNull, [null], [""]);
-        },
-
-        "should format value with assert.format": function () {
-            assertFormatWithFormat(buster.assert.isNull, {});
-        }
+        msg("fail with custom message",
+            "[assert.isNull] Yo! Expected Hey to be null",
+            "Hey", "Yo!").expectedFormats = 0;;
     });
 
-    testCase("AssertNotNullTest", {
-        "should fail for null": function () {
-            resetAssertPassCounter();
+    assertionTests("isNotNull", function (pass, fail, msg) {
+        fail("for null", null);
+        fail("for null with message", null, "Whatup?");
+        pass("for function", function () {});
+        pass("for undefined", undefined);
+        pass("for function with message", "Whatup?", function () {});
 
-            assert.throws(function () {
-                buster.assert.isNotNull(null);
-            });
+        msg("fail with descriptive message",
+            "[assert.isNotNull] Expected not to be null", null).expectedFormats = 0;;
 
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for null with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.isNotNull(null, "Whatup?");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass for function": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNotNull(function () {});
-            });
-
-            assertAssertPassCalled("isNotNull");
-        },
-
-        "should pass for undefined": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNotNull(undefined);
-            });
-
-            assertAssertPassCalled("isNotNull");
-        },
-
-        "should pass for function with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.isNotNull("Whatup?", function () {});
-            });
-        },
-
-        "should fail with descriptive message": function () {
-            try {
-                buster.assert.isNotNull(null);
-                throw new Error("Expected isNotNull to fail");
-            } catch (e) {
-                assert.equal("[assert.isNotNull] Expected not to be null",
-                             e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.isNotNull(null, "OMG!!");
-                throw new Error("Expected isNotNull to fail");
-            } catch (e) {
-                assert.equal("[assert.isNotNull] OMG!! Expected not to be " +
-                             "null", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.isNotNull, [""], [null]);
-        }
+        msg("fail with custom message",
+            "[assert.isNotNull] Sad: Expected not to be null",
+            null, "Sad").expectedFormats = 0;
     });
 
-    testCase("AssertMatchTest", {
-        "should pass matching regexp": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.match("Assertions", /[a-z]/);
-            });
-
-            assertAssertPassCalled("match");
-        },
-
-        "should pass matching regexp with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.match("Assertions", /[a-z]/, "Working?");
-            });
-
-            assertAssertPassCalled("match");
-        },
-
-        "should pass for generic object with test method returning true": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.match("Assertions", {
-                    test: function () {
-                        return true;
-                    }
-                });
-            });
-
-            assertAssertPassCalled("match");
-        },
-
-        "should fail for non-matching regexp": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.match("Assertions 123", /^[a-z]$/);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for non-matching regexp with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.match("Assertions 123", /^[a-z]$/, "Woot");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for generic object with test method returning false": function () {
-            assert.throws(function () {
-                buster.assert.match({
-                    test: function () {
-                        return false;
-                    }
-                }, "Assertions");
-            });
-        },
-
-        "should fail with understandable message": function () {
-            try {
-                buster.assert.match("Assertions 123", /^[a-z]+$/);
-                throw new Error("Expected assert.match to fail");
-            } catch (e) {
-                assert.equal("[assert.match] Expected Assertions 123 to match " +
-                             "/^[a-z]+$/", e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.match("Assertions 123", /^[a-z]+$/, "Wow!");
-                throw new Error("Expected assert.match to fail");
-            } catch (e) {
-                assert.equal("[assert.match] Wow! Expected Assertions 123 to match " +
-                             "/^[a-z]+$/", e.message);
-            }
-        },
-
-        "should format objects for message": function () {
-            var calls = spy(buster.assert, "format", function () {
-                buster.assert.match(/^[a-z]+$/, "Assertions 123");
-            });
-
-            assert.equal(2, calls.length);
-        },
-
-        "should fail if match object is null": function () {
-            try {
-                buster.assert.match("Assertions 123", null);
-                throw new Error("Expected assert.match to fail");
-            } catch (e) {
-                assert.equal("[assert.match] Matcher (null) was not a string, " +
-                             "a number, a function or an object", e.message);
-            }
-        },
-
-        "should fail if match object is undefined": function () {
-            try {
-                buster.assert.match("Assertions 123", undefined);
-                throw new Error("Expected assert.match to fail");
-            } catch (e) {
-                assert.equal("[assert.match] Matcher (undefined) was not a string, " +
-                             "a number, a function or an object", e.message);
-            }
-        },
-
-        "should fail if match object is false": function () {
-            try {
-                buster.assert.match("Assertions 123", false);
-                throw new Error("Expected assert.match to fail");
-            } catch (e) {
-                assert.equal("[assert.match] Matcher (false) was not a string, " +
-                             "a number, a function or an object", e.message);
-            }
-        },
-
-        "should fail if matching a number against a string": function () {
-            try {
-                buster.assert.match("Assertions 123", 23);
-                throw new Error("Expected assert.match to fail");
-            } catch (e) {
-                assert.equal("[assert.match] Expected Assertions 123 to match 23",
-                             e.message);
-            }
-        },
-
-        "should pass if matching a number against a similar string": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.match("23", 23);
-            });
-        },
-
-        "should pass if matching a number against itself": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.match(23, 23);
-            });
-        },
-
-        "should pass if matcher is a function that returns true": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.match("Assertions 123", function (obj) {
-                    return true;
-                });
-            });
-        },
-
-        "should fail if matcher is a function that returns false": function () {
-            assert.throws(function () {
-                buster.assert.match("Assertions 123", function (obj) {
-                    return false;
-                });
-            });
-        },
-
-        "should fail if matcher is a function that returns falsy": function () {
-            assert.throws(function () {
-                buster.assert.match("Assertions 123", function () {});
-            });
-        },
-
-        "should fail if matcher does not return explicit true": function () {
-            assert.throws(function () {
-                buster.assert.match("Assertions 123", function () {
-                    return "Hey";
-                });
-            });
-        },
-
-        "should call matcher with assertion argument": function () {
-            var received;
-
-            buster.assert.match("Assertions 123", function (obj) {
-                received = obj;
+    assertionTests("match", function (pass, fail, msg) {
+        pass("matching regexp", "Assertions", /[a-z]/);
+        pass("matching regexp with message", "Assertions", /[a-z]/, "Working?");
+        pass("for generic object with test method returning true", "Assertions", {
+            test: function () {
                 return true;
-            });
-
-            assert.equal("Assertions 123", received);
-        },
-
-        "should pass if matcher is substring of matchee": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.match("Diskord", "or");
-            });
-        },
-
-        "should pass if matcher is string equal to matchee": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.match("Diskord", "Diskord");
-            });
-        },
-
-        "should match strings ignoring case": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.match("Look ma, case-insensitive",
-                                    "LoOk Ma, CaSe-InSenSiTiVe");
-            });
-        },
-
-        "should fail if match string is not substring of matchee": function () {
-            assert.throws(function () {
-                buster.assert.match("Vim", "Emacs");
-            });
-        },
-
-        "should fail if match string is not substring of object": function () {
-            try {
-                buster.assert.match({}, "Emacs");
-                throw new Error("Expected assert.match to fail");
-            } catch (e) {
-                assert.equal("[assert.match] Expected [object Object] to match " +
-                             "Emacs", e.message);
             }
-        },
+        });
 
-        "should fail if matcher is substring of object.toString": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.match({
-                    toString: function () {
-                        return "Emacs";
-                    }
-                }, "Emacs");
-            });
-        },
+        fail("for non-matching regexp", "Assertions 123", /^[a-z]$/);
+        fail("for non-matching regexp with message",
+             "Assertions 123", /^[a-z]$/, "Woot");
 
-        "should fail if matcher is string and matchee is falsy": function () {
-            assert.throws(function () {
-                buster.assert.match(null, "");
-            });
-
-            assert.throws(function () {
-                buster.assert.match(undefined, "");
-            });
-
-            assert.throws(function () {
-                buster.assert.match(false, "");
-            });
-
-            assert.throws(function () {
-                buster.assert.match(0, "");
-            });
-
-            assert.throws(function () {
-                buster.assert.match(NaN, "");
-            });
-        },
-
-        "should pass if object contains all properties in matcher": function () {
-            var object = {
-                id: 42,
-                name: "Christian",
-                doIt: "yes",
-
-                speak: function () {
-                    return this.name;
-                }
-            };
-
-            assert.doesNotThrow(function () {
-                buster.assert.match(object, {
-                    id: 42,
-                    doIt: "yes"
-                });
-            });
-        },
-
-        "should pass for nested matcher": function () {
-            var object = {
-                id: 42,
-                name: "Christian",
-                doIt: "yes",
-                owner: {
-                    someDude: "Yes",
-                    hello: "ok"
-                },
-
-                speak: function () {
-                    return this.name;
-                }
-            };
-
-            assert.doesNotThrow(function () {
-                buster.assert.match(object, {
-                    owner: {
-                        someDude: "Yes",
-                        hello: function (value) {
-                            return value == "ok";
-                        }
-                    }
-                });
-            });
-        },
-
-        "should format non-regexp object for message": function () {
-            var calls = spy(buster.assert, "format", function () {
-                buster.assert.match("Assertions 123", null);
-            });
-
-            assert.equal(2, calls.length);
-            assert.equal(null, calls[0][0]);
-        },
-
-        "should fail through assert.fail": function () {
-            var calls = spy(buster.assert, "fail", function () {
-                buster.assert.match("Assertions 123", "^[a-z]+$");
-            });
-
-            assert.equal(1, calls.length);
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.match, ["a", /[a-z]/], ["1", /[a-z]/]);
-        }
-    });
-
-    testCase("AssertNoMatchTest", {
-        "should fail matching regexp": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.noMatch("Assertions", /[a-z]/);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail matching regexp with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.noMatch("Assertions", /[a-z]/, "Working?");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail generic object with test method returning true": function () {
-            assert.throws(function () {
-                buster.assert.noMatch("Assertions", {
-                    test: function () {
-                        return true;
-                    }
-                });
-            });
-        },
-
-        "should pass for non-matching regexp": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.noMatch("Assertions 123", /^[a-z]$/);
-            });
-
-            assertAssertPassCalled("noMatch");
-        },
-
-        "should pass for non-matching regexp with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.noMatch("Assertions 123", /^[a-z]$/, "Woot");
-            });
-
-            assertAssertPassCalled("noMatch");
-        },
-
-        "should pass for generic object with test method returning false": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.noMatch("Assertions", {
-                    test: function () {
-                        return false;
-                    }
-                });
-            });
-        },
-
-        "should fail with understandable message": function () {
-            try {
-                buster.assert.noMatch("Assertions 123", /^.+$/);
-                throw new Error("Expected assert.noMatch to fail");
-            } catch (e) {
-                assert.equal("[assert.noMatch] Expected Assertions 123 not to match " +
-                             "/^.+$/", e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.noMatch("Assertions 123", /^.+$/, "Wow!");
-                throw new Error("Expected assert.match to fail");
-            } catch (e) {
-                assert.equal("[assert.noMatch] Wow! Expected Assertions 123 not to " +
-                             "match /^.+$/", e.message);
-            }
-        },
-
-        "should format objects for message": function () {
-            var calls = spy(buster.assert, "format", function () {
-                buster.assert.noMatch("Assertions 123", /[0-9]$/);
-            });
-
-            assert.equal(2, calls.length);
-        },
-
-        "should fail if match object is null": function () {
-            try {
-                buster.assert.noMatch("Assertions 123", null);
-                throw new Error("Expected assert.match to fail");
-            } catch (e) {
-                assert.equal("[assert.noMatch] Matcher (null) was not a string, " +
-                             "a number, a function or an object", e.message);
-            }
-        },
-
-        "should fail if match object is undefined": function () {
-            try {
-                buster.assert.noMatch("Assertions 123", undefined);
-                throw new Error("Expected assert.match to fail");
-            } catch (e) {
-                assert.equal("[assert.noMatch] Matcher (undefined) was not a string, " +
-                             "a number, a function or an object", e.message);
-            }
-        },
-
-        "should fail if match object is false": function () {
-            try {
-                buster.assert.noMatch("Assertions 123", false);
-                throw new Error("Expected assert.match to fail");
-            } catch (e) {
-                assert.equal("[assert.noMatch] Matcher (false) was not a string, " +
-                             "a number, a function or an object", e.message);
-            }
-        },
-
-        "should pass if matching a number against a string": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.noMatch("Assertions 123", 23);
-            });
-        },
-
-        "should fail if matching a number against a similar string": function () {
-            assert.throws(function () {
-                buster.assert.noMatch(23, "23");
-            });
-        },
-
-        "should fail if matching a number against itself": function () {
-            assert.throws(function () {
-                buster.assert.noMatch(23, 23);
-            });
-        },
-
-        "should fail if matcher is a function that returns true": function () {
-            assert.throws(function () {
-                buster.assert.noMatch("Assertions 123", function (obj) {
-                    return true;
-                });
-            });
-        },
-
-        "should pass if matcher is a function that returns false": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.noMatch("Assertions 123", function (obj) {
-                    return false;
-                });
-            });
-        },
-
-        "should pass if matcher is a function that returns falsy": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.noMatch("Assertions 123", function () {});
-            });
-        },
-
-        "should pass if matcher does not return explicit true": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.noMatch("Assertions 123", function () {
-                    return "Hey";
-                });
-            });
-        },
-
-        "should call matcher with assertion argument": function () {
-            var received;
-
-            buster.assert.noMatch("Assertions 123", function (obj) {
-                received = obj;
+        fail("for generic object with test method returning false", {
+            test: function () {
                 return false;
-            });
+            }
+        }, "Assertions");
 
-            assert.equal("Assertions 123", received);
-        },
+        msg("fail with understandable message",
+            "[assert.match] Expected Assertions 123 to match /^[a-z]+$/",
+            "Assertions 123", /^[a-z]+$/);
 
-        "should fail if matcher is substring of matchee": function () {
-            assert.throws(function () {
-                buster.assert.noMatch("Diskord", "or");
-            });
-        },
+        msg("fail with custom message",
+            "[assert.match] Oops: Expected Assertions 123 to match /^[a-z]+$/",
+            "Assertions 123", /^[a-z]+$/, "Oops");
 
-        "should fail if matcher is string equal to matchee": function () {
-            assert.throws(function () {
-                buster.assert.noMatch("Diskord", "Diskord");
-            });
-        },
+        fail("fail if match object is null", "Assertions 123", null);
 
-        "should pass if match string is not substring of matchee": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.noMatch("Vim", "Emacs");
-            });
-        },
+        msg("fail if match object is undefined",
+            "[assert.match] Matcher (undefined) was not a string, a number, a function or an object",
+            "Assertions 123", undefined);
 
-        "should pass if match string is not substring of object": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.noMatch({}, "Emacs");
-            });
-        },
+        fail("if match object is false", "Assertions 123", false);
+        fail("if matching a number against a string", "Assertions 123", 23);
+        pass("if matching a number against a similar string", "23", 23);
+        pass("if matching a number against itself", 23, 23);
 
-        "should pass if matcher is substring of object.toString": function () {
-            assert.throws(function () {
-                buster.assert.noMatch({
-                    toString: function () {
-                        return "Emacs";
-                    }
-                }, "Emacs");
-            });
-        },
+        pass("if matcher is a function that returns true",
+             "Assertions 123", function (obj) {
+            return true;
+        });
 
-        "should pass if matcher is string and matchee is falsy": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.noMatch(null, "");
-                buster.assert.noMatch(undefined, "");
-                buster.assert.noMatch(false, "");
-                buster.assert.noMatch(0, "");
-                buster.assert.noMatch(NaN, "");
-            });
-        },
+        fail("if matcher is a function that returns false",
+             "Assertions 123", function (obj) {
+                 return false;
+             });
 
-        "should fail if object contains all properties in matcher": function () {
-            var object = {
-                id: 42,
-                name: "Christian",
-                doIt: "yes",
+        fail("if matcher is a function that returns falsy",
+             "Assertions 123", function () {});
 
-                speak: function () {
-                    return this.name;
+        fail("if matcher does not return explicit true",
+             "Assertions 123", function () {
+                 return "Hey";
+             });
+
+        this["should call matcher with assertion argument"] = function () {
+            var listener = sinon.stub().returns(true);
+
+            buster.assert.match("Assertions 123", listener);
+
+            assert.ok(listener.calledWith("Assertions 123"));
+        };
+
+        pass("if matcher is substring of matchee", "Diskord", "or");
+        pass("if matcher is string equal to matchee", "Diskord", "Diskord");
+        pass("for strings ignoring case", "Look ma, case-insensitive",
+             "LoOk Ma, CaSe-InSenSiTiVe");
+
+        fail("if match string is not substring of matchee", "Vim", "Emacs");
+        fail("if match string is not substring of object", {}, "Emacs");
+
+        fail("if matcher is substring of object.toString", "Emacs", {
+            toString: function () {
+                return "Emacs";
+            }
+        });
+
+        fail("for null and empty string", null, "");
+        fail("for undefined and empty string", undefined, "");
+        fail("for false and empty string", false, "");
+        fail("for 0 and empty string", 0, "");
+        fail("for NaN and empty string", NaN, "");
+
+        var object = {
+            id: 42,
+            name: "Christian",
+            doIt: "yes",
+
+            speak: function () {
+                return this.name;
+            }
+        };
+
+        pass("if object contains all properties in matcher", object, {
+            id: 42,
+            doIt: "yes"
+        });
+
+        var object2 = {
+            id: 42,
+            name: "Christian",
+            doIt: "yes",
+            owner: {
+                someDude: "Yes",
+                hello: "ok"
+            },
+
+            speak: function () {
+                return this.name;
+            }
+        };
+
+        pass("for nested matcher", object2, {
+            owner: {
+                someDude: "Yes",
+                hello: function (value) {
+                    return value == "ok";
                 }
-            };
+            }
+        });
+    });
 
-            assert.throws(function () {
-                buster.assert.noMatch(object, {
-                    id: 42,
-                    doIt: "yes"
-                });
-            });
-        },
+    assertionTests("noMatch", function (pass, fail, msg) {
+        fail("matching regexp", "Assertions", /[a-z]/);
+        fail("matching regexp with message", "Assertions", /[a-z]/, "Working?");
+        fail("generic object with test method returning true", "Assertions", {
+            test: function () {
+                return true;
+            }
+        });
 
-        "should fail for nested matcher": function () {
-            var object = {
-                id: 42,
-                name: "Christian",
-                doIt: "yes",
+        pass("for non-matching regexp", "Assertions 123", /^[a-z]$/);
+
+        pass("for non-matching regexp with message",
+             "Assertions 123", /^[a-z]$/, "Woot");
+
+        pass("for generic object with test method returning false", "Assertions", {
+            test: function () {
+                return false;
+            }
+        });
+
+        msg("fail with understandable message",
+            "[assert.noMatch] Expected Assertions 123 not to match /^.+$/",
+            "Assertions 123", /^.+$/);
+
+        msg("fail with custom message",
+            "[assert.noMatch] No! Expected Assertions 123 not to match /^.+$/",
+            "Assertions 123", /^.+$/, "No!");
+
+        fail("if match object is null", "Assertions 123", null);
+
+        fail("if match object is undefined", "Assertions 123", undefined);
+        fail("if match object is false", "Assertions 123", false);
+        pass("if matching a number against a string", "Assertions 123", 23);
+        fail("if matching a number against a similar string", 23, "23");
+        fail("if matching a number against itself", 23, 23);
+        fail("if matcher is a function that returns true", "Assertions 123",
+             function (obj) {
+                 return true;
+             });
+
+        pass("if matcher is a function that returns false",
+             "Assertions 123", function (obj) {
+                 return false;
+             });
+
+        pass("if matcher is a function that returns falsy",
+             "Assertions 123", function () {});
+
+        pass("if matcher does not return explicit true",
+             "Assertions 123", function () {
+                 return "Hey";
+             });
+
+        this["should call matcher with assertion argument"] = function () {
+            var listener = sinon.stub().returns(false);
+
+            buster.assert.noMatch("Assertions 123", listener);
+
+            assert.ok(listener.calledWith("Assertions 123"));
+        };
+
+        fail("if matcher is substring of matchee", "Diskord", "or");
+        fail("if matcher is string equal to matchee", "Diskord", "Diskord");
+        pass("if match string is not substring of matchee", "Vim", "Emacs");
+        pass("if match string is not substring of object", {}, "Emacs");
+
+        pass("if matcher is substring of object.toString", "Emacs", {
+            toString: function () {
+                return "Emacs";
+            }
+        });
+
+        pass("if matching an empty string with null", null, "");
+        pass("if matching an empty string with undefined", undefined, "");
+        pass("if matching an empty string with false", false, "");
+        pass("if matching an empty string with 0", 0, "");
+        pass("if matching an empty string with NaN", NaN, "");
+
+        var object = {
+            id: 42,
+            name: "Christian",
+            doIt: "yes",
+
+            speak: function () {
+                return this.name;
+            }
+        };
+
+        fail("if object contains all properties in matcher", object, {
+            id: 42,
+            doIt: "yes"
+        });
+
+        var object2 = {
+            id: 42,
+            name: "Christian",
+            doIt: "yes",
                 owner: {
                     someDude: "Yes",
                     hello: "ok"
                 },
 
-                speak: function () {
-                    return this.name;
+            speak: function () {
+                return this.name;
+            }
+        };
+
+        fail("for nested matcher", object2, {
+            owner: {
+                someDude: "Yes",
+                hello: function (value) {
+                    return value == "ok";
                 }
-            };
+            }
+        });
 
-            assert.throws(function () {
-                buster.assert.noMatch(object, {
-                    owner: {
-                        someDude: "Yes",
-                        hello: function (value) {
-                            return value == "ok";
-                        }
-                    }
-                });
-            });
-        },
+        var object3 = {
+            id: 42,
+            name: "Christian",
+            doIt: "yes",
+            owner: {
+                someDude: "Yes",
+                hello: "ok"
+            },
 
-        "should pass for nested matcher with mismatching properties": function () {
-            var object = {
-                id: 42,
-                name: "Christian",
-                doIt: "yes",
-                owner: {
-                    someDude: "Yes",
-                    hello: "ok"
-                },
+            speak: function () {
+                return this.name;
+            }
+        };
 
-                speak: function () {
-                    return this.name;
+        pass("for nested matcher with mismatching properties", object3, {
+            owner: {
+                someDude: "No",
+                hello: function (value) {
+                    return value == "ok";
                 }
-            };
-
-            assert.doesNotThrow(function () {
-                buster.assert.noMatch(object, {
-                    owner: {
-                        someDude: "No",
-                        hello: function (value) {
-                            return value == "ok";
-                        }
-                    }
-                });
-            });
-        },
-
-        "should format non-regexp object for message": function () {
-            var calls = spy(buster.assert, "format", function () {
-                buster.assert.noMatch("Assertions 123", null);
-            });
-
-            assert.equal(2, calls.length);
-            assert.equal(null, calls[0][0]);
-        },
-
-        "should fail through assert.fail": function () {
-            var calls = spy(buster.assert, "fail", function () {
-                buster.assert.noMatch("Assertions 123", "Assertions");
-            });
-
-            assert.equal(1, calls.length);
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.noMatch, [/[a-z]/, [/[a-z]/, "a"], "1"]);
-        }
+            }
+        });
     });
 
-    testCase("AssertExceptionTest", {
-        "should pass when callback throws": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.exception(function () {
-                    throw new Error();
-                });
-            });
+    assertionTests("exception", function (pass, fail, msg) {
+        pass("when callback throws", function () {
+            throw new Error();
+        });
 
-            assertAssertPassCalled("exception");
-        },
+        fail("when callback does not throw", function () {});
 
-        "should fail when callback does not throw": function () {
-            resetAssertPassCounter();
+        msg("fail with message", "[assert.exception] Expected exception",
+            function () {});
 
-            assert.throws(function () {
-                buster.assert.exception(function () {});
-            });
+        msg("fail with custom message", "[assert.exception] Snap: Expected exception",
+            function () {}, null, "Snap").expectedFormats = 0;
 
-            assertAssertPassNotCalled();
-        },
+        pass("when callback throws expected type", function () {
+            throw new TypeError("Oh hmm");
+        }, "TypeError");
 
-        "should fail with message": function () {
-            try {
-                buster.assert.exception(function () {});
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.exception] Expected exception",
-                             e.message);
-            }
-        },
+        pass("with custom message and expected type", function () {
+            throw new TypeError();
+        }, "TypeError", "Okidoki");
 
-        "should fail with custom message": function () {
-            try {
-                buster.assert.exception(function () {}, null, "Awww");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.exception] Awww: Expected exception",
-                             e.message);
-            }
-        },
+        fail("when callback does not throw expected type", function () {
+            throw new Error();
+        }, "TypeError");
 
-        "should pass when callback throws expected type": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.exception(function () {
-                    throw new TypeError("Oh hmm");
-                }, "TypeError");
-            });
+        fail("when callback does not throw and specific type os expected",
+             function () {}, "TypeError");
 
-            assertAssertPassCalled("exception");
-        },
+        fail("with message when callback does not throw expected type", function () {
+            throw new Error();
+        }, "TypeError", "Oh noes");
 
-        "should pass with custom message and expected type": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.exception(function () {
-                    throw new TypeError();
-                }, "TypeError", "Okidoki");
-            });
+        fail("with message when callback does not throw and type is expected",
+             function () {}, "TypeError", "Oh noes");
 
-            assertAssertPassCalled("exception");
-        },
+        msg("fail with message when not throwing", 
+            "[assert.exception] Expected TypeError but no exception was thrown",
+            function () {}, "TypeError");
 
-        "should fail when callback does not throw expected type": function () {
-            resetAssertPassCounter();
+        msg("fail with custom message when not throwing", 
+            "[assert.exception] Aww: Expected TypeError but no exception was thrown",
+            function () {}, "TypeError", "Aww").expectedFormats = 1;
 
-            assert.throws(function () {
-                buster.assert.exception(function () {
-                    throw new Error();
-                }, "TypeError");
-            });
+        msg("fail with message when throwing wrong kind of exception",
+             "[assert.exception] Expected TypeError but threw Error",
+             function () {
+                 throw new Error();
+             }, "TypeError");
 
-            assertAssertPassNotCalled();
-        },
+        msg("fail with custom message when throwing wrong kind of exception",
+             "[assert.exception] Aww: Expected TypeError but threw Error",
+             function () {
+                 throw new Error();
+             }, "TypeError", "Aww");
 
-        "should fail when callback does not throw and specific type os expected": function () {
-            resetAssertPassCounter();
+        msg("if not passed arguments",
+            "[assert.exception] Expected to receive at least 1 argument");
+    });
 
-            assert.throws(function () {
-                buster.assert.exception(function () {}, "TypeError");
-            });
+    assertionTests("noException", function (pass, fail, msg) {
+        fail("when callback throws", function () {
+            throw new Error();
+        });
 
-            assertAssertPassNotCalled();
-        },
+        pass("when callback does not throw", function () {});
+        pass("with message when callback does not throw", function () {}, "Oh noes");
 
-        "should fail with message when callback does not throw expected type": function () {
-            assert.throws(function () {
-                buster.assert.exception(function () {
-                    throw new Error();
-                }, "TypeError", "Oh noes");
-            });
-        },
-
-        "should fail with message when callback does not throw and type is expected": function () {
-            assert.throws(function () {
-                buster.assert.exception(function () {}, "TypeError", "Oh noes");
-            });
-        },
-
-        "should fail with message when not throwing": function () {
-            try {
-                buster.assert.exception(function () {}, "TypeError");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.exception] Expected TypeError but no exception was thrown",
-                             e.message);
-            }
-        },
-
-        "should fail with custom message when not throwing": function () {
-            try {
-                buster.assert.exception(function () {}, "TypeError", "Awww");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.exception] Awww: Expected TypeError but no exception was thrown",
-                             e.message);
-            }
-        },
-
-        "should fail with message when throwing wrong kind of exception": function () {
-            try {
-                buster.assert.exception(function () {
-                    throw new Error();
-                }, "TypeError");
-
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.exception] Expected TypeError but threw Error",
-                             e.message);
-            }
-        },
-
-        "should fail with custom message when throwing wrong kind of exception": function () {
-            try {
-                buster.assert.exception(function () {
-                    throw new Error();
-                }, "TypeError", "Awww");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.exception] Awww: Expected TypeError but threw Error",
-                             e.message);
-            }
-        },
-
-        "should fail if not passed arguments": function () {
-            try {
-                buster.assert.exception();
-                throw new Error("Expected assert.exception to fail");
-            } catch (e) {
-                assert.equal("[assert.exception] Expected to receive at least 1 argument", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.exception, [function () {
+        msg("fail with message",
+            "[assert.noException] Expected not to throw but threw Error",
+            function () {
                 throw new Error();
-            }], [function () {}]);
-        }
-    });
-
-    testCase("AssertNoExceptionTest", {
-        "should fail when callback throws": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.noException(function () {
-                    throw new Error();
-                });
             });
 
-            assertAssertPassNotCalled();
-        },
-
-        "should pass when callback does not throw": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.noException(function () {});
-            });
-
-            assertAssertPassCalled("noException");
-        },
-
-        "should pass with message when callback does not throw": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.noException(function () {}, "Oh noes");
-            });
-
-            assertAssertPassCalled("noException");
-        },
-
-        "should fail with message": function () {
-            try {
-                buster.assert.noException(function () {
-                    throw new Error();
-                });
-
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.noException] Expected not to throw but threw Error",
-                             e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            resetAssertPassCounter();
-
-            try {
-                buster.assert.noException(function () {
-                    throw new Error();
-                }, "Awww");
-
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.noException] Awww: Expected not to throw but threw Error",
-                             e.message);
-            }
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail if not passed arguments": function () {
-            try {
-                buster.assert.noException();
-                throw new Error("Expected assert.noException to fail");
-            } catch (e) {
-                assert.equal("[assert.noException] Expected to receive at least 1 argument", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.noException,
-                                   [function () {}], [function () {
+        msg("fail with custom message",
+            "[assert.noException] Aww: Expected not to throw but threw Error",
+            function () {
                 throw new Error();
-            }]);
+            }, "Aww");
+
+        msg("fail if not passed arguments",
+            "[assert.noException] Expected to receive at least 1 argument");
+    });
+
+    assertionTests("tagName", function (pass, fail, msg) {
+        pass("for matching tag names", { tagName: "li" }, "li");
+        pass("for case-insensitive matching tag names", { tagName: "LI" }, "li");
+        pass("for case-insensitive matching tag names #2", { tagName: "li" }, "LI");
+        pass("for uppercase matching tag names", { tagName: "LI" }, "LI");
+        pass("for matching tag names with message", { tagName: "li" }, "li", "Yup");
+        fail("for non-matching tag names", { tagName: "li" }, "p");
+        fail("for substring matches in tag names", { tagName: "li" }, "i");
+        fail("for non-matching with message", { tagName: "li" }, "p", "Aww");
+
+        msg("fail with message",
+            "[assert.tagName] Expected tagName to be p but was li",
+            { tagName: "li" }, "p");
+
+        msg("fail with custom message",
+            "[assert.tagName] Snap! Expected tagName to be p but was li",
+            { tagName: "li" }, "p", "Snap!");
+
+        msg("fail if not passed arguments",
+            "[assert.tagName] Expected to receive at least 2 arguments");
+
+        msg("fail if not passed tag name",
+            "[assert.tagName] Expected to receive at least 2 arguments",
+            { tagName: ""}).expectedFormats = 0;
+
+        msg("fail if object does not have tagName property",
+            "[assert.tagName] Expected [object Object] to have tagName property",
+            {}, "li");
+
+        if (typeof document != "undefined") {
+            pass("for DOM elements", document.createElement("li"), "li");
         }
     });
 
-    testCase("AssertTagNameTest", {
-        "should pass for matching tag names": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.tagName({ tagName: "li" }, "li");
-            });
+    assertionTests("notTagName", function (pass, fail, msg) {
+        fail("for matching tag names", { tagName: "li" }, "li");
+        fail("for case-insensitive matching tag names", { tagName: "LI" }, "li");
+        fail("for case-insensitive matching tag names #2", { tagName: "LI" }, "li");
+        fail("for same casing matching tag names", { tagName: "li" }, "li");
+        fail("for matching tag names with message", { tagName: "li" }, "li", "Yup");
+        pass("for non-matching tag names", { tagName: "li" }, "p");
+        pass("for substring matching tag names", { tagName: "li" }, "i");
+        pass("for case-insensitive non-matching tag names", { tagName: "li" }, "P");
+        pass("for case-insensitive substring mathcing tag names",
+             { tagName: "li" }, "i");
 
-            assertAssertPassCalled("tagName");
-        },
+        pass("for non-matching with message", { tagName: "li" }, "p", "Aww");
 
-        "should pass for case-insensitive matching tag names": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.tagName({ tagName: "LI" }, "li");
-                buster.assert.tagName({ tagName: "li" }, "LI");
-                buster.assert.tagName({ tagName: "LI" }, "LI");
-            });
+        msg("fail with message",
+            "[assert.notTagName] Expected tagName not to be li",
+            { tagName: "li" }, "li");
 
-            assertAssertPassCalled("tagName");
-        },
+        msg("fail with custom message",
+            "[assert.notTagName] No: Expected tagName not to be li",
+            { tagName: "li" }, "li", "No").expectedFormats = 1;
 
-        "should pass for matching tag names with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.tagName({ tagName: "li" }, "li", "Yup");
-            });
+        msg("fail if not passed arguments",
+            "[assert.notTagName] Expected to receive at least 2 arguments");
 
-            assertAssertPassCalled("tagName");
-        },
+        msg("fail if not passed tag name",
+            "[assert.notTagName] Expected to receive at least 2 arguments",
+            { tagName: "p" }).expectedFormats = 0;
 
-        "should fail for non-matching tag names": function () {
-            resetAssertPassCounter();
+        msg("fail if object does not have tagName property",
+            "[assert.notTagName] Expected [object Object] to have tagName property",
+            {}, "li");
 
-            assert.throws(function () {
-                buster.assert.tagName({ tagName: "li" }, "p");
-            });
-
-            assert.throws(function () {
-                buster.assert.tagName({ tagName: "li" }, "i");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for non-matching with message": function () {
-            resetAssertPassCounter();
-
-            assert.throws(function () {
-                buster.assert.tagName({ tagName: "li" }, "p", "Aww");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail with message": function () {
-            try {
-                buster.assert.tagName({ tagName: "li" }, "p");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.tagName] Expected tagName to be p but was li",
-                             e.message);
-            }
-        },
-
-        "should fail custom with message": function () {
-            try {
-                buster.assert.tagName({ tagName: "li" }, "p", "Awww");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.tagName] Awww: Expected tagName to be p but was li",
-                             e.message);
-            }
-        },
-
-        "should represent expected value in message": function () {
-            try {
-                buster.assert.tagName({ tagName: "p" }, {}, "Awww");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal(
-                    "[assert.tagName] Awww: Expected tagName to be [object Object] but was p",
-                    e.message
-                );
-            }
-        },
-
-        "should fail if not passed arguments": function () {
-            try {
-                buster.assert.tagName();
-                throw new Error("Expected assert.tagName to fail");
-            } catch (e) {
-                assert.equal("[assert.tagName] Expected to receive at least 2 arguments", e.message);
-            }
-        },
-
-        "should fail if not passed tag name": function () {
-            try {
-                buster.assert.tagName({});
-                throw new Error("Expected assert.tagName to fail");
-            } catch (e) {
-                assert.equal("[assert.tagName] Expected to receive at least 2 arguments", e.message);
-            }
-        },
-
-        "should fail if object does not have tagName property": function () {
-            try {
-                buster.assert.tagName({}, "li");
-                throw new Error("Expected assert.tagName to fail");
-            } catch (e) {
-                assert.equal("[assert.tagName] Expected [object Object] to have tagName property", e.message);
-            }
-        },
-
-        "should pass for DOM elements": function () {
-            if (typeof document != "undefined") {
-                assert.doesNotThrow(function () {
-                    var li = document.createElement("li");
-                    buster.assert.tagName(li, "li");
-                });
-            }
-        },
-
-        "should update assertion counter": function () {
-            var el = { tagName: "li" };
-
-            assertUpAssertionCount(buster.assert.tagName, [el, "li"], [el, "p"]);
+        if (typeof document != "undefined") {
+            pass("for DOM elements", document.createElement("li"), "p");
         }
     });
 
-    testCase("AssertNotTagNameTest", {
-        "should fail for matching tag names": function () {
-            resetAssertPassCounter();
+    assertionTests("className", function (pass, fail, msg) {
+        msg("fail without arguments",
+            "[assert.className] Expected to receive at least 2 arguments");
 
-            assert.throws(function () {
-                buster.assert.notTagName({ tagName: "li" }, "li");
-            });
+        msg("fail without class name",
+            "[assert.className] Expected to receive at least 2 arguments",
+            { className: "" }).expectedFormats = 0;
 
-            assertAssertPassNotCalled();
-        },
+        msg("fail if object does not have className property",
+            "[assert.className] Expected object to have className property",
+            {}, "item");
 
-        "should fail for case-insensitive matching tag names": function () {
-            resetAssertPassCounter();
+        msg("fail with message if object does not have className property",
+            "[assert.className] No go: Expected object to have className property",
+            {}, "item", "No go");
 
-            assert.throws(function () {
-                buster.assert.notTagName({ tagName: "LI" }, "li");
-            });
+        msg("fail when element does not include class name",
+            "[assert.className] Expected object's className to include item but was ",
+            { className: "" }, "item");
 
-            assert.throws(function () {
-                buster.assert.notTagName({ tagName: "li" }, "li");
-            });
+        pass("when element's class name matches", { className: "item" }, "item");
+        pass("when element includes class name", { className: "feed item" }, "item");
+        fail("when element does not include all class names",
+             { className: "feed item" }, "item post");
 
-            assert.throws(function () {
-                buster.assert.notTagName({ tagName: "LI" }, "li");
-            });
+        pass("when element includes all class names",
+             { className: "feed item post" }, "item post");
 
-            assertAssertPassNotCalled();
-        },
+        pass("when element includes all class names in different order",
+             { className: "a b c d e" }, "e a d");
 
-        "should fail for matching tag names with message": function () {
-            assert.throws(function () {
-                buster.assert.notTagName({ tagName: "li" }, "li", "Yup");
-            });
-        },
+        pass("with class names as array", { className: "a b c d e" }, ["e","a","d"]);
 
-        "should pass for non-matching tag names": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notTagName({ tagName: "li" }, "p");
-                buster.assert.notTagName({ tagName: "li" }, "i");
-            });
+        if (typeof document != "undefined") {
+            var li = document.createElement("li");
+            li.className = "some thing in here";
 
-            assertAssertPassCalled("notTagName");
-        },
-
-        "should pass for case-insensitive non-matching tag names": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notTagName({ tagName: "li" }, "P");
-                buster.assert.notTagName({ tagName: "LI" }, "i");
-            });
-
-            assertAssertPassCalled("notTagName");
-        },
-
-        "should pass for non-matching with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notTagName({ tagName: "li" }, "p", "Aww");
-            });
-
-            assertAssertPassCalled("notTagName");
-        },
-
-        "should fail with message": function () {
-            try {
-                buster.assert.notTagName({ tagName: "li" }, "li");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.notTagName] Expected tagName not to be li",
-                             e.message);
-            }
-        },
-
-        "should fail with custom message": function () {
-            try {
-                buster.assert.notTagName({ tagName: "p" }, "p", "Awww");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.notTagName] Awww: Expected tagName not to be p",
-                             e.message);
-            }
-        },
-
-        "should fail if not passed arguments": function () {
-            try {
-                buster.assert.notTagName();
-                throw new Error("Expected assert.notTagName to fail");
-            } catch (e) {
-                assert.equal("[assert.notTagName] Expected to receive at least 2 arguments", e.message);
-            }
-        },
-
-        "should fail if not passed tag name": function () {
-            try {
-                buster.assert.notTagName({});
-                throw new Error("Expected assert.notTagName to fail");
-            } catch (e) {
-                assert.equal("[assert.notTagName] Expected to receive at least 2 arguments", e.message);
-            }
-        },
-
-        "should fail if object does not have tagName property": function () {
-            try {
-                buster.assert.notTagName({}, "li");
-                throw new Error("Expected assert.notTagName to fail");
-            } catch (e) {
-                assert.equal("[assert.notTagName] Expected [object Object] to have tagName property", e.message);
-            }
-        },
-
-        "should pass for DOM elements": function () {
-            if (typeof document != "undefined") {
-                assert.doesNotThrow(function () {
-                    var li = document.createElement("li");
-                    buster.assert.notTagName(li, "p");
-                });
-            }
-        },
-
-        "should update assertion counter": function () {
-            var el = { tagName: "li" };
-
-            assertUpAssertionCount(buster.assert.notTagName, [el, "p"], [el, "li"]);
+            pass("for DOM elements", li, "thing some");
         }
     });
 
-    testCase("AssertClassName", {
-        "should fail without arguments": function () {
-            resetAssertPassCounter();
+    assertionTests("notClassName", function (pass, fail, msg) {
+        msg("fail without arguments",
+            "[assert.notClassName] Expected to receive at least 2 arguments");
 
-            try {
-                buster.assert.className();
-                throw new Error("assert.className did not fail");
-            } catch (e) {
-                assert.equal("[assert.className] Expected to receive at least 2 arguments", e.message);
-            }
+        msg("fail without class name",
+            "[assert.notClassName] Expected to receive at least 2 arguments",
+            { className: "item" }).expectedFormats = 0;
 
-            assertAssertPassNotCalled();
-        },
+        msg("fail if object does not have className property",
+            "[assert.notClassName] Expected object to have className property",
+            {}, "item");
 
-        "should fail without class name": function () {
-            resetAssertPassCounter();
+        msg("fail with message if object does not have className property",
+            "[assert.notClassName] No go: Expected object to have className property",
+            {}, "item", "No go");
 
-            try {
-                buster.assert.className({});
-                throw new Error("assert.className did not fail");
-            } catch (e) {
-                assert.equal("[assert.className] Expected to receive at least 2 arguments", e.message);
-            }
+        pass("when element does not include class name", { className: "" }, "item");
 
-            assertAssertPassNotCalled();
-        },
+        msg("fail when element's class name matches",
+            "[assert.notClassName] Expected object's className not to include item",
+            { className: "item" }, "item");
 
-        "should fail if object does not have className property": function () {
-            resetAssertPassCounter();
+        msg("fail with message when element's class name matches",
+            "[assert.notClassName] Aww: Expected object's className not to include item",
+            { className: "item" }, "item", "Aww");
 
-            try {
-                buster.assert.className({}, "item");
-                throw new Error("assert.className did not fail");
-            } catch (e) {
-                assert.equal("[assert.className] Expected object to have className property", e.message);
-            }
+        fail("when element includes class name", { className: "feed item" }, "item");
+        pass("when element does not include all class names",
+             { className: "feed item" }, "item post");
+        fail("when element includes all class names",
+             { className: "feed item post" }, "item post");
+        fail("when element includes all class names in different order",
+             { className: "a b c d e" }, "e a d");
+        fail("with class names as array", { className: "a b c d e" }, ["e","a","d"]);
+        pass("with class names as array", { className: "a b c d e" }, ["f","a","d"]);
 
-            assertAssertPassNotCalled();
-        },
+        if (typeof document != "undefined") {
+            var li = document.createElement("li");
+            li.className = "some thing in here";
 
-        "should fail with message if object does not have className property": function () {
-            resetAssertPassCounter();
-
-            try {
-                buster.assert.className({}, "item", "Won't work");
-                throw new Error("assert.className did not fail");
-            } catch (e) {
-                assert.equal("[assert.className] Won't work: Expected object to have className property", e.message);
-            }
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail when element does not include class name": function () {
-            resetAssertPassCounter();
-
-            try {
-                buster.assert.className({ className: "" }, "item");
-                throw new Error("assert.className did not fail");
-            } catch (e) {
-                assert.equal("[assert.className] Expected object's className to include item but was ", e.message);
-            }
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass when element's class name matches": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.className({ className: "item" }, "item");
-            });
-
-            assertAssertPassCalled("className");
-        },
-
-        "should pass when element includes class name": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.className({ className: "feed item" }, "item");
-            });
-
-            assertAssertPassCalled("className");
-        },
-
-        "should fail when element does not include all class names": function () {
-            assert.throws(function () {
-                buster.assert.className({ className: "feed item" }, "item post");
-            });
-        },
-
-        "should pass when element includes all class names": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.className({ className: "feed item post" }, "item post");
-            });
-
-            assertAssertPassCalled("className");
-        },
-
-        "should pass when element includes all class names in different order": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.className({ className: "a b c d e" }, "e a d");
-            });
-        },
-
-        "should pass with class names as array": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.className({ className: "a b c d e" }, ["e", "a", "d"]);
-            });
-        },
-
-        "should pass for DOM elements": function () {
-            if (typeof document != "undefined") {
-                assert.doesNotThrow(function () {
-                    var li = document.createElement("li");
-                    li.className = "some thing in here";
-
-                    buster.assert.className(li, "thing some");
-                });
-            }
-        },
-
-        "should update assertion counter": function () {
-            var el = { className: "item" };
-
-            assertUpAssertionCount(buster.assert.className, [el, "item"], [el, "eh"]);
+            pass("for DOM elements", li, "something");
         }
     });
 
-    testCase("AssertNotClassName", {
-        "should fail without arguments": function () {
-            resetAssertPassCounter();
+    assertionTests("inDelta", function (pass, fail, msg) {
+        pass("for equal numbers", 3, 3, 0);
+        pass("for equal numbers with message", 3, 3, 0, "Yup");
+        fail("for numbers out of delta range", 2, 3, 0.5);
+        fail("for numbers out of delta range with message", 3, 2, 0.5, "Awww");
 
-            try {
-                buster.assert.notClassName();
-                throw new Error("assert.notClassName did not fail");
-            } catch (e) {
-                assert.equal("[assert.notClassName] Expected to receive at least 2 arguments", e.message);
-            }
+        msg("fail with descriptive message",
+            "[assert.inDelta] Expected 3 to be equal to 2 +/- 0.6", 3, 2, 0.6);
 
-            assertAssertPassNotCalled();
-        },
+        msg("fail with custom message",
+            "[assert.inDelta] Awww: Expected 3 to be equal to 2 +/- 0.6",
+            3, 2, 0.6, "Awww");
 
-        "should fail without class name": function () {
-            resetAssertPassCounter();
+        pass("for numbers in delta range", 2, 3, 1);
 
-            try {
-                buster.assert.notClassName({ className: "item" });
-                throw new Error("assert.notClassName did not fail");
-            } catch (e) {
-                assert.equal("[assert.notClassName] Expected to receive at least 2 arguments", e.message);
-            }
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail if object does not have className property": function () {
-            resetAssertPassCounter();
-
-            try {
-                buster.assert.notClassName({}, "item");
-                throw new Error("assert.notClassName did not fail");
-            } catch (e) {
-                assert.equal("[assert.notClassName] Expected object to have className property", e.message);
-            }
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail with message if object does not have className property": function () {
-            resetAssertPassCounter();
-
-            try {
-                buster.assert.notClassName({}, "item", "Won't work");
-                throw new Error("assert.notClassName did not fail");
-            } catch (e) {
-                assert.equal("[assert.notClassName] Won't work: Expected object to have className property", e.message);
-            }
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass when element does not include class name": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notClassName({ className: "" }, "item");
-            });
-
-            assertAssertPassCalled("notClassName");
-        },
-
-        "should fail when element's class name matches": function () {
-            resetAssertPassCounter();
-
-            try {
-                buster.assert.notClassName({ className: "item" }, "item");
-                throw new Error("assert.notClassName did not throw");
-            } catch (e) {
-                assert.equal("[assert.notClassName] Expected object's className " +
-                             "not to include item", e.message);
-            }
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail with message when element's class name matches": function () {
-            try {
-                buster.assert.notClassName({ className: "item" }, "item", "Aww");
-                throw new Error("assert.notClassName did not throw");
-            } catch (e) {
-                assert.equal("[assert.notClassName] Aww: Expected object's " +
-                             "className not to include item", e.message);
-            }
-        },
-
-        "should fail when element includes class name": function () {
-            assert.throws(function () {
-                buster.assert.notClassName({ className: "feed item" }, "item");
-            });
-        },
-
-        "should pass when element does not include all class names": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notClassName({ className: "feed item" }, "item post");
-            });
-
-            assertAssertPassCalled("notClassName");
-        },
-
-        "should fail when element includes all class names": function () {
-            assert.throws(function () {
-                buster.assert.notClassName({ className: "feed item post" }, "item post");
-            });
-        },
-
-        "should fail when element includes all class names in different order": function () {
-            assert.throws(function () {
-                buster.assert.notClassName({ className: "a b c d e" }, "e a d");
-            });
-        },
-
-        "should fail with class names as array": function () {
-            assert.throws(function () {
-                buster.assert.notClassName({ className: "a b c d e" }, ["e", "a", "d"]);
-            });
-        },
-
-        "should pass with class names as array": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notClassName({ className: "a b c d e" }, ["f", "a", "d"]);
-            });
-        },
-
-        "should pass for DOM elements": function () {
-            if (typeof document != "undefined") {
-                assert.doesNotThrow(function () {
-                    var li = document.createElement("li");
-                    li.className = "some thing in here";
-
-                    buster.assert.notClassName(li, "something");
-                });
-            }
-        },
-
-        "should update assertion counter": function () {
-            var el = { className: "item" };
-
-            assertUpAssertionCount(buster.assert.notClassName, [el, "eh"], [el, "item"]);
-        }
+        msg("fail if not passed arguments",
+            "[assert.inDelta] Expected to receive at least 3 arguments");
     });
 
-    testCase("AssertInDeltaTest", {
-        "should pass for equal numbers": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.inDelta(3, 3, 0);
-            });
+    assertionTests("notInDelta", function (pass, fail, msg) {
+        fail("for equal numbers", 3, 3, 0);
+        fail("for equal numbers with message", 3, 3, 0, "Yup");
+        pass("for numbers out of delta range", 2, 3, 0.5);
+        pass("for numbers out of delta range with message", 3, 2, 0.5, "Awww");
 
-            assertAssertPassCalled("inDelta");
-        },
+        msg("with descriptive message",
+            "[assert.notInDelta] Expected 3 not to be equal to 3 +/- 0", 3, 3, 0);
 
-        "should pass for equal numbers with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.inDelta(3, 3, 0, "Yup");
-            });
+        msg("with custom message",
+            "[assert.notInDelta] Awww: Expected 3 not to be equal to 3 +/- 0",
+            3, 3, 0, "Awww");
 
-            assertAssertPassCalled("inDelta");
-        },
+        fail("for numbers in delta range", 2, 3, 1);
 
-        "should fail for numbers out of delta range": function () {
-            assert.throws(function () {
-                buster.assert.inDelta(2, 3, 0.5);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for numbers out of delta range with message": function () {
-            assert.throws(function () {
-                buster.assert.inDelta(3, 2, 0.5, "Awww");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail with message": function () {
-            try {
-                buster.assert.inDelta(3, 2, 0.6, "Awww");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.inDelta] Awww: Expected 3 to be equal to 2 +/- 0.6",
-                             e.message);
-            }
-        },
-
-        "should pass for numbers in delta range": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.inDelta(2, 3, 1);
-            });
-        },
-
-        "should fail if not passed arguments": function () {
-            try {
-                buster.assert.inDelta();
-                throw new Error("Expected assert.inDelta to fail");
-            } catch (e) {
-                assert.equal("[assert.inDelta] Expected to receive at least 3 arguments", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.inDelta, [2, 2, 0], [2, 1, 0]);
-        }
-    });
-
-    testCase("AssertNotInDeltaTest", {
-        setUp: function () {
-            resetAssertPassCounter();
-        },
-
-        "should fail for equal numbers": function () {
-            assert.throws(function () {
-                buster.assert.notInDelta(3, 3, 0);
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should fail for equal numbers with message": function () {
-            assert.throws(function () {
-                buster.assert.notInDelta(3, 3, 0, "Yup");
-            });
-
-            assertAssertPassNotCalled();
-        },
-
-        "should pass for numbers out of delta range": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notInDelta(2, 3, 0.5);
-            });
-
-            assertAssertPassCalled("notInDelta");
-        },
-
-        "should pass for numbers out of delta range with message": function () {
-            assert.doesNotThrow(function () {
-                buster.assert.notInDelta(3, 2, 0.5, "Awww");
-            });
-
-            assertAssertPassCalled("notInDelta");
-        },
-
-        "should fail with message": function () {
-            try {
-                buster.assert.notInDelta(3, 3, 0, "Awww");
-                throw new Error("Didn't fail");
-            } catch (e) {
-                assert.equal("[assert.notInDelta] Awww: Expected 3 not to be equal to 3 +/- 0",
-                             e.message);
-            }
-        },
-
-        "should fail for numbers in delta range": function () {
-            assert.throws(function () {
-                buster.assert.notInDelta(2, 3, 1);
-            });
-        },
-
-        "should fail if not passed arguments": function () {
-            try {
-                buster.assert.notInDelta();
-                throw new Error("Expected assert.notInDelta to fail");
-            } catch (e) {
-                assert.equal("[assert.notInDelta] Expected to receive at least 3 arguments", e.message);
-            }
-        },
-
-        "should update assertion counter": function () {
-            assertUpAssertionCount(buster.assert.notInDelta, [2, 4, 1], [2, 2, 0]);
-        }
+        msg("fail if not passed arguments",
+            "[assert.notInDelta] Expected to receive at least 3 arguments");
     });
 }());
