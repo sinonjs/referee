@@ -25,12 +25,12 @@ if (typeof require != "undefined") {
 
         var pass = function (message) {
             var args = Array.prototype.slice.call(arguments, 1);
-            tests["should pass when " + message] = assertPass.apply(null, args);
+            tests["should pass " + message] = assertPass.apply(null, args);
         };
 
         var fail = function (message, test) {
             var args = Array.prototype.slice.call(arguments, 1);
-            tests["should fail when " + message] = assertFail.apply(null, args);
+            tests["should fail " + message] = assertFail.apply(null, args);
         };
 
         var msg = function (message, msg) {
