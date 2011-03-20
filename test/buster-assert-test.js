@@ -218,11 +218,25 @@ if (typeof require != "undefined") {
         },
 
         "should update assertion count": function () {
-            assertUpAssertionCount(buster.assert, [true], [false]);
+            buster.assert.count = 0;
+
+            try {
+                buster.assert(true);
+                buster.assert(false);
+            } catch (e) {}
+
+            assert.equal(2, buster.assert.count);
         },
 
         "should format value with assert.format": function () {
-            assertFormatWithFormat(buster.assert, false);
+            buster.assert.format = sinon.spy();
+
+            try {
+                buster.assert(false);
+            } catch (e) {}
+
+            assert.ok(buster.assert.format.calledOnce);
+            assert.ok(buster.assert.format.calledWith(false));
         },
 
         "should fail if not passed arguments": function () {
