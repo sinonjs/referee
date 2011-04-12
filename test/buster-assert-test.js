@@ -1290,13 +1290,13 @@ if (typeof require != "undefined") {
             function () {}, "TypeError", "Aww").expectedFormats = 1;
 
         msg("fail with message when throwing wrong kind of exception",
-             "[assert.exception] Expected TypeError but threw Error",
+             "[assert.exception] Expected TypeError but threw Error (\":(\")",
              function () {
-                 throw new Error();
+                 throw new Error(":(");
              }, "TypeError");
 
         msg("fail with custom message when throwing wrong kind of exception",
-             "[assert.exception] Aww: Expected TypeError but threw Error",
+             "[assert.exception] Aww: Expected TypeError but threw Error (\"\")",
              function () {
                  throw new Error();
              }, "TypeError", "Aww");
@@ -1318,13 +1318,13 @@ if (typeof require != "undefined") {
         pass("with message when callback does not throw", function () {}, "Oh noes");
 
         msg("fail with message",
-            "[assert.noException] Expected not to throw but threw Error",
+            "[assert.noException] Expected not to throw but threw Error (\":(\")",
             function () {
-                throw new Error();
+                throw new Error(":(");
             });
 
         msg("fail with custom message",
-            "[assert.noException] Aww: Expected not to throw but threw Error",
+            "[assert.noException] Aww: Expected not to throw but threw Error (\"\")",
             function () {
                 throw new Error();
             }, "Aww");
