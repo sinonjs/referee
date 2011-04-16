@@ -992,6 +992,9 @@ if (typeof require != "undefined") {
         fail("for non-matching regexp with message",
              "Assertions 123", /^[a-z]$/, "Woot");
 
+        pass("matching boolean", true, true);
+        fail("mis-matching boolean", true, false);
+
         fail("for generic object with test method returning false", {
             test: function () {
                 return false;
@@ -1009,7 +1012,7 @@ if (typeof require != "undefined") {
         fail("fail if match object is null", "Assertions 123", null);
 
         msg("fail if match object is undefined",
-            "[assert.match] Matcher (undefined) was not a string, a number, a function or an object",
+            "[assert.match] Matcher (undefined) was not a string, a number, a function, a boolean or an object",
             "Assertions 123", undefined);
 
         fail("if match object is false", "Assertions 123", false);
@@ -1133,9 +1136,8 @@ if (typeof require != "undefined") {
             "Assertions 123", /^.+$/, "No!");
 
         fail("if match object is null", "Assertions 123", null);
-
         fail("if match object is undefined", "Assertions 123", undefined);
-        fail("if match object is false", "Assertions 123", false);
+        pass("if match object is false", "Assertions 123", false);
         pass("if matching a number against a string", "Assertions 123", 23);
         fail("if matching a number against a similar string", 23, "23");
         fail("if matching a number against itself", 23, 23);
