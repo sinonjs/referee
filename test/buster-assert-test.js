@@ -6,27 +6,10 @@ if (typeof require != "undefined") {
     var assert = require("assert");
     var buster = { assert: require("./../lib/buster-assert") };
     var sinon = require("sinon");
+    var testHelper = require("./test-helper");
 }
 
 (function () {
-    function assertFailCallbacks(callback) {
-        return function () {
-            var failListener = sinon.spy();
-            buster.assert.on("failure", failListener);
-            var okListener = sinon.spy();
-            buster.assert.on("pass", okListener);
-
-            try {
-                callback();
-            } catch (e) {
-                assert.fail("Assertion threw when it should not: " + e.message);
-            }
-
-            assert.ok(failListener.calledOnce, "Fail listener was not called once: " + failListener.callCount);
-            assert.ok(!okListener.called, "Pass listener was unexpectedly called");
-        };
-    }
-
     var testArgCount;
     var assertionUnderTest;
     var labels = ["no arguments", "one argument", "two arguments",
@@ -41,7 +24,7 @@ if (typeof require != "undefined") {
         }
 
         tests[testName + labels[count] + suffix] =
-            assertFailCallbacks(function () {
+            testHelper.assertFailCallbacks(function () {
                 buster.assert.throwOnFailure = false;
                 buster.assert[assertionUnderTest].apply(buster.assert,
                                                         args.slice(0, count));
@@ -51,8 +34,8 @@ if (typeof require != "undefined") {
     function assertionTests(assertion, callback) {
         assertionUnderTest = assertion;
         var tests = {
-            setUp: setUp,
-            tearDown: tearDown
+            setUp: testHelper.setUp,
+            tearDown: testHelper.tearDown
         };
 
         var pass = function (message) {
@@ -176,26 +159,9 @@ if (typeof require != "undefined") {
         return test;
     }
 
-    function setUp() {
-        delete buster.assert.listeners;
-        buster.assert.count = 0;
-
-        buster.assert.format = function (object) {
-            return "" + object;
-        };
-    }
-
-    function tearDown() {
-        if (buster.assert.fail.restore) {
-            buster.assert.fail.restore();
-        }
-
-        delete buster.assert.throwOnFailure;
-    }
-
     testCase("AssertTest", {
-        setUp: setUp,
-        tearDown: tearDown,
+        setUp: testHelper.setUp,
+        tearDown: testHelper.tearDown,
 
         "should allow true": function () {
             var okListener = sinon.spy();
@@ -315,7 +281,7 @@ if (typeof require != "undefined") {
             }
         },
 
-        "should not throw if not configured to": assertFailCallbacks(function () {
+        "should not throw if not configured to": testHelper.assertFailCallbacks(function () {
             buster.assert.throwOnFailure = false;
             buster.assert(false);
         })
@@ -510,8 +476,8 @@ if (typeof require != "undefined") {
 
     if (typeof document != "undefined") {
         testCase("AssertEqualsHostObjectTest", {
-            setUp: setUp,
-            tearDown: tearDown,
+            setUp: testHelper.setUp,
+            tearDown: testHelper.tearDown,
 
             "should pass when comparing DOM element to itself": function () {
                 var element = document.createElement("div");
