@@ -4,9 +4,6 @@
 [submodule "node_modules/buster-core"]
 	path = node_modules/buster-core
 	url = git@git.cjohansen.no:buster-js/buster-core.git
-[submodule "node_modules/buster-event-emitter"]
-	path = node_modules/buster-event-emitter
-	url = git@git.cjohansen.no:buster-js/buster-event-emitter.git
 [submodule "node_modules/sinon"]
 	path = node_modules/sinon
 	url = git@github.com:cjohansen/Sinon.JS.git
