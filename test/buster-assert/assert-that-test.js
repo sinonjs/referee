@@ -2,15 +2,19 @@
          plusplus: false, regexp: false*/
 /*global require, __dirname*/
 if (typeof require != "undefined") {
-    var testCase = require("buster-util").testCase;
     var assert = require("assert");
-    var buster = { assert: require("../../lib/buster-assert") };
-    buster.assert.that = require("../../lib/buster-assert/assert-that");
     var sinon = require("sinon");
     var testHelper = require("../test-helper");
+
+    var buster = {
+        assert: require("../../lib/buster-assert"),
+        util: require("buster-util")
+    };
+
+    buster.assert.that = require("../../lib/buster-assert/assert-that");
 }
 
-testCase("AssertThatTest", {
+buster.util.testCase("AssertThatTest", {
     setUp: testHelper.setUp,
     tearDown: testHelper.tearDown,
 

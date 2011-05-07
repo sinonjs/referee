@@ -2,20 +2,22 @@
          plusplus: false, regexp: false*/
 /*global require, __dirname*/
 if (typeof require != "undefined") {
-    var testCase = require("buster-util").testCase;
     var assert = require("assert");
-    var buster = { assert: require("./../lib/buster-assert") };
     var sinon = require("sinon");
     var testHelper = require("./test-helper");
+
+    var buster = {
+        assert: require("./../lib/buster-assert"),
+        util: require("buster-util")
+    };
 }
 
 (function () {
     var testArgCount;
-    var assertionUnderTest;
     var labels = ["no arguments", "one argument", "two arguments",
                   "three arguments", "four arguments"];
 
-    function generateCallbackTest(tests, args, count) {
+    function generateCallbackTest(assertion, tests, args, count) {
         var suffix = "", i = 2;
         var testName = "should not throw if not configured to for ";
 
@@ -26,30 +28,28 @@ if (typeof require != "undefined") {
         tests[testName + labels[count] + suffix] =
             testHelper.assertFailCallbacks(function () {
                 buster.assert.throwOnFailure = false;
-                buster.assert[assertionUnderTest].apply(buster.assert,
-                                                        args.slice(0, count));
+                buster.assert[assertion].apply(buster.assert, args.slice(0, count));
             });
     }
 
     function assertionTests(assertion, callback) {
-        assertionUnderTest = assertion;
         var tests = {
             setUp: testHelper.setUp,
             tearDown: testHelper.tearDown
         };
 
         var pass = function (message) {
-            var args = Array.prototype.slice.call(arguments, 1);
+            var args = [assertion].concat(Array.prototype.slice.call(arguments, 1));
             tests["should pass " + message] = assertPass.apply(null, args);
         };
 
         var fail = function (message, test) {
-            var args = Array.prototype.slice.call(arguments, 1);
+            var args = [assertion].concat(Array.prototype.slice.call(arguments, 1));
             tests["should fail " + message] = assertFail.apply(null, args);
         };
 
         var msg = function (message, msg) {
-            var args = Array.prototype.slice.call(arguments, 1);
+            var args = [assertion].concat(Array.prototype.slice.call(arguments, 1));
             return tests["should " + message] = assertMessage.apply(null, args);
         };
 
@@ -57,10 +57,10 @@ if (typeof require != "undefined") {
             var args = Array.prototype.slice.call(arguments);
 
             if (typeof testArgCount == "number") {
-                generateCallbackTest(tests, args, testArgCount);
+                generateCallbackTest(assertion, tests, args, testArgCount);
             } else {
                 for (var i = 0, l = args.length; i <= l; ++i) {
-                    generateCallbackTest(tests, args, i);
+                    generateCallbackTest(assertion, tests, args, i);
                 }
             }
 
@@ -68,11 +68,11 @@ if (typeof require != "undefined") {
         };
 
         callback.call(tests, pass, fail, msg, callbacks);
-        return testCase("Assert" + assertion + "Test", tests);
+        return buster.util.testCase("Assert" + assertion + "Test", tests);
     }
 
-    function assertFail() {
-        var args = Array.prototype.slice.call(arguments);
+    function assertFail(assertion) {
+        var args = Array.prototype.slice.call(arguments, 1);
 
         return function () {
             sinon.spy(buster.assert, "fail");
@@ -82,7 +82,7 @@ if (typeof require != "undefined") {
             buster.assert.on("failure", failListener);
 
             try {
-                buster.assert[assertionUnderTest].apply(buster.assert, args);
+                buster.assert[assertion].apply(buster.assert, args);
             } catch (e) {}
 
             assert.ok(buster.assert.fail.calledOnce);
@@ -92,8 +92,8 @@ if (typeof require != "undefined") {
         };
     }
 
-    function assertPass() {
-        var args = Array.prototype.slice.call(arguments);
+    function assertPass(assertion) {
+        var args = Array.prototype.slice.call(arguments, 1);
 
         return function () {
             var okListener = sinon.spy();
@@ -103,19 +103,19 @@ if (typeof require != "undefined") {
             buster.assert.on("failure", failListener);
 
             try {
-                buster.assert[assertionUnderTest].apply(buster.assert, args);
+                buster.assert[assertion].apply(buster.assert, args);
             } catch(e) {}
 
-            assert.ok(okListener.calledOnce);
-            assert.ok(okListener.calledWith(assertionUnderTest));
+            assert.equal(okListener.callCount, 1);
+            assert.ok(okListener.calledWith(assertion));
             assert.equal(1, buster.assert.count);
             assert.ok(!buster.assert.fail.called);
             assert.ok(!failListener.called);
         };
     }
 
-    function assertMessage(message) {
-        var args = Array.prototype.slice.call(arguments, 1);
+    function assertMessage(assertion, message) {
+        var args = Array.prototype.slice.call(arguments, 2);
 
         var test = function () {
             sinon.spy(buster.assert, "format");
@@ -124,8 +124,8 @@ if (typeof require != "undefined") {
             var msg;
 
             try {
-                buster.assert[assertionUnderTest].apply(buster.assert, args);
-                throw new Error(assertionUnderTest + " expected to fail");
+                buster.assert[assertion].apply(buster.assert, args);
+                throw new Error(assertion + " expected to fail");
             } catch(e) {
                 assert.equal(e.name, "AssertionError", e.name + ": " + e.message);
                 assert.equal(e.message, message);
@@ -159,7 +159,7 @@ if (typeof require != "undefined") {
         return test;
     }
 
-    testCase("AssertTest", {
+    buster.util.testCase("AssertTest", {
         setUp: testHelper.setUp,
         tearDown: testHelper.tearDown,
 
@@ -475,7 +475,7 @@ if (typeof require != "undefined") {
     });
 
     if (typeof document != "undefined") {
-        testCase("AssertEqualsHostObjectTest", {
+        buster.util.testCase("AssertEqualsHostObjectTest", {
             setUp: testHelper.setUp,
             tearDown: testHelper.tearDown,
 
@@ -1266,7 +1266,7 @@ if (typeof require != "undefined") {
         msg("fail with custom message when throwing wrong kind of exception",
              "[assert.exception] Aww: Expected TypeError but threw Error ()",
              function () {
-                 throw new Error();
+                 throw new Error("");
              }, "TypeError", "Aww");
 
         msg("if not passed arguments",
@@ -1294,7 +1294,7 @@ if (typeof require != "undefined") {
         msg("fail with custom message",
             "[assert.noException] Aww: Expected not to throw but threw Error ()",
             function () {
-                throw new Error();
+                throw new Error("");
             }, "Aww");
 
         msg("fail if not passed arguments",
