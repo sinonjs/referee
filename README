@@ -1,0 +1,7 @@
+To run tests in the browser:
+
+    node_modules/buster-util/jstdhtml
+
+Open test/test.html in a browser
+
+You can also run JsTestDriver from the root directory.
