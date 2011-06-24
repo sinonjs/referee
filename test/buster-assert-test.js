@@ -441,6 +441,7 @@ if (typeof require != "undefined") {
         var re2 = new RegExp("[a-z]+");
         re2.id = 42;
 
+        fail("when comparing nested array with shallow array", [["hey"]], ["hey"]);
         fail("when comparing regexp objects with custom properties", re1, re2);
         fail("when comparing different objects", { id: 42 }, {});
         fail("when comparing different objects with message", { id: 42 }, {}, "Hmm");
