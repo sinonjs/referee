@@ -20,5 +20,10 @@
     },
     "dependencies": {
         "buster-core": "~0.1"
+    },
+    "devDependencies": {
+        "sinon": "~1",
+        "buster-core": "*",
+        "buster-util": "*"
     }
 }
