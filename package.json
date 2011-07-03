@@ -19,7 +19,7 @@
         "url": "http://git.gitorious.org/buster-js/buster-assert.git"
     },
     "dependencies": {
-        "buster-core": "~0.1"
+        "buster-core": "*"
     },
     "devDependencies": {
         "sinon": "~1",
