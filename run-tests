@@ -1,4 +1,5 @@
 #!/usr/bin/env node
 
-require("./test/buster-assert-test.js");
-require("./test/buster-assert/assert-that-test.js");
+require("./test/buster-assertions-test.js");
+require("./test/buster-assertions/assert-that-test.js");
+require("./test/buster-assertions/refute-that-test.js");

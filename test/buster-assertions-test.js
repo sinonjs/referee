@@ -7,157 +7,13 @@ if (typeof require != "undefined") {
     var testHelper = require("./test-helper");
 
     var buster = {
-        assert: require("./../lib/buster-assert"),
+        assertions: require("./../lib/buster-assertions"),
         util: require("buster-util")
     };
 }
 
 (function () {
-    var testArgCount;
-    var labels = ["no arguments", "one argument", "two arguments",
-                  "three arguments", "four arguments"];
-
-    function generateCallbackTest(assertion, tests, args, count) {
-        var suffix = "", i = 2;
-        var testName = "should not throw if not configured to for ";
-
-        while (tests[testName + labels[count] + suffix]) {
-            suffix = " #" + (i++);
-        }
-
-        tests[testName + labels[count] + suffix] =
-            testHelper.assertFailCallbacks(function () {
-                buster.assert.throwOnFailure = false;
-                buster.assert[assertion].apply(buster.assert, args.slice(0, count));
-            });
-    }
-
-    function assertionTests(assertion, callback) {
-        var tests = {
-            setUp: testHelper.setUp,
-            tearDown: testHelper.tearDown
-        };
-
-        var pass = function (message) {
-            var args = [assertion].concat(Array.prototype.slice.call(arguments, 1));
-            tests["should pass " + message] = assertPass.apply(null, args);
-        };
-
-        var fail = function (message, test) {
-            var args = [assertion].concat(Array.prototype.slice.call(arguments, 1));
-            tests["should fail " + message] = assertFail.apply(null, args);
-        };
-
-        var msg = function (message, msg) {
-            var args = [assertion].concat(Array.prototype.slice.call(arguments, 1));
-            return tests["should " + message] = assertMessage.apply(null, args);
-        };
-
-        var callbacks = function () {
-            var args = Array.prototype.slice.call(arguments);
-
-            if (typeof testArgCount == "number") {
-                generateCallbackTest(assertion, tests, args, testArgCount);
-            } else {
-                for (var i = 0, l = args.length; i <= l; ++i) {
-                    generateCallbackTest(assertion, tests, args, i);
-                }
-            }
-
-            testArgCount = null;
-        };
-
-        callback.call(tests, pass, fail, msg, callbacks);
-        return buster.util.testCase("Assert" + assertion + "Test", tests);
-    }
-
-    function assertFail(assertion) {
-        var args = Array.prototype.slice.call(arguments, 1);
-
-        return function () {
-            sinon.spy(buster.assert, "fail");
-            var okListener = sinon.spy();
-            buster.assert.on("pass", okListener);
-            var failListener = sinon.spy();
-            buster.assert.on("failure", failListener);
-
-            try {
-                buster.assert[assertion].apply(buster.assert, args);
-            } catch (e) {}
-
-            assert.ok(buster.assert.fail.calledOnce);
-            assert.equal(1, buster.assert.count);
-            assert.ok(!okListener.called);
-            assert.ok(failListener.calledOnce);
-        };
-    }
-
-    function assertPass(assertion) {
-        var args = Array.prototype.slice.call(arguments, 1);
-
-        return function () {
-            var okListener = sinon.spy();
-            buster.assert.on("pass", okListener);
-            sinon.spy(buster.assert, "fail");
-            var failListener = sinon.spy();
-            buster.assert.on("failure", failListener);
-
-            try {
-                buster.assert[assertion].apply(buster.assert, args);
-            } catch(e) {}
-
-            assert.equal(okListener.callCount, 1);
-            assert.ok(okListener.calledWith(assertion));
-            assert.equal(1, buster.assert.count);
-            assert.ok(!buster.assert.fail.called);
-            assert.ok(!failListener.called);
-        };
-    }
-
-    function assertMessage(assertion, message) {
-        var args = Array.prototype.slice.call(arguments, 2);
-
-        var test = function () {
-            sinon.spy(buster.assert, "format");
-            var failListener = sinon.spy();
-            buster.assert.on("failure", failListener);
-            var msg;
-
-            try {
-                buster.assert[assertion].apply(buster.assert, args);
-                throw new Error(assertion + " expected to fail");
-            } catch(e) {
-                assert.equal(e.name, "AssertionError", e.name + ": " + e.message);
-                assert.equal(e.message, message);
-                msg = e.message;
-            }
-
-            var expected = test.expectedFormats;
-
-            if (typeof expected != "number") {
-                expected = args.length;
-
-                if (typeof args[args.length - 1] == "string") {
-                    expected -= 1;
-                }
-            }
-
-            assert.ok(buster.assert.format.callCount >= expected);
-
-            for (var i = 0, l = expected; i < l; ++i) {
-                if (isNaN(args[i]) && isNaN(buster.assert.format.args[i][0])) {
-                    continue;
-                }
-
-                assert.ok(buster.assert.format.calledWith(args[i]));
-            }
-
-            assert.equal(failListener.args[0][0].name, "AssertionError");
-            assert.equal(failListener.args[0][0].message, msg);
-        };
-
-        return test;
-    }
+    var ba = buster.assertions;
 
     buster.util.testCase("AssertTest", {
         setUp: testHelper.setUp,
@@ -165,10 +21,10 @@ if (typeof require != "undefined") {
 
         "should allow true": function () {
             var okListener = sinon.spy();
-            buster.assert.on("pass", okListener);
+            ba.on("pass", okListener);
 
             assert.doesNotThrow(function () {
-                buster.assert(true);
+                ba.assert(true);
             });
 
             assert.ok(okListener.calledOnce);
@@ -177,26 +33,26 @@ if (typeof require != "undefined") {
 
         "should allow truthy values": function () {
             assert.doesNotThrow(function () {
-                buster.assert({});
-                buster.assert([]);
-                buster.assert("Truthy");
-                buster.assert(1);
-                buster.assert(/a/);
+                ba.assert({});
+                ba.assert([]);
+                ba.assert("Truthy");
+                ba.assert(1);
+                ba.assert(/a/);
             });
         },
 
         "should allow true with message": function () {
             assert.doesNotThrow(function () {
-                buster.assert(true, "s'aright");
+                ba.assert(true, "s'aright");
             });
         },
 
         "should not allow false": function () {
             var okListener = sinon.spy();
-            buster.assert.on("pass", okListener);
+            ba.on("pass", okListener);
 
             assert.throws(function () {
-                buster.assert(false);
+                ba.assert(false);
             });
 
             assert.ok(!okListener.called);
@@ -204,35 +60,35 @@ if (typeof require != "undefined") {
 
         "should not allow falsy values": function () {
             assert.throws(function () {
-                buster.assert("");
+                ba.assert("");
             });
 
             assert.throws(function () {
-                buster.assert(0);
+                ba.assert(0);
             });
 
             assert.throws(function () {
-                buster.assert(NaN);
+                ba.assert(NaN);
             });
 
             assert.throws(function () {
-                buster.assert(null);
+                ba.assert(null);
             });
 
             assert.throws(function () {
-                buster.assert(undefined);
+                ba.assert(undefined);
             });
         },
 
         "should not allow false with message": function () {
             assert.throws(function () {
-                buster.assert(false, "Some message");
+                ba.assert(false, "Some message");
             });
         },
 
         "should fail with generated message": function () {
             try {
-                buster.assert(false);
+                ba.assert(false);
                 throw new Error("Didn't fail");
             } catch (e) {
                 assert.equal("AssertionError", e.name);
@@ -242,7 +98,7 @@ if (typeof require != "undefined") {
 
         "should fail with custom message": function () {
             try {
-                buster.assert(false, "False FTW");
+                ba.assert(false, "False FTW");
                 throw new Error("Didn't fail");
             } catch (e) {
                 assert.equal("AssertionError", e.name);
@@ -251,43 +107,44 @@ if (typeof require != "undefined") {
         },
 
         "should update assertion count": function () {
-            buster.assert.count = 0;
+            ba.count = 0;
 
             try {
-                buster.assert(true);
-                buster.assert(false);
+                ba.assert(true);
+                ba.assert(false);
             } catch (e) {}
 
-            assert.equal(2, buster.assert.count);
+            assert.equal(2, ba.count);
         },
 
         "should format value with assert.format": function () {
-            buster.assert.format = sinon.spy();
+            ba.format = sinon.spy();
 
             try {
-                buster.assert(false);
+                ba.assert(false);
             } catch (e) {}
 
-            assert.ok(buster.assert.format.calledOnce);
-            assert.ok(buster.assert.format.calledWith(false));
+            assert.ok(ba.format.calledOnce);
+            assert.ok(ba.format.calledWith(false));
         },
 
         "should fail if not passed arguments": function () {
             try {
-                buster.assert();
+                ba.assert();
                 throw new Error("Expected assert to fail");
             } catch (e) {
-                assert.equal("[assert] Expected to receive at least 1 argument", e.message);
+                assert.equal("[assert] Expected to receive at least 1 argument",
+                             e.message);
             }
         },
 
-        "should not throw if not configured to": testHelper.assertFailCallbacks(function () {
-            buster.assert.throwOnFailure = false;
-            buster.assert(false);
+        "should not throw if not configured to":
+        testHelper.assertionFailureEventTest(function () {
+            ba.assert(false);
         })
     });
 
-    assertionTests("isTrue", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "isTrue", function (pass, fail, msg) {
         pass("for true", true);
         pass("for true with message", true, "Yup");
         fail("for false", false);
@@ -302,10 +159,9 @@ if (typeof require != "undefined") {
         fail("for number", 32);
         msg("fail if not passed arguments",
             "[assert.isTrue] Expected to receive at least 1 argument");
-        callbacks(false);
     });
 
-    assertionTests("isFalse", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "isFalse", function (pass, fail, msg, callbacks) {
         pass("for false", false);
         pass("for false with message", false, "Yup");
         fail("for true", true);
@@ -320,13 +176,12 @@ if (typeof require != "undefined") {
         fail("for NaN", NaN);
         fail("for null", null);
         fail("for undefined", undefined);
-        callbacks(true);
     });
 
     var obj = { id: 42 };
     var obj2 = { id: 42 };
 
-    assertionTests("same", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "same", function (pass, fail, msg) {
         pass("when comparing object to itself", obj, obj);
         pass("when comparing object to itself with message",
              obj, obj, "These should be the same");
@@ -347,10 +202,9 @@ if (typeof require != "undefined") {
             "Obj", {});
         msg("include custom message",
             "[assert.same] Oh noes: Expected [object Object] to be the same object as [object Object]", obj, obj2, "Oh noes");
-        callbacks(true, false);
     });
 
-    assertionTests("notSame", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("refute", "same", function (pass, fail, msg) {
         fail("comparing object to itsel", obj, obj);
         fail("with message", obj, obj, "Aww");
         pass("when comparing different objects", obj, obj2);
@@ -363,13 +217,12 @@ if (typeof require != "undefined") {
         fail("when comparing null to null", null, null);
         fail("when comparing undefined to undefined", undefined, undefined);
         msg("include objects in message",
-            "[assert.notSame] Expected [object Object] not to be the same object as [object Object]", obj, obj);
+            "[refute.same] Expected [object Object] not to be the same object as [object Object]", obj, obj);
         msg("include custom message",
-            "[assert.notSame] Aww: Expected [object Object] not to be the same object as [object Object]", obj, obj, "Aww");
-        callbacks(2, 2);
+            "[refute.same] Aww: Expected [object Object] not to be the same object as [object Object]", obj, obj, "Aww");
     });
 
-    assertionTests("equals", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "equals", function (pass, fail, msg) {
         var func = function () {};
         var arr = [];
         var date = new Date();
@@ -471,8 +324,6 @@ if (typeof require != "undefined") {
         msg("fail with custom message",
             "[assert.equals] Aww! Expected [object Object] to be equal to Hey",
             {}, "Hey", "Aww!");
-
-        callbacks(3, 2);
     });
 
     if (typeof document != "undefined") {
@@ -484,7 +335,7 @@ if (typeof require != "undefined") {
                 var element = document.createElement("div");
 
                 assert.doesNotThrow(function () {
-                    buster.assert.equals(element, element);
+                    ba.assert.equals(element, element);
                 });
             },
 
@@ -493,13 +344,13 @@ if (typeof require != "undefined") {
                 var span = document.createElement("span");
 
                 assert.throws(function () {
-                    buster.assert.equals(div, span);
+                    ba.assert.equals(div, span);
                 });
             }
         });
     }
 
-    assertionTests("notEquals", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("refute", "equals", function (pass, fail, msg) {
         fail("when comparing object to itself", obj, obj);
         fail("when comparing object to itself with message", obj, obj, "No!");
         fail("when comparing strings", "Hey", "Hey");
@@ -599,12 +450,10 @@ if (typeof require != "undefined") {
             "[assert.notEquals] Expected [object Object] not to be equal to [object Object]", {}, {});
 
         msg("fail with understandable message",
-            "[assert.notEquals] Holy cow! Expected [object Object] not to be equal to [object Object]", {}, {}, "Holy cow!");
-
-        callbacks(2, 2);
+            "[refute.equals] Holy cow! Expected [object Object] not to be equal to [object Object]", {}, {}, "Holy cow!");
     });
 
-    assertionTests("typeOf", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "typeOf", function (pass, fail, msg) {
         pass("when types match", function () {}, "function");
         pass("when types match with message", function () {}, "function", "OMG!");
         fail("when types don't match", {}, "function");
@@ -616,27 +465,23 @@ if (typeof require != "undefined") {
         msg("generate custom failure message",
             "[assert.typeOf] Crep: Expected typeof [object Object] (object) to be function",
             {}, "function", "Crep");
-
-        callbacks({}, "function");
     });
 
-    assertionTests("notTypeOf", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("refute", "typeOf", function (pass, fail, msg) {
         fail("when types match", function () {}, "function");
         fail("when types match with message", function () {}, "function", "OMG!");
         pass("when types don't match", {}, "function");
         pass("when types don't match with message", {}, "function", "OMG!");
         msg("generate failure message",
-            "[assert.notTypeOf] Expected typeof [object Object] not to be object",
+            "[refute.typeOf] Expected typeof [object Object] not to be object",
             {}, "object");
 
         msg("generate custom failure message",
-            "[assert.notTypeOf] Oops: Expected typeof [object Object] not to be object",
+            "[refute.typeOf] Oops: Expected typeof [object Object] not to be object",
             {}, "object", "Oops");
-
-        callbacks({}, "object");
     });
 
-    assertionTests("isString", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "isString", function (pass, fail, msg) {
         pass("for string", "Hey");
         pass("for string with message", "Hey", "Whatup?");
         fail("for object", {});
@@ -649,11 +494,9 @@ if (typeof require != "undefined") {
         msg("fail with custom descriptive message",
             "[assert.isString] No go: Expected typeof [object Object] (object) to be string",
             {}, "No go");
-
-        callbacks({});
     });
 
-    assertionTests("isObject", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "isObject", function (pass, fail, msg) {
         pass("for object", {});
         pass("for object with message", {}, "Whatup?");
         fail("for function", function () {});
@@ -666,11 +509,9 @@ if (typeof require != "undefined") {
         msg("fail with custom message",
             "[assert.isObject] Whoa: Expected typeof Hey (string) to be object and not null",
             "Hey", "Whoa");
-
-        callbacks("");
     });
 
-    assertionTests("isFunction", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "isFunction", function (pass, fail, msg) {
         pass("for function", function () {});
         pass("for function with message", function () {}, "Whatup?");
         fail("for object", {});
@@ -682,11 +523,9 @@ if (typeof require != "undefined") {
         msg("fail with custom message",
             "[assert.isFunction] Err: Expected typeof Hey (string) to be function",
             "Hey", "Err");
-
-        callbacks({});
     });
 
-    assertionTests("isBoolean", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "isBoolean", function (pass, fail, msg) {
         pass("for boolean", true);
         pass("for boolean with message", true, "Whatup?");
         fail("for function", function () {});
@@ -698,11 +537,9 @@ if (typeof require != "undefined") {
         msg("fail with custom message",
             "[assert.isBoolean] No: Expected typeof Hey (string) to be boolean",
             "Hey", "No");
-
-        callbacks({});
     });
 
-    assertionTests("isNumber", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "isNumber", function (pass, fail, msg) {
         pass("for number", 32);
         fail("for NaN (sic)", NaN);
         pass("for number with message", 32, "Whatup?");
@@ -716,11 +553,9 @@ if (typeof require != "undefined") {
         msg("fail with descriptive message", 
             "[assert.isNumber] Hola: Expected Hey (string) to be a non-NaN number",
             "Hey", "Hola");
-
-        callbacks({});
     });
 
-    assertionTests("isNaN", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "isNaN", function (pass, fail, msg) {
         pass("for NaN", NaN);
         pass("for NaN with message", NaN, "Whatup?");
         fail("for number", 32);
@@ -732,11 +567,9 @@ if (typeof require != "undefined") {
         msg("fail with descriptive message", "[assert.isNaN] Expected 32 to be NaN", 32);
         msg("fail with custom message",
             "[assert.isNaN] Crap: Expected 32 to be NaN", 32, "Crap");
-
-        callbacks({});
     });
 
-    assertionTests("isNotNaN", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("refute", "isNaN", function (pass, fail, msg) {
         fail("for NaN", NaN);
         fail("for NaN with message", NaN, "Whatup?");
         pass("for number", 32);
@@ -747,15 +580,13 @@ if (typeof require != "undefined") {
         pass("for null", null);
 
         msg("fail with descriptive message",
-            "[assert.isNotNaN] Expected not to be NaN", NaN);
+            "[refute.isNaN] Expected not to be NaN", NaN);
 
         msg("fail with custom message",
-            "[assert.isNotNaN] See? Expected not to be NaN", NaN, "See?");
-
-        callbacks(NaN);
+            "[refute.isNaN] See? Expected not to be NaN", NaN, "See?");
     });
 
-    assertionTests("isArray", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "isArray", function (pass, fail, msg) {
         pass("for array", []);
         pass("for array with message", [1, 2, 3], "Message");
         fail("for object", {});
@@ -782,11 +613,9 @@ if (typeof require != "undefined") {
 
         msg("fail with custom message",
             "[assert.isArray] No: Expected [object Object] to be array", {}, "No");
-
-        callbacks({});
     });
 
-    assertionTests("isNotArray", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("refute", "isArray", function (pass, fail, msg) {
         fail("for array", []);
         fail("for array with message", [1, 2, 3], "Message");
         pass("for object", {});
@@ -809,15 +638,13 @@ if (typeof require != "undefined") {
         pass("for array like", arrayLike);
 
         msg("fail with descriptive message",
-            "[assert.isNotArray] Expected 1,2 not to be array", [1, 2]);
+            "[refute.isArray] Expected 1,2 not to be array", [1, 2]);
 
         msg("fail with custom message",
-            "[assert.isNotArray] Hmm: Expected 1,2 not to be array", [1, 2], "Hmm");
-
-        callbacks([]);
+            "[refute.isArray] Hmm: Expected 1,2 not to be array", [1, 2], "Hmm");
     });
 
-    assertionTests("isArrayLike", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "isArrayLike", function (pass, fail, msg) {
         pass("for array", []);
         pass("for array with message", [1, 2, 3], "Message");
         fail("for object", {});
@@ -843,11 +670,9 @@ if (typeof require != "undefined") {
         msg("fail with custom message",
             "[assert.isArrayLike] No: Expected [object Object] to be array like",
             {}, "No");
-
-        callbacks({});
     });
 
-    assertionTests("isNotArrayLike", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("refute", "isArrayLike", function (pass, fail, msg) {
         fail("for array", []);
         fail("for array with message", [1, 2, 3], "Message");
         pass("for object", {});
@@ -868,16 +693,14 @@ if (typeof require != "undefined") {
         fail("for array like", arrayLike);
 
         msg("fail with descriptive message",
-            "[assert.isNotArrayLike] Expected 1,2 not to be array like", [1, 2]); 
+            "[refute.isArrayLike] Expected 1,2 not to be array like", [1, 2]); 
         
         msg("fail with custom message",
-            "[assert.isNotArrayLike] Hmm: Expected 1,2 not to be array like",
+            "[refute.isArrayLike] Hmm: Expected 1,2 not to be array like",
             [1, 2], "Hmm"); 
-
-        callbacks([]);
     });
 
-    assertionTests("isUndefined", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "isUndefined", function (pass, fail, msg) {
         pass("for undefined", undefined);
         pass("for undefined with message", undefined, "Whatup?");
         fail("for function", function () {});
@@ -891,11 +714,9 @@ if (typeof require != "undefined") {
         msg("fail with custom message",
             "[assert.isUndefined] No! Expected typeof Hey (string) to be undefined",
             "Hey", "No!");
-
-        callbacks(function () {});
     });
 
-    assertionTests("isNotUndefined", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("refute", "isUndefined", function (pass, fail, msg) {
         fail("for undefined", undefined);
         fail("for undefined with message", undefined, "Whatup?");
         pass("for function", function () {});
@@ -903,16 +724,14 @@ if (typeof require != "undefined") {
         pass("for function with message", function () {}, "Whatup?");
 
         msg("fail with descriptive message",
-            "[assert.isNotUndefined] Expected not to be undefined", undefined);
+            "[refute.isUndefined] Expected not to be undefined", undefined);
 
         msg("fail with custom message",
-            "[assert.isNotUndefined] A: Expected not to be undefined",
+            "[refute.isUndefined] A: Expected not to be undefined",
             undefined, "A");
-
-        callbacks(undefined);
     });
 
-    assertionTests("isNull", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "isNull", function (pass, fail, msg) {
         pass("for null", null);
         pass("for null with message", null, "Whatup?");
         fail("for function", function () {});
@@ -920,16 +739,14 @@ if (typeof require != "undefined") {
         fail("for function with message", function () {}, "Whatup?");
         
         msg("fail with descriptive message",
-            "[assert.isNull] Expected Hey to be null", "Hey").expectedFormats = 0;;
+            "[assert.isNull] Expected Hey to be null", "Hey").expectedFormats = 1;
 
         msg("fail with custom message",
             "[assert.isNull] Yo! Expected Hey to be null",
-            "Hey", "Yo!").expectedFormats = 0;;
-
-        callbacks(function () {});
+            "Hey", "Yo!").expectedFormats = 1;
     });
 
-    assertionTests("isNotNull", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("refute", "isNull", function (pass, fail, msg) {
         fail("for null", null);
         fail("for null with message", null, "Whatup?");
         pass("for function", function () {});
@@ -937,16 +754,14 @@ if (typeof require != "undefined") {
         pass("for function with message", "Whatup?", function () {});
 
         msg("fail with descriptive message",
-            "[assert.isNotNull] Expected not to be null", null).expectedFormats = 0;;
+            "[refute.isNull] Expected not to be null", null).expectedFormats = 0;
 
         msg("fail with custom message",
-            "[assert.isNotNull] Sad: Expected not to be null",
+            "[refute.isNull] Sad: Expected not to be null",
             null, "Sad").expectedFormats = 0;
-
-        callbacks(null);
     });
 
-    assertionTests("match", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "match", function (pass, fail, msg) {
         pass("matching regexp", "Assertions", /[a-z]/);
         pass("matching regexp with message", "Assertions", /[a-z]/, "Working?");
         pass("for generic object with test method returning true", "Assertions", {
@@ -1008,7 +823,7 @@ if (typeof require != "undefined") {
         this["should call matcher with assertion argument"] = function () {
             var listener = sinon.stub().returns(true);
 
-            buster.assert.match("Assertions 123", listener);
+            ba.assert.match("Assertions 123", listener);
 
             assert.ok(listener.calledWith("Assertions 123"));
         };
@@ -1070,11 +885,9 @@ if (typeof require != "undefined") {
                 }
             }
         });
-
-        callbacks(NaN, "");
     });
 
-    assertionTests("noMatch", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("refute", "match", function (pass, fail, msg) {
         fail("matching regexp", "Assertions", /[a-z]/);
         fail("matching regexp with message", "Assertions", /[a-z]/, "Working?");
         fail("generic object with test method returning true", "Assertions", {
@@ -1095,11 +908,11 @@ if (typeof require != "undefined") {
         });
 
         msg("fail with understandable message",
-            "[assert.noMatch] Expected Assertions 123 not to match /^.+$/",
+            "[refute.match] Expected Assertions 123 not to match /^.+$/",
             "Assertions 123", /^.+$/);
 
         msg("fail with custom message",
-            "[assert.noMatch] No! Expected Assertions 123 not to match /^.+$/",
+            "[refute.match] No! Expected Assertions 123 not to match /^.+$/",
             "Assertions 123", /^.+$/, "No!");
 
         fail("if match object is null", "Assertions 123", null);
@@ -1129,7 +942,7 @@ if (typeof require != "undefined") {
         this["should call matcher with assertion argument"] = function () {
             var listener = sinon.stub().returns(false);
 
-            buster.assert.noMatch("Assertions 123", listener);
+            ba.refute.match("Assertions 123", listener);
 
             assert.ok(listener.calledWith("Assertions 123"));
         };
@@ -1211,11 +1024,9 @@ if (typeof require != "undefined") {
                 }
             }
         });
-
-        callbacks("Assertions", /[a-z]/);
     });
 
-    assertionTests("exception", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "exception", function (pass, fail, msg) {
         pass("when callback throws", function () {
             throw new Error();
         });
@@ -1272,13 +1083,9 @@ if (typeof require != "undefined") {
 
         msg("if not passed arguments",
             "[assert.exception] Expected to receive at least 1 argument");
-
-        callbacks(function () {});
-        testArgCount = 2;
-        callbacks(function () { throw new Error(); }, "TypeError");
     });
 
-    assertionTests("noException", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("refute", "exception", function (pass, fail, msg) {
         fail("when callback throws", function () {
             throw new Error();
         });
@@ -1287,24 +1094,22 @@ if (typeof require != "undefined") {
         pass("with message when callback does not throw", function () {}, "Oh noes");
 
         msg("fail with message",
-            "[assert.noException] Expected not to throw but threw Error (:()",
+            "[refute.exception] Expected not to throw but threw Error (:()",
             function () {
                 throw new Error(":(");
             });
 
         msg("fail with custom message",
-            "[assert.noException] Aww: Expected not to throw but threw Error ()",
+            "[refute.exception] Aww: Expected not to throw but threw Error ()",
             function () {
                 throw new Error("");
             }, "Aww");
 
         msg("fail if not passed arguments",
-            "[assert.noException] Expected to receive at least 1 argument");
-
-        callbacks(function () { throw new Error(); });
+            "[refute.exception] Expected to receive at least 1 argument");
     });
 
-    assertionTests("tagName", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "tagName", function (pass, fail, msg) {
         pass("for matching tag names", { tagName: "li" }, "li");
         pass("for case-insensitive matching tag names", { tagName: "LI" }, "li");
         pass("for case-insensitive matching tag names #2", { tagName: "li" }, "LI");
@@ -1336,12 +1141,9 @@ if (typeof require != "undefined") {
         if (typeof document != "undefined") {
             pass("for DOM elements", document.createElement("li"), "li");
         }
-
-        callbacks({ tagName: "li" }, "p");
-        callbacks({}, "p");
     });
 
-    assertionTests("notTagName", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("refute", "tagName", function (pass, fail, msg) {
         fail("for matching tag names", { tagName: "li" }, "li");
         fail("for case-insensitive matching tag names", { tagName: "LI" }, "li");
         fail("for case-insensitive matching tag names #2", { tagName: "LI" }, "li");
@@ -1356,33 +1158,30 @@ if (typeof require != "undefined") {
         pass("for non-matching with message", { tagName: "li" }, "p", "Aww");
 
         msg("fail with message",
-            "[assert.notTagName] Expected tagName not to be li",
+            "[refute.tagName] Expected tagName not to be li",
             { tagName: "li" }, "li");
 
         msg("fail with custom message",
-            "[assert.notTagName] No: Expected tagName not to be li",
+            "[refute.tagName] No: Expected tagName not to be li",
             { tagName: "li" }, "li", "No").expectedFormats = 1;
 
         msg("fail if not passed arguments",
-            "[assert.notTagName] Expected to receive at least 2 arguments");
+            "[refute.tagName] Expected to receive at least 2 arguments");
 
         msg("fail if not passed tag name",
-            "[assert.notTagName] Expected to receive at least 2 arguments",
+            "[refute.tagName] Expected to receive at least 2 arguments",
             { tagName: "p" }).expectedFormats = 0;
 
         msg("fail if object does not have tagName property",
-            "[assert.notTagName] Expected [object Object] to have tagName property",
+            "[refute.tagName] Expected [object Object] to have tagName property",
             {}, "li");
 
         if (typeof document != "undefined") {
             pass("for DOM elements", document.createElement("li"), "p");
         }
-
-        callbacks({ tagName: "li" }, "li");
-        callbacks({}, "li");
     });
 
-    assertionTests("className", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "className", function (pass, fail, msg) {
         msg("fail without arguments",
             "[assert.className] Expected to receive at least 2 arguments");
 
@@ -1421,35 +1220,32 @@ if (typeof require != "undefined") {
 
             pass("for DOM elements", li, "thing some");
         }
-
-        callbacks({ className: "feed" }, "post");
-        callbacks({}, "post");
     });
 
-    assertionTests("notClassName", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("refute", "className", function (pass, fail, msg) {
         msg("fail without arguments",
-            "[assert.notClassName] Expected to receive at least 2 arguments");
+            "[refute.className] Expected to receive at least 2 arguments");
 
         msg("fail without class name",
-            "[assert.notClassName] Expected to receive at least 2 arguments",
+            "[refute.className] Expected to receive at least 2 arguments",
             { className: "item" }).expectedFormats = 0;
 
         msg("fail if object does not have className property",
-            "[assert.notClassName] Expected object to have className property",
+            "[refute.className] Expected object to have className property",
             {}, "item");
 
         msg("fail with message if object does not have className property",
-            "[assert.notClassName] No go: Expected object to have className property",
+            "[refute.className] No go: Expected object to have className property",
             {}, "item", "No go");
 
         pass("when element does not include class name", { className: "" }, "item");
 
         msg("fail when element's class name matches",
-            "[assert.notClassName] Expected object's className not to include item",
+            "[refute.className] Expected object's className not to include item",
             { className: "item" }, "item");
 
         msg("fail with message when element's class name matches",
-            "[assert.notClassName] Aww: Expected object's className not to include item",
+            "[refute.className] Aww: Expected object's className not to include item",
             { className: "item" }, "item", "Aww");
 
         fail("when element includes class name", { className: "feed item" }, "item");
@@ -1468,12 +1264,9 @@ if (typeof require != "undefined") {
 
             pass("for DOM elements", li, "something");
         }
-
-        callbacks({ className: "post" }, "post");
-        callbacks({}, "post");
     });
 
-    assertionTests("inDelta", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("assert", "inDelta", function (pass, fail, msg) {
         pass("for equal numbers", 3, 3, 0);
         pass("for equal numbers with message", 3, 3, 0, "Yup");
         fail("for numbers out of delta range", 2, 3, 0.5);
@@ -1490,28 +1283,24 @@ if (typeof require != "undefined") {
 
         msg("fail if not passed arguments",
             "[assert.inDelta] Expected to receive at least 3 arguments");
-
-        callbacks(3, 2, 0);
     });
 
-    assertionTests("notInDelta", function (pass, fail, msg, callbacks) {
+    testHelper.assertionTests("refute", "inDelta", function (pass, fail, msg) {
         fail("for equal numbers", 3, 3, 0);
         fail("for equal numbers with message", 3, 3, 0, "Yup");
         pass("for numbers out of delta range", 2, 3, 0.5);
         pass("for numbers out of delta range with message", 3, 2, 0.5, "Awww");
 
         msg("with descriptive message",
-            "[assert.notInDelta] Expected 3 not to be equal to 3 +/- 0", 3, 3, 0);
+            "[refute.inDelta] Expected 3 not to be equal to 3 +/- 0", 3, 3, 0);
 
         msg("with custom message",
-            "[assert.notInDelta] Awww: Expected 3 not to be equal to 3 +/- 0",
+            "[refute.inDelta] Awww: Expected 3 not to be equal to 3 +/- 0",
             3, 3, 0, "Awww");
 
         fail("for numbers in delta range", 2, 3, 1);
 
         msg("fail if not passed arguments",
-            "[assert.notInDelta] Expected to receive at least 3 arguments");
-
-        callbacks(3, 3, 0);
+            "[refute.inDelta] Expected to receive at least 3 arguments");
     });
 }());
