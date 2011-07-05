@@ -13,7 +13,7 @@
         "email": "august.lilleaas@gmail.com",
         "url": "http://augustl.com"
     }],
-    "main": "./lib/buster-assert",
+    "main": "./lib/buster-assertions",
     "repository": {
         "type": "git",
         "url": "http://git.gitorious.org/buster-js/buster-assert.git"
