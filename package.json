@@ -1,5 +1,5 @@
 {
-    "name": "buster-assert",
+    "name": "buster-assertions",
     "version": "0.5.0",
     "description": "Assertions for any JavaScript test framework and environment",
     "homepage": "http://busterjs.org/buster-assert",
