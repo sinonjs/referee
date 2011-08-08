@@ -1,0 +1,4 @@
+vendor
+.gitignore
+.gitmodules
+.npmignore

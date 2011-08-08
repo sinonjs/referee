@@ -1,2 +1,0 @@
-#!/bin/sh
-asciidoc -a stylesheet="`pwd`"/doc/buster.css doc/assert.txt
