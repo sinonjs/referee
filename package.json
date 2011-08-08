@@ -23,7 +23,6 @@
     },
     "devDependencies": {
         "sinon": "~1",
-        "buster-core": "*",
         "buster-util": "*"
     }
 }
