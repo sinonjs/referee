@@ -1,6 +1,6 @@
 {
     "name": "buster-assertions",
-    "version": "0.6.0",
+    "version": "0.6.1",
     "description": "Assertions for any JavaScript test framework and environment",
     "homepage": "http://busterjs.org/docs/buster-assertions",
     "author": { "name": "August Lilleaas and Christian Johansen" },
@@ -19,10 +19,10 @@
         "url": "git://gitorious.org/buster/buster-assertions.git"
     },
     "dependencies": {
-        "buster-core": "~>0.3"
+        "buster-core": "~0.3.1"
     },
     "devDependencies": {
         "sinon": "~1.1",
-        "buster-util": "~>0.3"
+        "buster-util": "~0.3"
     }
 }
