@@ -7,20 +7,47 @@ if (typeof require != "undefined") {
     };
 }
 
-buster.util.testCase("IsArgumentsTest", {
-    "should recognize real arguments object": function () {
-        assert.ok(buster.assertions.isArguments(arguments));
-    },
+(function () {
+    var create = function (obj) {
+        function F() {}
+        F.prototype = obj;
+        return new F();
+    };
 
-    "should reject primitive": function () {
-        assert.ok(!buster.assertions.isArguments(42));
-    },
+    var ba = buster.assertions;
 
-    "should reject object without length": function () {
-        assert.ok(!buster.assertions.isArguments({}));
-    },
+    buster.util.testCase("IsArgumentsTest", {
+        "should recognize real arguments object": function () {
+            assert.ok(ba.isArguments(arguments));
+        },
 
-    "should reject array": function () {
-        assert.ok(!buster.assertions.isArguments([]));
-    }
-});
+        "should reject primitive": function () {
+            assert.ok(!ba.isArguments(42));
+        },
+
+        "should reject object without length": function () {
+            assert.ok(!ba.isArguments({}));
+        },
+
+        "should reject array": function () {
+            assert.ok(!ba.isArguments([]));
+        }
+    });
+
+    buster.util.testCase("KeysTest", {
+        "should return keys of object": function () {
+            var obj = { a: 1, b: 2, c: 3 };
+
+            assert.equal(ba.keys(obj).sort().join(""), "abc");
+        },
+
+        "should exclude inherited properties": function () {
+            var obj = { a: 1, b: 2, c: 3 };
+            var obj2 = create(obj);
+            obj2.d = 4;
+            obj2.e = 5;
+
+            assert.deepEqual(ba.keys(obj2).sort().join(""), "de");
+        }
+    });
+}());
