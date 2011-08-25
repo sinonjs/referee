@@ -18,6 +18,9 @@
         "type": "git",
         "url": "git://gitorious.org/buster/buster-assertions.git"
     },
+    "dependencies": {
+        "buster-core": "~0.4"
+    },
     "devDependencies": {
         "sinon": "~1.1",
         "buster-util": "~0.3"
