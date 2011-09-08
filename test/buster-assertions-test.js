@@ -546,11 +546,11 @@ if (typeof require != "undefined") {
         fail("for function", function () {});
         fail("for null", null);
         fail("for function with message", function () {}, "Whatup?");
-        msg("fail with descriptive message", 
+        msg("fail with descriptive message",
             "[assert.isNumber] Expected Hey (string) to be a non-NaN number",
             "Hey");
 
-        msg("fail with descriptive message", 
+        msg("fail with descriptive message",
             "[assert.isNumber] Hola: Expected Hey (string) to be a non-NaN number",
             "Hey", "Hola");
     });
@@ -693,11 +693,11 @@ if (typeof require != "undefined") {
         fail("for array like", arrayLike);
 
         msg("fail with descriptive message",
-            "[refute.isArrayLike] Expected 1,2 not to be array like", [1, 2]); 
-        
+            "[refute.isArrayLike] Expected 1,2 not to be array like", [1, 2]);
+
         msg("fail with custom message",
             "[refute.isArrayLike] Hmm: Expected 1,2 not to be array like",
-            [1, 2], "Hmm"); 
+            [1, 2], "Hmm");
     });
 
     testHelper.assertionTests("assert", "isUndefined", function (pass, fail, msg) {
@@ -737,7 +737,7 @@ if (typeof require != "undefined") {
         fail("for function", function () {});
         fail("for undefined", undefined);
         fail("for function with message", function () {}, "Whatup?");
-        
+
         msg("fail with descriptive message",
             "[assert.isNull] Expected Hey to be null", "Hey").expectedFormats = 1;
 
@@ -1061,11 +1061,11 @@ if (typeof require != "undefined") {
         fail("with message when callback does not throw and type is expected",
              function () {}, "TypeError", "Oh noes");
 
-        msg("fail with message when not throwing", 
+        msg("fail with message when not throwing",
             "[assert.exception] Expected TypeError but no exception was thrown",
             function () {}, "TypeError");
 
-        msg("fail with custom message when not throwing", 
+        msg("fail with custom message when not throwing",
             "[assert.exception] Aww: Expected TypeError but no exception was thrown",
             function () {}, "TypeError", "Aww").expectedFormats = 1;
 
@@ -1302,5 +1302,46 @@ if (typeof require != "undefined") {
 
         msg("fail if not passed arguments",
             "[refute.inDelta] Expected to receive at least 3 arguments");
+    });
+
+    function MyThing() {}
+    var myThing = new MyThing();
+    var otherThing = {};
+    function F() {}
+    F.prototype = myThing;
+    var specializedThing = new F();
+
+    testHelper.assertionTests("assert", "hasPrototype", function (pass, fail, msg) {
+        fail("when object does not inherit from prototype", otherThing, MyThing.prototype);
+        fail("when primitive does not inherit from prototype", 3, MyThing.prototype);
+        fail("with only one object", {});
+        pass("when object has other object on prototype chain", myThing, MyThing.prototype);
+        pass("when not directly inheriting", specializedThing, MyThing.prototype);
+
+        msg("with descriptive message",
+            "[assert.hasPrototype] Expected [object Object] to have [object Object] on its prototype chain", otherThing, MyThing.prototype);
+
+        msg("with custom message",
+            "[assert.hasPrototype] Awwwww: Expected [object Object] to have [object Object] on its prototype chain", otherThing, MyThing.prototype, "Awwwww");
+
+        msg("fail if not passed arguments",
+            "[assert.hasPrototype] Expected to receive at least 2 arguments");
+    });
+
+    testHelper.assertionTests("refute", "hasPrototype", function (pass, fail, msg) {
+        fail("when object inherits from prototype", myThing, MyThing.prototype);
+        fail("when not inheriting 'indirectly'", specializedThing, MyThing.prototype);
+        fail("with only one object", {});
+        pass("when primitive does not inherit from prototype", 3, MyThing.prototype);
+        pass("when object does not inherit", otherThing, MyThing.prototype);
+
+        msg("with descriptive message",
+            "[refute.hasPrototype] Expected [object Object] not to have [object Object] on its prototype chain", myThing, MyThing.prototype);
+
+        msg("with custom message",
+            "[refute.hasPrototype] Awwwww: Expected [object Object] not to have [object Object] on its prototype chain", myThing, MyThing.prototype, "Awwwww");
+
+        msg("fail if not passed arguments",
+            "[refute.hasPrototype] Expected to receive at least 2 arguments");
     });
 }());
