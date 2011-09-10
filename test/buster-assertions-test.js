@@ -488,12 +488,27 @@ if (typeof require != "undefined") {
         fail("for object with message", {}, "Whatup?");
 
         msg("fail with descriptive message",
-            "[assert.isString] Expected typeof [object Object] (object) to be string",
+            "[assert.isString] Expected [object Object] (object) to be string",
             {});
 
         msg("fail with custom descriptive message",
-            "[assert.isString] No go: Expected typeof [object Object] (object) to be string",
+            "[assert.isString] No go: Expected [object Object] (object) to be string",
             {}, "No go");
+    });
+
+    testHelper.assertionTests("refute", "isString", function (pass, fail, msg) {
+        fail("for string", "Hey");
+        fail("for string with message", "Hey", "Whatup?");
+        pass("for object", {});
+        pass("for object with message", {}, "Whatup?");
+
+        msg("fail with descriptive message",
+            "[refute.isString] Expected Yo not to be string",
+            "Yo");
+
+        msg("fail with custom descriptive message",
+            "[refute.isString] No go: Expected Hey not to be string",
+            "Hey", "No go");
     });
 
     testHelper.assertionTests("assert", "isObject", function (pass, fail, msg) {
@@ -503,12 +518,27 @@ if (typeof require != "undefined") {
         fail("for null", null);
         fail("for function with message", function () {}, "Whatup?");
         msg("fail with descriptive message",
-            "[assert.isObject] Expected typeof Hey (string) to be object and not null",
+            "[assert.isObject] Expected Hey (string) to be object and not null",
             "Hey");
 
         msg("fail with custom message",
-            "[assert.isObject] Whoa: Expected typeof Hey (string) to be object and not null",
+            "[assert.isObject] Whoa: Expected Hey (string) to be object and not null",
             "Hey", "Whoa");
+    });
+
+    testHelper.assertionTests("refute", "isObject", function (pass, fail, msg) {
+        fail("for object", {});
+        fail("for object with message", {}, "Whatup?");
+        pass("for function", function () {});
+        pass("for null", null);
+        pass("for function with message", function () {}, "Whatup?");
+        msg("fail with descriptive message",
+            "[refute.isObject] Expected [object Object] to be null or not an object",
+            {});
+
+        msg("fail with custom message",
+            "[refute.isObject] Whoa: Expected [object Object] to be null or not an object",
+            {}, "Whoa");
     });
 
     testHelper.assertionTests("assert", "isFunction", function (pass, fail, msg) {
@@ -517,12 +547,26 @@ if (typeof require != "undefined") {
         fail("for object", {});
         fail("for object with message", {}, "Whatup?");
         msg("fail with descriptive message",
-            "[assert.isFunction] Expected typeof Hey (string) to be function",
+            "[assert.isFunction] Expected Hey (string) to be function",
             "Hey");
 
         msg("fail with custom message",
-            "[assert.isFunction] Err: Expected typeof Hey (string) to be function",
+            "[assert.isFunction] Err: Expected Hey (string) to be function",
             "Hey", "Err");
+    });
+
+    testHelper.assertionTests("refute", "isFunction", function (pass, fail, msg) {
+        fail("for function", function () {});
+        fail("for function with message", function () {}, "Whatup?");
+        pass("for object", {});
+        pass("for object with message", {}, "Whatup?");
+        msg("fail with descriptive message",
+            "[refute.isFunction] Expected function () {} not to be function",
+            function () {});
+
+        msg("fail with custom message",
+            "[refute.isFunction] Err: Expected function () {} not to be function",
+            function () {}, "Err");
     });
 
     testHelper.assertionTests("assert", "isBoolean", function (pass, fail, msg) {
@@ -532,11 +576,25 @@ if (typeof require != "undefined") {
         fail("for null", null);
         fail("for function with message", function () {}, "Whatup?");
         msg("fail with descriptive message",
-            "[assert.isBoolean] Expected typeof Hey (string) to be boolean", "Hey");
+            "[assert.isBoolean] Expected Hey (string) to be boolean", "Hey");
 
         msg("fail with custom message",
-            "[assert.isBoolean] No: Expected typeof Hey (string) to be boolean",
+            "[assert.isBoolean] No: Expected Hey (string) to be boolean",
             "Hey", "No");
+    });
+
+    testHelper.assertionTests("refute", "isBoolean", function (pass, fail, msg) {
+        fail("for boolean", true);
+        fail("for boolean with message", true, "Whatup?");
+        pass("for function", function () {});
+        pass("for null", null);
+        pass("for function with message", function () {}, "Whatup?");
+        msg("fail with descriptive message",
+            "[refute.isBoolean] Expected true not to be boolean", true);
+
+        msg("fail with custom message",
+            "[refute.isBoolean] No: Expected false not to be boolean",
+            false, "No");
     });
 
     testHelper.assertionTests("assert", "isNumber", function (pass, fail, msg) {
@@ -553,6 +611,22 @@ if (typeof require != "undefined") {
         msg("fail with descriptive message",
             "[assert.isNumber] Hola: Expected Hey (string) to be a non-NaN number",
             "Hey", "Hola");
+    });
+
+    testHelper.assertionTests("refute", "isNumber", function (pass, fail, msg) {
+        fail("for number", 32);
+        pass("for NaN (sic)", NaN);
+        fail("for number with message", 32, "Whatup?");
+        pass("for function", function () {});
+        pass("for null", null);
+        pass("for function with message", function () {}, "Whatup?");
+        msg("fail with descriptive message",
+            "[refute.isNumber] Expected 42 to be NaN or another non-number value",
+            42);
+
+        msg("fail with descriptive message",
+            "[refute.isNumber] Hola: Expected 42 to be NaN or another non-number value",
+            42, "Hola");
     });
 
     testHelper.assertionTests("assert", "isNaN", function (pass, fail, msg) {
@@ -708,11 +782,11 @@ if (typeof require != "undefined") {
         fail("for function with message", function () {}, "Whatup?");
 
         msg("fail with descriptive message",
-            "[assert.isUndefined] Expected typeof Hey (string) to be undefined",
+            "[assert.isUndefined] Expected Hey (string) to be undefined",
             "Hey");
 
         msg("fail with custom message",
-            "[assert.isUndefined] No! Expected typeof Hey (string) to be undefined",
+            "[assert.isUndefined] No! Expected Hey (string) to be undefined",
             "Hey", "No!");
     });
 
@@ -791,7 +865,7 @@ if (typeof require != "undefined") {
             "[assert.match] Oops: Expected Assertions 123 to match /^[a-z]+$/",
             "Assertions 123", /^[a-z]+$/, "Oops");
 
-        fail("fail if match object is null", "Assertions 123", null);
+        fail("if match object is null", "Assertions 123", null);
 
         msg("fail if match object is undefined",
             "[assert.match] Matcher (undefined) was not a string, a number, a function, a boolean or an object",
