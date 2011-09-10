@@ -15,6 +15,8 @@ if (typeof require != "undefined") {
     };
 
     var ba = buster.assertions;
+    var expect = ba.expect;
+    expect();
 
     buster.util.testCase("IsArgumentsTest", {
         "should recognize real arguments object": function () {
@@ -48,6 +50,20 @@ if (typeof require != "undefined") {
             obj2.e = 5;
 
             assert.deepEqual(ba.keys(obj2).sort().join(""), "de");
+        }
+    });
+
+    buster.util.testCase("AddAssertionTest", {
+        "should add expectation if expect property is set": function () {
+            ba.add("isFoo", function (actual) {
+                return actual == "foo";
+            }, {
+                assertFail: "Expected ${1} to be foo!",
+                refuteFail: "Expected not to be foo!",
+                expect: "toBeFoo"
+            });
+
+            expect("foo").toBeFoo();
         }
     });
 }());
