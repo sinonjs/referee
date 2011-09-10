@@ -2,6 +2,4 @@
 
 require.paths.unshift("./vendor");
 require("./test/buster-assertions-test.js");
-require("./test/buster-assertions/assert-that-test.js");
-require("./test/buster-assertions/refute-that-test.js");
 require("./test/buster-assertions/expect-test.js");
