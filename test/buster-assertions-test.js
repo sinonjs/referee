@@ -1161,7 +1161,7 @@ if (typeof require != "undefined") {
 
     testHelper.assertionTests("refute", "exception", function (pass, fail, msg) {
         fail("when callback throws", function () {
-            throw new Error();
+            throw new Error("Yo, fuckface");
         });
 
         pass("when callback does not throw", function () {});

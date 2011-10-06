@@ -10,11 +10,9 @@ if (typeof require != "undefined") {
         assertions: require("../../lib/buster-assertions"),
         util: require("buster-util")
     };
-
-    buster.expect = buster.assertions.expect;
 }
 
-var expect = buster.expect;
+var expect = buster.assertions.expect;
 
 buster.util.testCase("ExpectTest", {
     setUp: testHelper.setUp,
@@ -80,7 +78,6 @@ buster.util.testCase("ExpectTest", {
     },
 
     "should expose all assertions": function () {
-        var expect = buster.expect;
         var obj = { id: 42 };
 
         expect(true).toBeTrue();
