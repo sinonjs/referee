@@ -47,7 +47,11 @@ var testHelper = (function () {
             try {
                 ba[type][assertion].apply(ba, args);
             } catch (e) {
-                console.log("Failed: " + callStr);
+                if (typeof console != "undefined") {
+                    console.log("Failed: " + callStr);
+                } else {
+                    buster.util.puts("Failed: " + callStr);
+                }
             }
 
             assert.equal(
@@ -67,7 +71,12 @@ var testHelper = (function () {
 
             try {
                 ba[type][assertion].apply(ba, args);
-                console.log("Unexpectedly passed: " + callStr);
+
+                if (typeof console != "undefined") {
+                    console.log("Unexpectedly passed: " + callStr);
+                } else {
+                    buster.util.puts("Unexpectedly passed: " + callStr);
+                }
             } catch (e) {}
 
             assert.equal(ba.fail.callCount, 1,
