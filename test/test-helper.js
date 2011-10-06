@@ -41,6 +41,7 @@ var testHelper = (function () {
 
     function passingAssertionTest(type, assertion, args) {
         return function () {
+            var initialCount = ba.count;
             var callStr = type + "." + assertion + "(" + args.join(", ") + ")";
 
             try {
@@ -53,7 +54,7 @@ var testHelper = (function () {
                 this.okListener.callCount, 1,
                 "Expected buster.assertions to emit the pass event once for " + callStr);
             sinon.assert.calledWith(this.okListener, type + "." + assertion);
-            assert.equal(1, ba.count);
+            assert.equal(1, ba.count - initialCount);
             sinon.assert.notCalled(ba.fail);
             sinon.assert.notCalled(this.failListener);
         };
@@ -61,6 +62,7 @@ var testHelper = (function () {
 
     function failingAssertionTest(type, assertion, args) {
         return function () {
+            var initialCount = ba.count;
             var callStr = type + "." + assertion + "(" + args.join(", ") + ")";
 
             try {
@@ -71,7 +73,8 @@ var testHelper = (function () {
             assert.equal(ba.fail.callCount, 1,
                      "Expected buster.assertions.fail to be called once for " + callStr +
                          ", was called " + ba.fail.callCount + " times");
-            assert.equal(1, ba.count);
+
+            assert.equal(1, ba.count - initialCount);
             sinon.assert.notCalled(this.okListener);
             sinon.assert.calledOnce(this.failListener);
 
@@ -88,7 +91,7 @@ var testHelper = (function () {
             try {
                 ba[type][assertion].apply(ba, args);
                 throw new Error(type + "." + assertion + " expected to fail");
-            } catch(e) {
+            } catch (e) {
                 assert.equal(e.name, "AssertionError", e.name + ": " + e.message);
                 assert.equal(e.message, message, "Message was " + e.message + ", " +
                              "expected " + message);
