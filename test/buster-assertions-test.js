@@ -774,23 +774,7 @@ if (typeof require != "undefined") {
             [1, 2], "Hmm");
     });
 
-    testHelper.assertionTests("assert", "isUndefined", function (pass, fail, msg) {
-        pass("for undefined", undefined);
-        pass("for undefined with message", undefined, "Whatup?");
-        fail("for function", function () {});
-        fail("for null", null);
-        fail("for function with message", function () {}, "Whatup?");
-
-        msg("fail with descriptive message",
-            "[assert.isUndefined] Expected Hey (string) to be undefined",
-            "Hey");
-
-        msg("fail with custom message",
-            "[assert.isUndefined] No! Expected Hey (string) to be undefined",
-            "Hey", "No!");
-    });
-
-    testHelper.assertionTests("refute", "isUndefined", function (pass, fail, msg) {
+    testHelper.assertionTests("assert", "defined", function (pass, fail, msg) {
         fail("for undefined", undefined);
         fail("for undefined with message", undefined, "Whatup?");
         pass("for function", function () {});
@@ -798,11 +782,27 @@ if (typeof require != "undefined") {
         pass("for function with message", function () {}, "Whatup?");
 
         msg("fail with descriptive message",
-            "[refute.isUndefined] Expected not to be undefined", undefined);
+            "[assert.defined] Expected to be defined", undefined);
 
         msg("fail with custom message",
-            "[refute.isUndefined] A: Expected not to be undefined",
+            "[assert.defined] A: Expected to be defined",
             undefined, "A");
+    });
+
+    testHelper.assertionTests("refute", "defined", function (pass, fail, msg) {
+        pass("for undefined", undefined);
+        pass("for undefined with message", undefined, "Whatup?");
+        fail("for function", function () {});
+        fail("for null", null);
+        fail("for function with message", function () {}, "Whatup?");
+
+        msg("fail with descriptive message",
+            "[refute.defined] Expected Hey (string) not to be defined",
+            "Hey");
+
+        msg("fail with custom message",
+            "[refute.defined] No! Expected Hey (string) not to be defined",
+            "Hey", "No!");
     });
 
     testHelper.assertionTests("assert", "isNull", function (pass, fail, msg) {

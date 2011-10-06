@@ -100,8 +100,8 @@ buster.util.testCase("ExpectTest", {
         expect(42).not().toBeBoolean();
         expect(42).toBeNumber();
         expect("Hey").not().toBeNumber();
-        expect(undefined).toBeUndefined();
-        expect(null).not().toBeUndefined();
+        expect(null).toBeDefined();
+        expect(undefined).not().toBeDefined();
         expect(null).toBeNull();
         expect(42).not().toBeNull();
         expect(NaN).toBeNaN();
