@@ -324,6 +324,36 @@ if (typeof require != "undefined") {
         msg("fail with custom message",
             "[assert.equals] Aww! Expected [object Object] to be equal to Hey",
             {}, "Hey", "Aww!");
+
+        msg("fail with special message for multi-line strings",
+            "[assert.equals] Expected multi-line strings to be equal:\n" +
+            "line 2: The quick brown fox jumps over the lazy god\n" +
+            "was:    The quick brown fox jumps over the lazy dog",
+            "Yo!\nThe quick brown fox jumps over the lazy dog",
+            "Yo!\nThe quick brown fox jumps over the lazy god").expectedFormats = 0;
+
+        msg("fail with special message for multi-line strings with too short actual",
+            "[assert.equals] Expected multi-line strings to be equal:\n" +
+            "line 2: The quick brown fox jumps over the lazy god\n" +
+            "was:    ",
+            "Yo!",
+            "Yo!\nThe quick brown fox jumps over the lazy god").expectedFormats = 0;
+
+        msg("fail with special message for multi-line strings with too long actual",
+            "[assert.equals] Expected multi-line strings to be equal:\n" +
+            "line 2: \n" +
+            "was:    The quick brown fox jumps over the lazy god",
+            "Yo!\nThe quick brown fox jumps over the lazy god",
+            "Yo!").expectedFormats = 0;
+
+        msg("fail with all differing lines in multi-line string fail",
+            "[assert.equals] Expected multi-line strings to be equal:\n" +
+            "line 1: Yo!\n" +
+            "was:    Yo\n\n" +
+            "line 4: Hey\n" +
+            "was:    Oh noes",
+            "Yo\n2\n3\nOh noes",
+            "Yo!\n2\n3\nHey").expectedFormats = 0;
     });
 
     if (typeof document != "undefined") {
@@ -437,6 +467,7 @@ if (typeof require != "undefined") {
         pass("when comparing 'empty' object to string object", {}, new String());
         pass("when comparing 'empty' object to number object", {}, new Number());
         pass("when comparing 'empty' object to empty array", {}, []);
+        pass("when comparing multi-line strings", "Hey\nHo", "Yo\nNo");
 
         function gather() { return arguments; }
         var arrayLike = { length: 4, "0": 1, "1": 2, "2": {}, "3": [] };
