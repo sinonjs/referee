@@ -1,16 +1,16 @@
 /*jslint onevar: false, browser: true, eqeqeq: false, nomen: false,
-         plusplus: false, regexp: false*/
+  plusplus: false, regexp: false*/
 /*global require, __dirname*/
-if (typeof require != "undefined") {
-    var assert = require("assert");
-    var sinon = require("sinon");
-    var testHelper = require("./test-helper");
+        if (typeof require != "undefined") {
+            var assert = require("assert");
+            var sinon = require("sinon");
+            var testHelper = require("./test-helper");
 
-    var buster = {
-        assertions: require("./../lib/buster-assertions"),
-        util: require("buster-util")
-    };
-}
+            var buster = {
+                assertions: require("./../lib/buster-assertions"),
+                util: require("buster-util")
+            };
+        }
 
 (function () {
     var ba = buster.assertions;
@@ -909,8 +909,8 @@ if (typeof require != "undefined") {
 
         pass("if matcher is a function that returns true",
              "Assertions 123", function (obj) {
-            return true;
-        });
+                 return true;
+             });
 
         fail("if matcher is a function that returns false",
              "Assertions 123", function (obj) {
@@ -1088,10 +1088,10 @@ if (typeof require != "undefined") {
             id: 42,
             name: "Christian",
             doIt: "yes",
-                owner: {
-                    someDude: "Yes",
-                    hello: "ok"
-                },
+            owner: {
+                someDude: "Yes",
+                hello: "ok"
+            },
 
             speak: function () {
                 return this.name;
@@ -1175,16 +1175,16 @@ if (typeof require != "undefined") {
             function () {}, "TypeError", "Aww").expectedFormats = 1;
 
         msg("fail with message when throwing wrong kind of exception",
-             "[assert.exception] Expected TypeError but threw Error (:()",
-             function () {
-                 throw new Error(":(");
-             }, "TypeError");
+            "[assert.exception] Expected TypeError but threw Error (:()",
+            function () {
+                throw new Error(":(");
+            }, "TypeError");
 
         msg("fail with custom message when throwing wrong kind of exception",
-             "[assert.exception] Aww: Expected TypeError but threw Error ()",
-             function () {
-                 throw new Error("");
-             }, "TypeError", "Aww");
+            "[assert.exception] Aww: Expected TypeError but threw Error ()",
+            function () {
+                throw new Error("");
+            }, "TypeError", "Aww");
 
         msg("if not passed arguments",
             "[assert.exception] Expected to receive at least 1 argument");
@@ -1448,5 +1448,106 @@ if (typeof require != "undefined") {
 
         msg("fail if not passed arguments",
             "[refute.hasPrototype] Expected to receive at least 2 arguments");
+    });
+
+    buster.util.testCase("CustomAssertionsTest", {
+        setUp: testHelper.setUp,
+        tearDown: function () {
+            testHelper.tearDown.call(this);
+            delete ba.assert.custom;
+            delete ba.refute.custom;
+        },
+
+        "should expose properties on this as message values": function () {
+            ba.add("custom", function (actual, expected) {
+                this.actual = actual + "?";
+                this.expected = expected + "!";
+                return false;
+            }, {
+                assertFail: "${actual} ${expected}"
+            });
+
+            try {
+                ba.assert.custom(2, 3);
+                throw new Error("Didn't throw");
+            } catch (e) {
+                assert.equal(e.message, "[assert.custom] 2? 3!");
+            }
+        },
+
+        "should not expose fail property": function () {
+            ba.add("custom", function (actual, expected) {
+                return false;
+            }, {
+                assertFail: "${fail}"
+            });
+
+            try {
+                ba.assert.custom(2, 3);
+                throw new Error("Didn't throw");
+            } catch (e) {
+                assert.equal(e.message, "[assert.custom] ${fail}");
+            }
+        },
+
+        "should not leak properties between calls": function () {
+            var i = 0;
+
+            ba.add("custom", function (actual, expected) {
+                if (i == 0) {
+                    this.actual = "A";
+                } else {
+                    this.expected = "B";
+                }
+
+                i++;
+                return false;
+            }, {
+                assertFail: "${actual} ${expected}"
+            });
+
+            try {
+                ba.assert.custom(4, 5);
+            } catch (e) {}
+
+            try {
+                ba.assert.custom(2, 3);
+                throw new Error("Didn't throw");
+            } catch (e) {
+                assert.equal(e.message, "[assert.custom] ${actual} B");
+            }
+        },
+
+        "should interpolate same property multiple times": function () {
+            ba.add("custom", function (actual, expected) {
+                this.actual = actual + "?";
+                return false;
+            }, {
+                assertFail: "${actual} ${actual}"
+            });
+
+            try {
+                ba.assert.custom(2, 3);
+                throw new Error("Didn't throw");
+            } catch (e) {
+                assert.equal(e.message, "[assert.custom] 2? 2?");
+            }
+        },
+
+        "should interpolate numeric placeholders multiple times": function () {
+            ba.add("custom", function (actual, expected) {
+                this.actual = actual + "?";
+                return false;
+            }, {
+                assertFail: "${1} ${1}"
+            });
+
+            try {
+                ba.assert.custom(2, 3);
+                throw new Error("Didn't throw");
+            } catch (e) {
+                assert.equal(e.message, "[assert.custom] 2 2");
+            }
+        }
     });
 }());
