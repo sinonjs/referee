@@ -1475,6 +1475,23 @@
             }
         },
 
+        "should format interpolated property with format": function () {
+            ba.add("custom", function (actual, expected) {
+                this.actual = actual + "?";
+                this.expected = expected + "!";
+                return false;
+            }, {
+                assertFail: "${actual} ${expected}"
+            });
+
+            try {
+                ba.assert.custom(2, 3);
+            } catch (e) {}
+
+            assert.ok(ba.format.calledWith("2?"));
+            assert.ok(ba.format.calledWith("3!"));
+        },
+
         "should not expose fail property": function () {
             ba.add("custom", function (actual, expected) {
                 return false;
