@@ -354,6 +354,10 @@
             "was:    Oh noes",
             "Yo\n2\n3\nOh noes",
             "Yo!\n2\n3\nHey").expectedFormats = 0;
+
+        msg("fail with regular message for one-line strings",
+            "[assert.equals] Expected Yo to be equal to Hey",
+            "Yo", "Hey");
     });
 
     if (typeof document != "undefined") {
