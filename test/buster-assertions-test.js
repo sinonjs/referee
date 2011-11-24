@@ -1,16 +1,18 @@
 /*jslint onevar: false, browser: true, eqeqeq: false, nomen: false,
   plusplus: false, regexp: false*/
 /*global require, __dirname*/
-        if (typeof require != "undefined") {
-            var assert = require("assert");
-            var sinon = require("sinon");
-            var testHelper = require("./test-helper");
+if (typeof require != "undefined") {
+    var assert = require("assert");
+    var sinon = require("sinon");
+    var testHelper = require("./test-helper");
 
-            var buster = {
-                assertions: require("./../lib/buster-assertions"),
-                util: require("buster-util")
-            };
-        }
+    var buster = {
+        assertions: require("./../lib/buster-assertions"),
+        util: require("buster-util")
+    };
+
+    require("./../lib/buster-assertions/extras");
+}
 
 (function () {
     var ba = buster.assertions;
