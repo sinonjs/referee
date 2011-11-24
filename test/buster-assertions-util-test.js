@@ -55,12 +55,13 @@ if (typeof require != "undefined") {
 
     buster.util.testCase("AddAssertionTest", {
         "should add expectation if expect property is set": function () {
-            ba.add("isFoo", function (actual) {
-                return actual == "foo";
-            }, {
-                assertFail: "Expected ${1} to be foo!",
-                refuteFail: "Expected not to be foo!",
-                expect: "toBeFoo"
+            ba.add("isFoo", {
+                assert: function (actual) {
+                    return actual == "foo";
+                },
+                assertMessage: "Expected ${1} to be foo!",
+                refuteMessage: "Expected not to be foo!",
+                expectation: "toBeFoo"
             });
 
             expect("foo").toBeFoo();

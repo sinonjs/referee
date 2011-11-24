@@ -146,13 +146,9 @@
 
     testHelper.assertionTests("assert", "isTrue", function (pass, fail, msg) {
         pass("for true", true);
-        pass("for true with message", true, "Yup");
         fail("for false", false);
-        fail("for false with message", false, "Aww");
-        msg("fail with message",
-            "[assert.isTrue] Awww: Expected false to be true", false, "Awww");
         msg("represent expected value in message",
-            "[assert.isTrue] Awww: Expected [object Object] to be true", {}, "Awww");
+            "[assert.isTrue] Expected [object Object] to be true", {});
         fail("for object", {});
         fail("for array", []);
         fail("for string", "32");
@@ -163,14 +159,11 @@
 
     testHelper.assertionTests("assert", "isFalse", function (pass, fail, msg, callbacks) {
         pass("for false", false);
-        pass("for false with message", false, "Yup");
         fail("for true", true);
-        fail("for true with message", true, "Awww");
         msg("fail with message",
-            "[assert.isFalse] Sucks: Expected true to be false", true, "Sucks");
+            "[assert.isFalse] Expected true to be false", true);
         msg("represent expected value in message",
-            "[assert.isFalse] Sucker: Expected [object Object] to be false",
-            {}, "Sucker");
+            "[assert.isFalse] Expected [object Object] to be false", {});
         fail("for empty string", "");
         fail("for 0", 0);
         fail("for NaN", NaN);
@@ -183,8 +176,6 @@
 
     testHelper.assertionTests("assert", "same", function (pass, fail, msg) {
         pass("when comparing object to itself", obj, obj);
-        pass("when comparing object to itself with message",
-             obj, obj, "These should be the same");
         fail("when comparing different objects", obj, obj2);
         pass("when comparing strings", "Hey", "Hey");
         pass("when comparing booleans", true, true);
@@ -195,20 +186,14 @@
         pass("when comparing null to null", null, null);
         pass("when comparing undefined to undefined", undefined, undefined);
         fail("when comparing NaN to NaN", NaN, NaN);
-        fail("when comparing different objects with message",
-             obj, obj2, "How d'ya like that?");
         msg("include objects in message",
             "[assert.same] Expected Obj to be the same object as [object Object]",
             "Obj", {});
-        msg("include custom message",
-            "[assert.same] Oh noes: Expected [object Object] to be the same object as [object Object]", obj, obj2, "Oh noes");
     });
 
     testHelper.assertionTests("refute", "same", function (pass, fail, msg) {
-        fail("comparing object to itsel", obj, obj);
-        fail("with message", obj, obj, "Aww");
+        fail("comparing object to itself", obj, obj);
         pass("when comparing different objects", obj, obj2);
-        pass("with message", obj, obj2, "Aww");
         fail("when comparing strings", "Hey", "Hey");
         fail("when comparing booleans", true, true);
         fail("when comparing numbers", 32, 32);
@@ -217,9 +202,7 @@
         fail("when comparing null to null", null, null);
         fail("when comparing undefined to undefined", undefined, undefined);
         msg("include objects in message",
-            "[refute.same] Expected [object Object] not to be the same object as [object Object]", obj, obj);
-        msg("include custom message",
-            "[refute.same] Aww: Expected [object Object] not to be the same object as [object Object]", obj, obj, "Aww");
+           "[refute.same] Expected [object Object] not to be the same object as [object Object]", obj, obj);
     });
 
     testHelper.assertionTests("assert", "equals", function (pass, fail, msg) {
@@ -230,7 +213,6 @@
         var anotherDate = new Date(date.getTime() - 10);
 
         pass("when comparing object to itself", obj, obj);
-        pass("when comparing object to itself with message", obj, obj, "Msg");
         pass("when comparing strings", "Hey", "Hey");
         pass("when comparing numbers", 32, 32);
         pass("when comparing booleans", false, false);
@@ -297,7 +279,6 @@
         fail("when comparing nested array with shallow array", [["hey"]], ["hey"]);
         fail("when comparing regexp objects with custom properties", re1, re2);
         fail("when comparing different objects", { id: 42 }, {});
-        fail("when comparing different objects with message", { id: 42 }, {}, "Hmm");
         fail("when comparing object to null", {}, null);
         fail("when comparing object to undefined", {}, undefined);
         fail("when comparing object to false", {}, false);
@@ -320,10 +301,6 @@
 
         msg("fail with understandable message",
             "[assert.equals] Expected [object Object] to be equal to Hey", {}, "Hey");
-
-        msg("fail with custom message",
-            "[assert.equals] Aww! Expected [object Object] to be equal to Hey",
-            {}, "Hey", "Aww!");
 
         msg("fail with special message for multi-line strings",
             "[assert.equals] Expected multi-line strings to be equal:\n" +
@@ -386,7 +363,6 @@
 
     testHelper.assertionTests("refute", "equals", function (pass, fail, msg) {
         fail("when comparing object to itself", obj, obj);
-        fail("when comparing object to itself with message", obj, obj, "No!");
         fail("when comparing strings", "Hey", "Hey");
         fail("when comparing numbers", 32, 32);
         fail("when comparing booleans", false, false);
@@ -458,7 +434,6 @@
 
         pass("when comparing regexp objects with custom properties", re1, re2);
         pass("when comparing different objects", obj, {});
-        pass("when comparing different objects with message", obj, {}, "Hmm");
         pass("when comparing object to null", {}, null);
         pass("when comparing null to object", {}, null);
         pass("when comparing object to undefined", {}, undefined);
@@ -482,225 +457,135 @@
              arrayLike, gather(1, 2, {}, []));
 
         msg("fail with understandable message",
-            "[assert.notEquals] Expected [object Object] not to be equal to [object Object]", {}, {});
-
-        msg("fail with understandable message",
-            "[refute.equals] Holy cow! Expected [object Object] not to be equal to [object Object]", {}, {}, "Holy cow!");
+            "[refute.equals] Expected [object Object] not to be equal to [object Object]", {}, {});
     });
 
     testHelper.assertionTests("assert", "typeOf", function (pass, fail, msg) {
         pass("when types match", function () {}, "function");
-        pass("when types match with message", function () {}, "function", "OMG!");
         fail("when types don't match", {}, "function");
-        fail("when types don't match with message", {}, "function", "OMG!");
         msg("generate failure message",
             "[assert.typeOf] Expected typeof [object Object] (object) to be function",
             {}, "function");
-
-        msg("generate custom failure message",
-            "[assert.typeOf] Crep: Expected typeof [object Object] (object) to be function",
-            {}, "function", "Crep");
     });
 
     testHelper.assertionTests("refute", "typeOf", function (pass, fail, msg) {
         fail("when types match", function () {}, "function");
-        fail("when types match with message", function () {}, "function", "OMG!");
         pass("when types don't match", {}, "function");
-        pass("when types don't match with message", {}, "function", "OMG!");
         msg("generate failure message",
             "[refute.typeOf] Expected typeof [object Object] not to be object",
             {}, "object");
-
-        msg("generate custom failure message",
-            "[refute.typeOf] Oops: Expected typeof [object Object] not to be object",
-            {}, "object", "Oops");
     });
 
     testHelper.assertionTests("assert", "isString", function (pass, fail, msg) {
         pass("for string", "Hey");
-        pass("for string with message", "Hey", "Whatup?");
         fail("for object", {});
-        fail("for object with message", {}, "Whatup?");
 
         msg("fail with descriptive message",
             "[assert.isString] Expected [object Object] (object) to be string",
             {});
-
-        msg("fail with custom descriptive message",
-            "[assert.isString] No go: Expected [object Object] (object) to be string",
-            {}, "No go");
     });
 
     testHelper.assertionTests("refute", "isString", function (pass, fail, msg) {
         fail("for string", "Hey");
-        fail("for string with message", "Hey", "Whatup?");
         pass("for object", {});
-        pass("for object with message", {}, "Whatup?");
 
         msg("fail with descriptive message",
             "[refute.isString] Expected Yo not to be string",
             "Yo");
-
-        msg("fail with custom descriptive message",
-            "[refute.isString] No go: Expected Hey not to be string",
-            "Hey", "No go");
     });
 
     testHelper.assertionTests("assert", "isObject", function (pass, fail, msg) {
         pass("for object", {});
-        pass("for object with message", {}, "Whatup?");
         fail("for function", function () {});
         fail("for null", null);
-        fail("for function with message", function () {}, "Whatup?");
         msg("fail with descriptive message",
             "[assert.isObject] Expected Hey (string) to be object and not null",
             "Hey");
 
-        msg("fail with custom message",
-            "[assert.isObject] Whoa: Expected Hey (string) to be object and not null",
-            "Hey", "Whoa");
     });
 
     testHelper.assertionTests("refute", "isObject", function (pass, fail, msg) {
         fail("for object", {});
-        fail("for object with message", {}, "Whatup?");
         pass("for function", function () {});
         pass("for null", null);
-        pass("for function with message", function () {}, "Whatup?");
         msg("fail with descriptive message",
             "[refute.isObject] Expected [object Object] to be null or not an object",
             {});
-
-        msg("fail with custom message",
-            "[refute.isObject] Whoa: Expected [object Object] to be null or not an object",
-            {}, "Whoa");
     });
 
     testHelper.assertionTests("assert", "isFunction", function (pass, fail, msg) {
         pass("for function", function () {});
-        pass("for function with message", function () {}, "Whatup?");
         fail("for object", {});
-        fail("for object with message", {}, "Whatup?");
         msg("fail with descriptive message",
             "[assert.isFunction] Expected Hey (string) to be function",
             "Hey");
-
-        msg("fail with custom message",
-            "[assert.isFunction] Err: Expected Hey (string) to be function",
-            "Hey", "Err");
     });
 
     testHelper.assertionTests("refute", "isFunction", function (pass, fail, msg) {
         fail("for function", function () {});
-        fail("for function with message", function () {}, "Whatup?");
         pass("for object", {});
-        pass("for object with message", {}, "Whatup?");
         msg("fail with descriptive message",
             "[refute.isFunction] Expected function () {} not to be function",
             function () {});
 
-        msg("fail with custom message",
-            "[refute.isFunction] Err: Expected function () {} not to be function",
-            function () {}, "Err");
     });
 
     testHelper.assertionTests("assert", "isBoolean", function (pass, fail, msg) {
         pass("for boolean", true);
-        pass("for boolean with message", true, "Whatup?");
         fail("for function", function () {});
         fail("for null", null);
-        fail("for function with message", function () {}, "Whatup?");
         msg("fail with descriptive message",
             "[assert.isBoolean] Expected Hey (string) to be boolean", "Hey");
-
-        msg("fail with custom message",
-            "[assert.isBoolean] No: Expected Hey (string) to be boolean",
-            "Hey", "No");
     });
 
     testHelper.assertionTests("refute", "isBoolean", function (pass, fail, msg) {
         fail("for boolean", true);
-        fail("for boolean with message", true, "Whatup?");
         pass("for function", function () {});
         pass("for null", null);
-        pass("for function with message", function () {}, "Whatup?");
         msg("fail with descriptive message",
             "[refute.isBoolean] Expected true not to be boolean", true);
-
-        msg("fail with custom message",
-            "[refute.isBoolean] No: Expected false not to be boolean",
-            false, "No");
     });
 
     testHelper.assertionTests("assert", "isNumber", function (pass, fail, msg) {
         pass("for number", 32);
         fail("for NaN (sic)", NaN);
-        pass("for number with message", 32, "Whatup?");
         fail("for function", function () {});
         fail("for null", null);
-        fail("for function with message", function () {}, "Whatup?");
         msg("fail with descriptive message",
             "[assert.isNumber] Expected Hey (string) to be a non-NaN number",
             "Hey");
-
-        msg("fail with descriptive message",
-            "[assert.isNumber] Hola: Expected Hey (string) to be a non-NaN number",
-            "Hey", "Hola");
     });
 
     testHelper.assertionTests("refute", "isNumber", function (pass, fail, msg) {
         fail("for number", 32);
         pass("for NaN (sic)", NaN);
-        fail("for number with message", 32, "Whatup?");
         pass("for function", function () {});
         pass("for null", null);
-        pass("for function with message", function () {}, "Whatup?");
         msg("fail with descriptive message",
             "[refute.isNumber] Expected 42 to be NaN or another non-number value",
             42);
-
-        msg("fail with descriptive message",
-            "[refute.isNumber] Hola: Expected 42 to be NaN or another non-number value",
-            42, "Hola");
     });
 
     testHelper.assertionTests("assert", "isNaN", function (pass, fail, msg) {
         pass("for NaN", NaN);
-        pass("for NaN with message", NaN, "Whatup?");
         fail("for number", 32);
-        fail("for number with message", 32, "Whatup?");
         fail("for function", function () {});
-        fail("for function with message", function () {}, "Whatup?");
         fail("for object", {});
         fail("for null", null);
         msg("fail with descriptive message", "[assert.isNaN] Expected 32 to be NaN", 32);
-        msg("fail with custom message",
-            "[assert.isNaN] Crap: Expected 32 to be NaN", 32, "Crap");
     });
 
     testHelper.assertionTests("refute", "isNaN", function (pass, fail, msg) {
         fail("for NaN", NaN);
-        fail("for NaN with message", NaN, "Whatup?");
         pass("for number", 32);
-        pass("for number with message", 32, "Whatup?");
         pass("for function", function () {});
-        pass("for function with message", function () {}, "Whatup?");
         pass("for object", {});
         pass("for null", null);
-
         msg("fail with descriptive message",
             "[refute.isNaN] Expected not to be NaN", NaN);
-
-        msg("fail with custom message",
-            "[refute.isNaN] See? Expected not to be NaN", NaN, "See?");
     });
 
     testHelper.assertionTests("assert", "isArray", function (pass, fail, msg) {
-        pass("for array", []);
-        pass("for array with message", [1, 2, 3], "Message");
-        fail("for object", {});
-        fail("for object with message", {}, "Is it an array?");
-
         function captureArgs() {
             return arguments;
         }
@@ -714,22 +599,15 @@
             splice: function () {}
         };
 
+        pass("for array", []);
+        fail("for object", {});
         fail("for arguments", captureArgs());
         fail("for array like", arrayLike);
-
         msg("fail with descriptive message",
             "[assert.isArray] Expected [object Object] to be array", {});
-
-        msg("fail with custom message",
-            "[assert.isArray] No: Expected [object Object] to be array", {}, "No");
     });
 
     testHelper.assertionTests("refute", "isArray", function (pass, fail, msg) {
-        fail("for array", []);
-        fail("for array with message", [1, 2, 3], "Message");
-        pass("for object", {});
-        pass("for object with message", {}, "Is it an array?");
-
         function captureArgs() {
             return arguments;
         }
@@ -743,22 +621,15 @@
             splice: function () {}
         };
 
+        fail("for array", []);
+        pass("for object", {});
         pass("for arguments", captureArgs());
         pass("for array like", arrayLike);
-
         msg("fail with descriptive message",
             "[refute.isArray] Expected 1,2 not to be array", [1, 2]);
-
-        msg("fail with custom message",
-            "[refute.isArray] Hmm: Expected 1,2 not to be array", [1, 2], "Hmm");
     });
 
     testHelper.assertionTests("assert", "isArrayLike", function (pass, fail, msg) {
-        pass("for array", []);
-        pass("for array with message", [1, 2, 3], "Message");
-        fail("for object", {});
-        fail("for object with message", {}, "Is it an array?");
-
         function captureArgs() { return arguments; }
 
         var arrayLike = {
@@ -770,23 +641,15 @@
             splice: function () {}
         };
 
+        pass("for array", []);
+        fail("for object", {});
         pass("for arguments", captureArgs());
         pass("for array like", arrayLike);
-
         msg("fail with descriptive message",
             "[assert.isArrayLike] Expected [object Object] to be array like", {});
-
-        msg("fail with custom message",
-            "[assert.isArrayLike] No: Expected [object Object] to be array like",
-            {}, "No");
     });
 
     testHelper.assertionTests("refute", "isArrayLike", function (pass, fail, msg) {
-        fail("for array", []);
-        fail("for array with message", [1, 2, 3], "Message");
-        pass("for object", {});
-        pass("for object with message", {}, "Is it an array?");
-
         function captureArgs() { return arguments; }
 
         var arrayLike = {
@@ -798,81 +661,49 @@
             splice: function () {}
         };
 
+        fail("for array", []);
+        pass("for object", {});
         fail("for arguments", captureArgs());
         fail("for array like", arrayLike);
-
         msg("fail with descriptive message",
             "[refute.isArrayLike] Expected 1,2 not to be array like", [1, 2]);
-
-        msg("fail with custom message",
-            "[refute.isArrayLike] Hmm: Expected 1,2 not to be array like",
-            [1, 2], "Hmm");
     });
 
     testHelper.assertionTests("assert", "defined", function (pass, fail, msg) {
         fail("for undefined", undefined);
-        fail("for undefined with message", undefined, "Whatup?");
         pass("for function", function () {});
         pass("for null", null);
-        pass("for function with message", function () {}, "Whatup?");
-
         msg("fail with descriptive message",
             "[assert.defined] Expected to be defined", undefined);
-
-        msg("fail with custom message",
-            "[assert.defined] A: Expected to be defined",
-            undefined, "A");
     });
 
     testHelper.assertionTests("refute", "defined", function (pass, fail, msg) {
         pass("for undefined", undefined);
-        pass("for undefined with message", undefined, "Whatup?");
         fail("for function", function () {});
         fail("for null", null);
-        fail("for function with message", function () {}, "Whatup?");
-
         msg("fail with descriptive message",
             "[refute.defined] Expected Hey (string) not to be defined",
             "Hey");
-
-        msg("fail with custom message",
-            "[refute.defined] No! Expected Hey (string) not to be defined",
-            "Hey", "No!");
     });
 
     testHelper.assertionTests("assert", "isNull", function (pass, fail, msg) {
         pass("for null", null);
-        pass("for null with message", null, "Whatup?");
         fail("for function", function () {});
         fail("for undefined", undefined);
-        fail("for function with message", function () {}, "Whatup?");
-
         msg("fail with descriptive message",
             "[assert.isNull] Expected Hey to be null", "Hey").expectedFormats = 1;
-
-        msg("fail with custom message",
-            "[assert.isNull] Yo! Expected Hey to be null",
-            "Hey", "Yo!").expectedFormats = 1;
     });
 
     testHelper.assertionTests("refute", "isNull", function (pass, fail, msg) {
         fail("for null", null);
-        fail("for null with message", null, "Whatup?");
         pass("for function", function () {});
         pass("for undefined", undefined);
-        pass("for function with message", "Whatup?", function () {});
-
         msg("fail with descriptive message",
             "[refute.isNull] Expected not to be null", null).expectedFormats = 0;
-
-        msg("fail with custom message",
-            "[refute.isNull] Sad: Expected not to be null",
-            null, "Sad").expectedFormats = 0;
     });
 
     testHelper.assertionTests("assert", "match", function (pass, fail, msg) {
         pass("matching regexp", "Assertions", /[a-z]/);
-        pass("matching regexp with message", "Assertions", /[a-z]/, "Working?");
         pass("for generic object with test method returning true", "Assertions", {
             test: function () {
                 return true;
@@ -880,9 +711,6 @@
         });
 
         fail("for non-matching regexp", "Assertions 123", /^[a-z]$/);
-        fail("for non-matching regexp with message",
-             "Assertions 123", /^[a-z]$/, "Woot");
-
         pass("matching boolean", true, true);
         fail("mis-matching boolean", true, false);
 
@@ -895,10 +723,6 @@
         msg("fail with understandable message",
             "[assert.match] Expected Assertions 123 to match /^[a-z]+$/",
             "Assertions 123", /^[a-z]+$/);
-
-        msg("fail with custom message",
-            "[assert.match] Oops: Expected Assertions 123 to match /^[a-z]+$/",
-            "Assertions 123", /^[a-z]+$/, "Oops");
 
         fail("if match object is null", "Assertions 123", null);
 
@@ -998,7 +822,6 @@
 
     testHelper.assertionTests("refute", "match", function (pass, fail, msg) {
         fail("matching regexp", "Assertions", /[a-z]/);
-        fail("matching regexp with message", "Assertions", /[a-z]/, "Working?");
         fail("generic object with test method returning true", "Assertions", {
             test: function () {
                 return true;
@@ -1006,9 +829,6 @@
         });
 
         pass("for non-matching regexp", "Assertions 123", /^[a-z]$/);
-
-        pass("for non-matching regexp with message",
-             "Assertions 123", /^[a-z]$/, "Woot");
 
         pass("for generic object with test method returning false", "Assertions", {
             test: function () {
@@ -1019,10 +839,6 @@
         msg("fail with understandable message",
             "[refute.match] Expected Assertions 123 not to match /^.+$/",
             "Assertions 123", /^.+$/);
-
-        msg("fail with custom message",
-            "[refute.match] No! Expected Assertions 123 not to match /^.+$/",
-            "Assertions 123", /^.+$/, "No!");
 
         fail("if match object is null", "Assertions 123", null);
         fail("if match object is undefined", "Assertions 123", undefined);
@@ -1141,20 +957,12 @@
         });
 
         fail("when callback does not throw", function () {});
-
         msg("fail with message", "[assert.exception] Expected exception",
-            function () {});
-
-        msg("fail with custom message", "[assert.exception] Snap: Expected exception",
-            function () {}, null, "Snap").expectedFormats = 0;
+            function () {}).expectedFormats = 0;
 
         pass("when callback throws expected type", function () {
             throw new TypeError("Oh hmm");
         }, "TypeError");
-
-        pass("with custom message and expected type", function () {
-            throw new TypeError();
-        }, "TypeError", "Okidoki");
 
         fail("when callback does not throw expected type", function () {
             throw new Error();
@@ -1163,32 +971,15 @@
         fail("when callback does not throw and specific type os expected",
              function () {}, "TypeError");
 
-        fail("with message when callback does not throw expected type", function () {
-            throw new Error();
-        }, "TypeError", "Oh noes");
-
-        fail("with message when callback does not throw and type is expected",
-             function () {}, "TypeError", "Oh noes");
-
         msg("fail with message when not throwing",
             "[assert.exception] Expected TypeError but no exception was thrown",
-            function () {}, "TypeError");
-
-        msg("fail with custom message when not throwing",
-            "[assert.exception] Aww: Expected TypeError but no exception was thrown",
-            function () {}, "TypeError", "Aww").expectedFormats = 1;
+            function () {}, "TypeError").expectedFormats = 0;
 
         msg("fail with message when throwing wrong kind of exception",
             "[assert.exception] Expected TypeError but threw Error (:()",
             function () {
                 throw new Error(":(");
-            }, "TypeError");
-
-        msg("fail with custom message when throwing wrong kind of exception",
-            "[assert.exception] Aww: Expected TypeError but threw Error ()",
-            function () {
-                throw new Error("");
-            }, "TypeError", "Aww");
+            }, "TypeError").expectedFormats = 0;
 
         msg("if not passed arguments",
             "[assert.exception] Expected to receive at least 1 argument");
@@ -1208,12 +999,6 @@
                 throw new Error(":(");
             });
 
-        msg("fail with custom message",
-            "[refute.exception] Aww: Expected not to throw but threw Error ()",
-            function () {
-                throw new Error("");
-            }, "Aww");
-
         msg("fail if not passed arguments",
             "[refute.exception] Expected to receive at least 1 argument");
     });
@@ -1223,18 +1008,12 @@
         pass("for case-insensitive matching tag names", { tagName: "LI" }, "li");
         pass("for case-insensitive matching tag names #2", { tagName: "li" }, "LI");
         pass("for uppercase matching tag names", { tagName: "LI" }, "LI");
-        pass("for matching tag names with message", { tagName: "li" }, "li", "Yup");
         fail("for non-matching tag names", { tagName: "li" }, "p");
         fail("for substring matches in tag names", { tagName: "li" }, "i");
-        fail("for non-matching with message", { tagName: "li" }, "p", "Aww");
 
         msg("fail with message",
             "[assert.tagName] Expected tagName to be p but was li",
             { tagName: "li" }, "p");
-
-        msg("fail with custom message",
-            "[assert.tagName] Snap! Expected tagName to be p but was li",
-            { tagName: "li" }, "p", "Snap!");
 
         msg("fail if not passed arguments",
             "[assert.tagName] Expected to receive at least 2 arguments");
@@ -1257,22 +1036,15 @@
         fail("for case-insensitive matching tag names", { tagName: "LI" }, "li");
         fail("for case-insensitive matching tag names #2", { tagName: "LI" }, "li");
         fail("for same casing matching tag names", { tagName: "li" }, "li");
-        fail("for matching tag names with message", { tagName: "li" }, "li", "Yup");
         pass("for non-matching tag names", { tagName: "li" }, "p");
         pass("for substring matching tag names", { tagName: "li" }, "i");
         pass("for case-insensitive non-matching tag names", { tagName: "li" }, "P");
         pass("for case-insensitive substring mathcing tag names",
              { tagName: "li" }, "i");
 
-        pass("for non-matching with message", { tagName: "li" }, "p", "Aww");
-
         msg("fail with message",
             "[refute.tagName] Expected tagName not to be li",
             { tagName: "li" }, "li");
-
-        msg("fail with custom message",
-            "[refute.tagName] No: Expected tagName not to be li",
-            { tagName: "li" }, "li", "No").expectedFormats = 1;
 
         msg("fail if not passed arguments",
             "[refute.tagName] Expected to receive at least 2 arguments");
@@ -1301,10 +1073,6 @@
         msg("fail if object does not have className property",
             "[assert.className] Expected object to have className property",
             {}, "item");
-
-        msg("fail with message if object does not have className property",
-            "[assert.className] No go: Expected object to have className property",
-            {}, "item", "No go");
 
         msg("fail when element does not include class name",
             "[assert.className] Expected object's className to include item but was ",
@@ -1343,19 +1111,11 @@
             "[refute.className] Expected object to have className property",
             {}, "item");
 
-        msg("fail with message if object does not have className property",
-            "[refute.className] No go: Expected object to have className property",
-            {}, "item", "No go");
-
         pass("when element does not include class name", { className: "" }, "item");
 
         msg("fail when element's class name matches",
             "[refute.className] Expected object's className not to include item",
             { className: "item" }, "item");
-
-        msg("fail with message when element's class name matches",
-            "[refute.className] Aww: Expected object's className not to include item",
-            { className: "item" }, "item", "Aww");
 
         fail("when element includes class name", { className: "feed item" }, "item");
         pass("when element does not include all class names",
@@ -1377,38 +1137,20 @@
 
     testHelper.assertionTests("assert", "inDelta", function (pass, fail, msg) {
         pass("for equal numbers", 3, 3, 0);
-        pass("for equal numbers with message", 3, 3, 0, "Yup");
         fail("for numbers out of delta range", 2, 3, 0.5);
-        fail("for numbers out of delta range with message", 3, 2, 0.5, "Awww");
-
         msg("fail with descriptive message",
             "[assert.inDelta] Expected 3 to be equal to 2 +/- 0.6", 3, 2, 0.6);
-
-        msg("fail with custom message",
-            "[assert.inDelta] Awww: Expected 3 to be equal to 2 +/- 0.6",
-            3, 2, 0.6, "Awww");
-
         pass("for numbers in delta range", 2, 3, 1);
-
         msg("fail if not passed arguments",
             "[assert.inDelta] Expected to receive at least 3 arguments");
     });
 
     testHelper.assertionTests("refute", "inDelta", function (pass, fail, msg) {
         fail("for equal numbers", 3, 3, 0);
-        fail("for equal numbers with message", 3, 3, 0, "Yup");
         pass("for numbers out of delta range", 2, 3, 0.5);
-        pass("for numbers out of delta range with message", 3, 2, 0.5, "Awww");
-
         msg("with descriptive message",
             "[refute.inDelta] Expected 3 not to be equal to 3 +/- 0", 3, 3, 0);
-
-        msg("with custom message",
-            "[refute.inDelta] Awww: Expected 3 not to be equal to 3 +/- 0",
-            3, 3, 0, "Awww");
-
         fail("for numbers in delta range", 2, 3, 1);
-
         msg("fail if not passed arguments",
             "[refute.inDelta] Expected to receive at least 3 arguments");
     });
@@ -1426,13 +1168,8 @@
         fail("with only one object", {});
         pass("when object has other object on prototype chain", myThing, MyThing.prototype);
         pass("when not directly inheriting", specializedThing, MyThing.prototype);
-
         msg("with descriptive message",
             "[assert.hasPrototype] Expected [object Object] to have [object Object] on its prototype chain", otherThing, MyThing.prototype);
-
-        msg("with custom message",
-            "[assert.hasPrototype] Awwwww: Expected [object Object] to have [object Object] on its prototype chain", otherThing, MyThing.prototype, "Awwwww");
-
         msg("fail if not passed arguments",
             "[assert.hasPrototype] Expected to receive at least 2 arguments");
     });
@@ -1443,13 +1180,8 @@
         fail("with only one object", {});
         pass("when primitive does not inherit from prototype", 3, MyThing.prototype);
         pass("when object does not inherit", otherThing, MyThing.prototype);
-
         msg("with descriptive message",
             "[refute.hasPrototype] Expected [object Object] not to have [object Object] on its prototype chain", myThing, MyThing.prototype);
-
-        msg("with custom message",
-            "[refute.hasPrototype] Awwwww: Expected [object Object] not to have [object Object] on its prototype chain", myThing, MyThing.prototype, "Awwwww");
-
         msg("fail if not passed arguments",
             "[refute.hasPrototype] Expected to receive at least 2 arguments");
     });
@@ -1463,12 +1195,13 @@
         },
 
         "should expose properties on this as message values": function () {
-            ba.add("custom", function (actual, expected) {
-                this.actual = actual + "?";
-                this.expected = expected + "!";
-                return false;
-            }, {
-                assertFail: "${actual} ${expected}"
+            ba.add("custom", {
+                assert: function (actual, expected) {
+                    this.actual = actual + "?";
+                    this.expected = expected + "!";
+                    return false;
+                },
+                assertMessage: "${actual} ${expected}"
             });
 
             try {
@@ -1480,12 +1213,13 @@
         },
 
         "should format interpolated property with format": function () {
-            ba.add("custom", function (actual, expected) {
-                this.actual = actual + "?";
-                this.expected = expected + "!";
-                return false;
-            }, {
-                assertFail: "${actual} ${expected}"
+            ba.add("custom", {
+                assert: function (actual, expected) {
+                    this.actual = actual + "?";
+                    this.expected = expected + "!";
+                    return false;
+                },
+                assertMessage: "${actual} ${expected}"
             });
 
             try {
@@ -1497,10 +1231,11 @@
         },
 
         "should not expose fail property": function () {
-            ba.add("custom", function (actual, expected) {
-                return false;
-            }, {
-                assertFail: "${fail}"
+            ba.add("custom", {
+                assert: function (actual, expected) {
+                    return false;
+                },
+                assertMessage: "${fail}"
             });
 
             try {
@@ -1514,17 +1249,18 @@
         "should not leak properties between calls": function () {
             var i = 0;
 
-            ba.add("custom", function (actual, expected) {
-                if (i == 0) {
-                    this.actual = "A";
-                } else {
-                    this.expected = "B";
-                }
+            ba.add("custom", {
+                assert: function (actual, expected) {
+                    if (i == 0) {
+                        this.actual = "A";
+                    } else {
+                        this.expected = "B";
+                    }
 
-                i++;
-                return false;
-            }, {
-                assertFail: "${actual} ${expected}"
+                    i++;
+                    return false;
+                },
+                assertMessage: "${actual} ${expected}"
             });
 
             try {
@@ -1540,11 +1276,12 @@
         },
 
         "should interpolate same property multiple times": function () {
-            ba.add("custom", function (actual, expected) {
-                this.actual = actual + "?";
-                return false;
-            }, {
-                assertFail: "${actual} ${actual}"
+            ba.add("custom", {
+                assert: function (actual, expected) {
+                    this.actual = actual + "?";
+                    return false;
+                },
+                assertMessage: "${actual} ${actual}"
             });
 
             try {
@@ -1556,11 +1293,12 @@
         },
 
         "should interpolate numeric placeholders multiple times": function () {
-            ba.add("custom", function (actual, expected) {
-                this.actual = actual + "?";
-                return false;
-            }, {
-                assertFail: "${1} ${1}"
+            ba.add("custom", {
+                assert: function (actual, expected) {
+                    this.actual = actual + "?";
+                    return false;
+                },
+                assertMessage: "${0} ${0}"
             });
 
             try {
