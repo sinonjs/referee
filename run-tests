@@ -1,5 +1,4 @@
 #!/usr/bin/env node
 
-require.paths.unshift("./vendor");
 require("./test/buster-assertions-test.js");
 require("./test/buster-assertions/expect-test.js");
