@@ -189,7 +189,7 @@ if (typeof require != "undefined") {
         pass("when comparing undefined to undefined", undefined, undefined);
         fail("when comparing NaN to NaN", NaN, NaN);
         msg("include objects in message",
-            "[assert.same] Expected Obj to be the same object as [object Object]",
+            "[assert.same] Obj expected to be the same object as [object Object]",
             "Obj", {});
     });
 
@@ -204,7 +204,7 @@ if (typeof require != "undefined") {
         fail("when comparing null to null", null, null);
         fail("when comparing undefined to undefined", undefined, undefined);
         msg("include objects in message",
-           "[refute.same] Expected [object Object] not to be the same object as [object Object]", obj, obj);
+           "[refute.same] [object Object] expected not to be the same object as [object Object]", obj, obj);
     });
 
     testHelper.assertionTests("assert", "equals", function (pass, fail, msg) {
@@ -302,7 +302,7 @@ if (typeof require != "undefined") {
              arrayLike, gather(1, 2, {}, []));
 
         msg("fail with understandable message",
-            "[assert.equals] Expected [object Object] to be equal to Hey", {}, "Hey");
+            "[assert.equals] [object Object] expected to be equal to Hey", {}, "Hey");
 
         msg("fail with special message for multi-line strings",
             "[assert.equals] Expected multi-line strings to be equal:\n" +
@@ -335,7 +335,7 @@ if (typeof require != "undefined") {
             "Yo!\n2\n3\nHey").expectedFormats = 0;
 
         msg("fail with regular message for one-line strings",
-            "[assert.equals] Expected Yo to be equal to Hey",
+            "[assert.equals] Yo expected to be equal to Hey",
             "Yo", "Hey");
     });
 
@@ -459,14 +459,14 @@ if (typeof require != "undefined") {
              arrayLike, gather(1, 2, {}, []));
 
         msg("fail with understandable message",
-            "[refute.equals] Expected [object Object] not to be equal to [object Object]", {}, {});
+            "[refute.equals] [object Object] expected not to be equal to [object Object]", {}, {});
     });
 
     testHelper.assertionTests("assert", "typeOf", function (pass, fail, msg) {
         pass("when types match", function () {}, "function");
         fail("when types don't match", {}, "function");
         msg("generate failure message",
-            "[assert.typeOf] Expected typeof [object Object] (object) to be function",
+            "[assert.typeOf] typeof [object Object] (object) expected to be function",
             {}, "function");
     });
 
@@ -474,7 +474,7 @@ if (typeof require != "undefined") {
         fail("when types match", function () {}, "function");
         pass("when types don't match", {}, "function");
         msg("generate failure message",
-            "[refute.typeOf] Expected typeof [object Object] not to be object",
+            "[refute.typeOf] typeof [object Object] expected not to be object",
             {}, "object");
     });
 
@@ -501,7 +501,7 @@ if (typeof require != "undefined") {
         fail("for function", function () {});
         fail("for null", null);
         msg("fail with descriptive message",
-            "[assert.isObject] Expected Hey (string) to be object and not null",
+            "[assert.isObject] Hey (string) expected to be object and not null",
             "Hey");
 
     });
@@ -511,7 +511,7 @@ if (typeof require != "undefined") {
         pass("for function", function () {});
         pass("for null", null);
         msg("fail with descriptive message",
-            "[refute.isObject] Expected [object Object] to be null or not an object",
+            "[refute.isObject] [object Object] expected to be null or not an object",
             {});
     });
 
@@ -519,7 +519,7 @@ if (typeof require != "undefined") {
         pass("for function", function () {});
         fail("for object", {});
         msg("fail with descriptive message",
-            "[assert.isFunction] Expected Hey (string) to be function",
+            "[assert.isFunction] Hey (string) expected to be function",
             "Hey");
     });
 
@@ -527,7 +527,7 @@ if (typeof require != "undefined") {
         fail("for function", function () {});
         pass("for object", {});
         msg("fail with descriptive message",
-            "[refute.isFunction] Expected function () {} not to be function",
+            "[refute.isFunction] function () {} expected not to be function",
             function () {});
 
     });
@@ -723,7 +723,7 @@ if (typeof require != "undefined") {
         }, "Assertions");
 
         msg("fail with understandable message",
-            "[assert.match] Expected Assertions 123 to match /^[a-z]+$/",
+            "[assert.match] Assertions 123 expected to match /^[a-z]+$/",
             "Assertions 123", /^[a-z]+$/);
 
         fail("if match object is null", "Assertions 123", null);
@@ -839,7 +839,7 @@ if (typeof require != "undefined") {
         });
 
         msg("fail with understandable message",
-            "[refute.match] Expected Assertions 123 not to match /^.+$/",
+            "[refute.match] Assertions 123 expected not to match /^.+$/",
             "Assertions 123", /^.+$/);
 
         fail("if match object is null", "Assertions 123", null);

@@ -33,7 +33,7 @@ buster.util.testCase("ExpectTest", {
             expect({ id: 42 }).toEqual({ bleh: "Nah" });
             throw new Error("Did not throw");
         } catch (e) {
-            assert.equal(e.message, "[expect.toEqual] Expected [object Object] to be equal to [object Object]");
+            assert.equal(e.message, "[expect.toEqual] [object Object] expected to be equal to [object Object]");
         }
     },
 
@@ -69,7 +69,7 @@ buster.util.testCase("ExpectTest", {
             expect({ id: 42 }).not().toEqual({ id: 42 });
             throw new Error("Did not throw");
         } catch (e) {
-            assert.equal(e.message, "[expect.not.toEqual] Expected [object Object] not to be equal to [object Object]");
+            assert.equal(e.message, "[expect.not.toEqual] [object Object] expected not to be equal to [object Object]");
         }
     },
 
@@ -80,36 +80,20 @@ buster.util.testCase("ExpectTest", {
     "should expose all assertions": function () {
         var obj = { id: 42 };
 
-        expect(true).toBeTrue();
-        expect(false).not().toBeTrue();
-        expect(false).toBeFalse();
-        expect(true).not().toBeFalse();
         expect(obj).toBeSameAs(obj);
         expect(obj).not().toBeSameAs({ id: 42 });
         expect(obj).toEqual({ id: 42 });
         expect(obj).not().toEqual({});
         expect(obj).toBeType("object");
         expect(obj).not().toBeType("string");
-        expect("Something").toBeString();
-        expect([]).not().toBeString();
         expect(obj).toBeObject();
         expect(false).not().toBeObject();
         expect(function () {}).toBeFunction();
         expect({}).not().toBeFunction();
-        expect(true).toBeBoolean();
-        expect(42).not().toBeBoolean();
-        expect(42).toBeNumber();
-        expect("Hey").not().toBeNumber();
         expect(null).toBeDefined();
         expect(undefined).not().toBeDefined();
         expect(null).toBeNull();
         expect(42).not().toBeNull();
-        expect(NaN).toBeNaN();
-        expect(42).not().toBeNaN();
-        expect([]).toBeArray();
-        expect({ length: 1, "0": 1}).not().toBeArray();
-        expect(arguments).toBeArrayLike();
-        expect({}).not().toBeArrayLike();
         expect(obj).toMatch({ id: 42 });
         expect(obj).not().toMatch({ id: 37 });
         expect(function () { throw new TypeError("Oops"); }).toThrow("TypeError");
@@ -118,7 +102,5 @@ buster.util.testCase("ExpectTest", {
         expect({ tagName: "ol" }).not().toHaveTagName("li");
         expect({ className: "a b c" }).toHaveClassName("b");
         expect({ className: "a b c" }).not().toHaveClassName("d");
-        expect(4.5).toBeInDelta(5, 1);
-        expect(1).not().toBeInDelta(6, 1);
     }
 });
