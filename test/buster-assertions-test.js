@@ -191,6 +191,9 @@ if (typeof require != "undefined") {
         msg("include objects in message",
             "[assert.same] Obj expected to be the same object as [object Object]",
             "Obj", {});
+        msg("include custom message",
+            "[assert.same] Back again: Obj expected to be the same object as [object Object]",
+            "Obj", {}, "Back again");
     });
 
     testHelper.assertionTests("refute", "same", function (pass, fail, msg) {
@@ -205,6 +208,9 @@ if (typeof require != "undefined") {
         fail("when comparing undefined to undefined", undefined, undefined);
         msg("include objects in message",
            "[refute.same] [object Object] expected not to be the same object as [object Object]", obj, obj);
+        msg("include custom message",
+           "[refute.same] Sigh... [object Object] expected not to be the same object as [object Object]",
+            obj, obj, "Sigh...");
     });
 
     testHelper.assertionTests("assert", "equals", function (pass, fail, msg) {
@@ -304,12 +310,24 @@ if (typeof require != "undefined") {
         msg("fail with understandable message",
             "[assert.equals] [object Object] expected to be equal to Hey", {}, "Hey");
 
+        msg("fail with custom message",
+            "[assert.equals] Here: [object Object] expected to be equal to Hey",
+            {}, "Hey", "Here:");
+
         msg("fail with special message for multi-line strings",
             "[assert.equals] Expected multi-line strings to be equal:\n" +
             "line 2: The quick brown fox jumps over the lazy god\n" +
             "was:    The quick brown fox jumps over the lazy dog",
             "Yo!\nThe quick brown fox jumps over the lazy dog",
             "Yo!\nThe quick brown fox jumps over the lazy god").expectedFormats = 0;
+
+        msg("fail with custom message for multi-line strings",
+            "[assert.equals] Slick! Expected multi-line strings to be equal:\n" +
+            "line 2: The quick brown fox jumps over the lazy god\n" +
+            "was:    The quick brown fox jumps over the lazy dog",
+            "Yo!\nThe quick brown fox jumps over the lazy dog",
+            "Yo!\nThe quick brown fox jumps over the lazy god",
+            "Slick!").expectedFormats = 0;
 
         msg("fail with special message for multi-line strings with too short actual",
             "[assert.equals] Expected multi-line strings to be equal:\n" +
@@ -460,6 +478,10 @@ if (typeof require != "undefined") {
 
         msg("fail with understandable message",
             "[refute.equals] [object Object] expected not to be equal to [object Object]", {}, {});
+
+        msg("fail with custom message",
+            "[refute.equals] Eh? [object Object] expected not to be equal to [object Object]",
+            {}, {}, "Eh?");
     });
 
     testHelper.assertionTests("assert", "typeOf", function (pass, fail, msg) {
@@ -468,6 +490,9 @@ if (typeof require != "undefined") {
         msg("generate failure message",
             "[assert.typeOf] typeof [object Object] (object) expected to be function",
             {}, "function");
+        msg("use custom message",
+            "[assert.typeOf] Aww: typeof [object Object] (object) expected to be function",
+            {}, "function", "Aww");
     });
 
     testHelper.assertionTests("refute", "typeOf", function (pass, fail, msg) {
@@ -476,6 +501,9 @@ if (typeof require != "undefined") {
         msg("generate failure message",
             "[refute.typeOf] typeof [object Object] expected not to be object",
             {}, "object");
+        msg("use custom message",
+            "[refute.typeOf] Hmm: typeof [object Object] expected not to be object",
+            {}, "object", "Hmm");
     });
 
     testHelper.assertionTests("assert", "isString", function (pass, fail, msg) {
@@ -515,12 +543,17 @@ if (typeof require != "undefined") {
             {});
     });
 
+
+
     testHelper.assertionTests("assert", "isFunction", function (pass, fail, msg) {
         pass("for function", function () {});
         fail("for object", {});
         msg("fail with descriptive message",
             "[assert.isFunction] Hey (string) expected to be function",
             "Hey");
+        msg("fail with custom message",
+            "[assert.isFunction] Oh no: Hey (string) expected to be function",
+            "Hey", "Oh no");
     });
 
     testHelper.assertionTests("refute", "isFunction", function (pass, fail, msg) {
@@ -529,7 +562,9 @@ if (typeof require != "undefined") {
         msg("fail with descriptive message",
             "[refute.isFunction] function () {} expected not to be function",
             function () {});
-
+        msg("fail with custom message",
+            "[refute.isFunction] Hmm: function () {} expected not to be function",
+            function () {}, "Hmm");
     });
 
     testHelper.assertionTests("assert", "isBoolean", function (pass, fail, msg) {
@@ -677,6 +712,9 @@ if (typeof require != "undefined") {
         pass("for null", null);
         msg("fail with descriptive message",
             "[assert.defined] Expected to be defined", undefined);
+        msg("fail with custom message",
+            "[assert.defined] Huh? Expected to be defined",
+            undefined, "Huh?");
     });
 
     testHelper.assertionTests("refute", "defined", function (pass, fail, msg) {
@@ -686,6 +724,9 @@ if (typeof require != "undefined") {
         msg("fail with descriptive message",
             "[refute.defined] Expected Hey (string) not to be defined",
             "Hey");
+        msg("fail with custom message",
+            "[refute.defined] Yawn... Expected Hey (string) not to be defined",
+            "Hey", "Yawn...");
     });
 
     testHelper.assertionTests("assert", "isNull", function (pass, fail, msg) {
@@ -694,6 +735,9 @@ if (typeof require != "undefined") {
         fail("for undefined", undefined);
         msg("fail with descriptive message",
             "[assert.isNull] Expected Hey to be null", "Hey").expectedFormats = 1;
+        msg("fail with custom message",
+            "[assert.isNull] Hmm: Expected Hey to be null",
+            "Hey", "Hmm").expectedFormats = 1;
     });
 
     testHelper.assertionTests("refute", "isNull", function (pass, fail, msg) {
@@ -702,6 +746,9 @@ if (typeof require != "undefined") {
         pass("for undefined", undefined);
         msg("fail with descriptive message",
             "[refute.isNull] Expected not to be null", null).expectedFormats = 0;
+        msg("fail with custom message",
+            "[refute.isNull] Here: Expected not to be null",
+            null, "Here").expectedFormats = 0;
     });
 
     testHelper.assertionTests("assert", "match", function (pass, fail, msg) {
@@ -726,11 +773,19 @@ if (typeof require != "undefined") {
             "[assert.match] Assertions 123 expected to match /^[a-z]+$/",
             "Assertions 123", /^[a-z]+$/);
 
+        msg("fail with custom message",
+            "[assert.match] Yeah! Assertions 123 expected to match /^[a-z]+$/",
+            "Assertions 123", /^[a-z]+$/, "Yeah!");
+
         fail("if match object is null", "Assertions 123", null);
 
         msg("fail if match object is undefined",
             "[assert.match] Matcher (undefined) was not a string, a number, a function, a boolean or an object",
             "Assertions 123", undefined);
+
+        msg("fail with custom message if match object is undefined",
+            "[assert.match] No: Matcher (undefined) was not a string, a number, a function, a boolean or an object",
+            "Assertions 123", undefined, "No");
 
         fail("if match object is false", "Assertions 123", false);
         fail("if matching a number against a string", "Assertions 123", 23);
@@ -841,6 +896,9 @@ if (typeof require != "undefined") {
         msg("fail with understandable message",
             "[refute.match] Assertions 123 expected not to match /^.+$/",
             "Assertions 123", /^.+$/);
+        msg("fail with custom message",
+            "[refute.match] NO! Assertions 123 expected not to match /^.+$/",
+            "Assertions 123", /^.+$/, "NO!");
 
         fail("if match object is null", "Assertions 123", null);
         fail("if match object is undefined", "Assertions 123", undefined);
@@ -977,11 +1035,21 @@ if (typeof require != "undefined") {
             "[assert.exception] Expected TypeError but no exception was thrown",
             function () {}, "TypeError").expectedFormats = 0;
 
+        msg("fail with custom message",
+            "[assert.exception] Hmm: Expected TypeError but no exception was thrown",
+            function () {}, "TypeError", "Hmm").expectedFormats = 0;
+
         msg("fail with message when throwing wrong kind of exception",
             "[assert.exception] Expected TypeError but threw Error (:()",
             function () {
                 throw new Error(":(");
             }, "TypeError").expectedFormats = 0;
+
+        msg("fail with custom message when throwing wrong kind of exception",
+            "[assert.exception] Wow: Expected TypeError but threw Error (:()",
+            function () {
+                throw new Error(":(");
+            }, "TypeError", "Wow").expectedFormats = 0;
 
         msg("if not passed arguments",
             "[assert.exception] Expected to receive at least 1 argument");
@@ -1001,6 +1069,12 @@ if (typeof require != "undefined") {
                 throw new Error(":(");
             });
 
+        msg("fail with custom message",
+            "[refute.exception] Jeez: Expected not to throw but threw Error (:()",
+            function () {
+                throw new Error(":(");
+            }, "Jeez");
+
         msg("fail if not passed arguments",
             "[refute.exception] Expected to receive at least 1 argument");
     });
@@ -1017,6 +1091,10 @@ if (typeof require != "undefined") {
             "[assert.tagName] Expected tagName to be p but was li",
             { tagName: "li" }, "p");
 
+        msg("fail with custom message",
+            "[assert.tagName] Here: Expected tagName to be p but was li",
+            { tagName: "li" }, "p", "Here");
+
         msg("fail if not passed arguments",
             "[assert.tagName] Expected to receive at least 2 arguments");
 
@@ -1027,6 +1105,10 @@ if (typeof require != "undefined") {
         msg("fail if object does not have tagName property",
             "[assert.tagName] Expected [object Object] to have tagName property",
             {}, "li");
+
+        msg("fail with custom message if object does not have tagName property",
+            "[assert.tagName] Yikes! Expected [object Object] to have tagName property",
+            {}, "li", "Yikes!");
 
         if (typeof document != "undefined") {
             pass("for DOM elements", document.createElement("li"), "li");
@@ -1048,6 +1130,10 @@ if (typeof require != "undefined") {
             "[refute.tagName] Expected tagName not to be li",
             { tagName: "li" }, "li");
 
+        msg("fail with custom message",
+            "[refute.tagName] Oh well: Expected tagName not to be li",
+            { tagName: "li" }, "li", "Oh well");
+
         msg("fail if not passed arguments",
             "[refute.tagName] Expected to receive at least 2 arguments");
 
@@ -1058,6 +1144,10 @@ if (typeof require != "undefined") {
         msg("fail if object does not have tagName property",
             "[refute.tagName] Expected [object Object] to have tagName property",
             {}, "li");
+
+        msg("fail with custom message if object does not have tagName property",
+            "[refute.tagName] Yes: Expected [object Object] to have tagName property",
+            {}, "li", "Yes");
 
         if (typeof document != "undefined") {
             pass("for DOM elements", document.createElement("li"), "p");
@@ -1076,9 +1166,17 @@ if (typeof require != "undefined") {
             "[assert.className] Expected object to have className property",
             {}, "item");
 
+        msg("fail with custom message if object does not have className property",
+            "[assert.className] Nope: Expected object to have className property",
+            {}, "item", "Nope");
+
         msg("fail when element does not include class name",
             "[assert.className] Expected object's className to include item but was ",
             { className: "" }, "item");
+
+        msg("fail with custom message when element does not include class name",
+            "[assert.className] Come on! Expected object's className to include item but was ",
+            { className: "" }, "item", "Come on!");
 
         pass("when element's class name matches", { className: "item" }, "item");
         pass("when element includes class name", { className: "feed item" }, "item");
@@ -1113,11 +1211,19 @@ if (typeof require != "undefined") {
             "[refute.className] Expected object to have className property",
             {}, "item");
 
+        msg("fail with custom message if object does not have className property",
+            "[refute.className] Yikes: Expected object to have className property",
+            {}, "item", "Yikes");
+
         pass("when element does not include class name", { className: "" }, "item");
 
         msg("fail when element's class name matches",
             "[refute.className] Expected object's className not to include item",
             { className: "item" }, "item");
+
+        msg("fail with custom message when element's class name matches",
+            "[refute.className] Noes: Expected object's className not to include item",
+            { className: "item" }, "item", "Noes");
 
         fail("when element includes class name", { className: "feed item" }, "item");
         pass("when element does not include all class names",
