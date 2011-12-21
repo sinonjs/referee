@@ -149,6 +149,8 @@
         fail("for false", false);
         msg("represent expected value in message",
             "[assert.isTrue] Expected [object Object] to be true", {});
+        msg("include custom message",
+            "[assert.isTrue] Oh: Expected [object Object] to be true", {}, "Oh");
         fail("for object", {});
         fail("for array", []);
         fail("for string", "32");
@@ -162,6 +164,8 @@
         fail("for true", true);
         msg("fail with message",
             "[assert.isFalse] Expected true to be false", true);
+        msg("fail with custom message",
+            "[assert.isFalse] Nooo! Expected true to be false", true, "Nooo!");
         msg("represent expected value in message",
             "[assert.isFalse] Expected [object Object] to be false", {});
         fail("for empty string", "");
@@ -507,19 +511,23 @@
     testHelper.assertionTests("assert", "isString", function (pass, fail, msg) {
         pass("for string", "Hey");
         fail("for object", {});
-
         msg("fail with descriptive message",
             "[assert.isString] Expected [object Object] (object) to be string",
             {});
+        msg("fail with custom message",
+            "[assert.isString] Snap: Expected [object Object] (object) to be string",
+            {}, "Snap");
     });
 
     testHelper.assertionTests("refute", "isString", function (pass, fail, msg) {
         fail("for string", "Hey");
         pass("for object", {});
-
         msg("fail with descriptive message",
             "[refute.isString] Expected Yo not to be string",
             "Yo");
+        msg("fail with custom message",
+            "[refute.isString] Here goes: Expected Yo not to be string",
+            "Yo", "Here goes");
     });
 
     testHelper.assertionTests("assert", "isObject", function (pass, fail, msg) {
@@ -529,7 +537,9 @@
         msg("fail with descriptive message",
             "[assert.isObject] Hey (string) expected to be object and not null",
             "Hey");
-
+        msg("fail with custom message",
+            "[assert.isObject] OH! Hey (string) expected to be object and not null",
+            "Hey", "OH!");
     });
 
     testHelper.assertionTests("refute", "isObject", function (pass, fail, msg) {
@@ -539,9 +549,10 @@
         msg("fail with descriptive message",
             "[refute.isObject] [object Object] expected to be null or not an object",
             {});
+        msg("fail with custom message",
+            "[refute.isObject] Oh no! [object Object] expected to be null or not an object",
+            {}, "Oh no!");
     });
-
-
 
     testHelper.assertionTests("assert", "isFunction", function (pass, fail, msg) {
         pass("for function", function () {});
@@ -571,6 +582,9 @@
         fail("for null", null);
         msg("fail with descriptive message",
             "[assert.isBoolean] Expected Hey (string) to be boolean", "Hey");
+        msg("fail with custom message",
+            "[assert.isBoolean] Boolean, plz: Expected Hey (string) to be boolean",
+            "Hey", "Boolean, plz");
     });
 
     testHelper.assertionTests("refute", "isBoolean", function (pass, fail, msg) {
@@ -579,6 +593,9 @@
         pass("for null", null);
         msg("fail with descriptive message",
             "[refute.isBoolean] Expected true not to be boolean", true);
+        msg("fail with custom message",
+            "[refute.isBoolean] Here: Expected true not to be boolean",
+            true, "Here");
     });
 
     testHelper.assertionTests("assert", "isNumber", function (pass, fail, msg) {
@@ -589,6 +606,9 @@
         msg("fail with descriptive message",
             "[assert.isNumber] Expected Hey (string) to be a non-NaN number",
             "Hey");
+        msg("fail with custom message",
+            "[assert.isNumber] Check it: Expected Hey (string) to be a non-NaN number",
+            "Hey", "Check it");
     });
 
     testHelper.assertionTests("refute", "isNumber", function (pass, fail, msg) {
@@ -597,8 +617,8 @@
         pass("for function", function () {});
         pass("for null", null);
         msg("fail with descriptive message",
-            "[refute.isNumber] Expected 42 to be NaN or another non-number value",
-            42);
+            "[refute.isNumber] Ho ho! Expected 42 to be NaN or another non-number value",
+            42, "Ho ho!");
     });
 
     testHelper.assertionTests("assert", "isNaN", function (pass, fail, msg) {
@@ -608,6 +628,8 @@
         fail("for object", {});
         fail("for null", null);
         msg("fail with descriptive message", "[assert.isNaN] Expected 32 to be NaN", 32);
+        msg("fail with custom message", "[assert.isNaN] No! Expected 32 to be NaN",
+            32, "No!");
     });
 
     testHelper.assertionTests("refute", "isNaN", function (pass, fail, msg) {
@@ -618,6 +640,8 @@
         pass("for null", null);
         msg("fail with descriptive message",
             "[refute.isNaN] Expected not to be NaN", NaN);
+        msg("fail with custom message",
+            "[refute.isNaN] Hey: Expected not to be NaN", NaN, "Hey");
     });
 
     testHelper.assertionTests("assert", "isArray", function (pass, fail, msg) {
@@ -640,6 +664,9 @@
         fail("for array like", arrayLike);
         msg("fail with descriptive message",
             "[assert.isArray] Expected [object Object] to be array", {});
+        msg("fail with custom message",
+            "[assert.isArray] Nope: Expected [object Object] to be array",
+            {}, "Nope");
     });
 
     testHelper.assertionTests("refute", "isArray", function (pass, fail, msg) {
@@ -662,6 +689,9 @@
         pass("for array like", arrayLike);
         msg("fail with descriptive message",
             "[refute.isArray] Expected 1,2 not to be array", [1, 2]);
+        msg("fail with custom message",
+            "[refute.isArray] Hmm: Expected 1,2 not to be array",
+            [1, 2], "Hmm");
     });
 
     testHelper.assertionTests("assert", "isArrayLike", function (pass, fail, msg) {
@@ -682,6 +712,9 @@
         pass("for array like", arrayLike);
         msg("fail with descriptive message",
             "[assert.isArrayLike] Expected [object Object] to be array like", {});
+        msg("fail with custom message",
+            "[assert.isArrayLike] Here! Expected [object Object] to be array like",
+            {}, "Here!");
     });
 
     testHelper.assertionTests("refute", "isArrayLike", function (pass, fail, msg) {
@@ -702,6 +735,9 @@
         fail("for array like", arrayLike);
         msg("fail with descriptive message",
             "[refute.isArrayLike] Expected 1,2 not to be array like", [1, 2]);
+        msg("fail with custom message",
+            "[refute.isArrayLike] Hey: Expected 1,2 not to be array like",
+            [1, 2], "Hey");
     });
 
     testHelper.assertionTests("assert", "defined", function (pass, fail, msg) {
@@ -1246,6 +1282,9 @@
         fail("for numbers out of delta range", 2, 3, 0.5);
         msg("fail with descriptive message",
             "[assert.inDelta] Expected 3 to be equal to 2 +/- 0.6", 3, 2, 0.6);
+        msg("fail with custom message",
+            "[assert.inDelta] Ho! Expected 3 to be equal to 2 +/- 0.6",
+            3, 2, 0.6, "Ho!");
         pass("for numbers in delta range", 2, 3, 1);
         msg("fail if not passed arguments",
             "[assert.inDelta] Expected to receive at least 3 arguments");
@@ -1256,6 +1295,9 @@
         pass("for numbers out of delta range", 2, 3, 0.5);
         msg("with descriptive message",
             "[refute.inDelta] Expected 3 not to be equal to 3 +/- 0", 3, 3, 0);
+        msg("with custom message",
+            "[refute.inDelta] Hey: Expected 3 not to be equal to 3 +/- 0",
+            3, 3, 0, "Hey");
         fail("for numbers in delta range", 2, 3, 1);
         msg("fail if not passed arguments",
             "[refute.inDelta] Expected to receive at least 3 arguments");
@@ -1276,6 +1318,9 @@
         pass("when not directly inheriting", specializedThing, MyThing.prototype);
         msg("with descriptive message",
             "[assert.hasPrototype] Expected [object Object] to have [object Object] on its prototype chain", otherThing, MyThing.prototype);
+        msg("with custom message",
+            "[assert.hasPrototype] Oh: Expected [object Object] to have [object Object] on its prototype chain",
+            otherThing, MyThing.prototype, "Oh");
         msg("fail if not passed arguments",
             "[assert.hasPrototype] Expected to receive at least 2 arguments");
     });
@@ -1288,6 +1333,9 @@
         pass("when object does not inherit", otherThing, MyThing.prototype);
         msg("with descriptive message",
             "[refute.hasPrototype] Expected [object Object] not to have [object Object] on its prototype chain", myThing, MyThing.prototype);
+        msg("with descriptive message",
+            "[refute.hasPrototype] Oh: Expected [object Object] not to have [object Object] on its prototype chain",
+            myThing, MyThing.prototype, "Oh");
         msg("fail if not passed arguments",
             "[refute.hasPrototype] Expected to receive at least 2 arguments");
     });
