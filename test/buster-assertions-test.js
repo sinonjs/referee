@@ -1,27 +1,25 @@
 /*jslint onevar: false, browser: true, eqeqeq: false, nomen: false,
   plusplus: false, regexp: false*/
 /*global require, __dirname*/
-if (typeof require != "undefined") {
-    var assert = require("assert");
-    var sinon = require("sinon");
-    var testHelper = require("./test-helper");
+(function (B, sinon, assert, testHelper) {
+    var bu, ba;
 
-    var buster = {
-        assertions: require("./../lib/buster-assertions"),
-        util: require("buster-util")
-    };
+    if (typeof require == "function" && typeof module == "object") {
+        sinon = require("sinon");
+        assert = require("assert");
+        testHelper = require("./test-helper");
+        bu = require("buster-util");
+        ba = require("./../lib/buster-assertions");
+    } else {
+        bu = buster.util;
+        ba = buster.assertions;
+    }
 
-    require("./../lib/buster-assertions/extras");
-}
-
-(function () {
-    var ba = buster.assertions;
-
-    buster.util.testCase("AssertTest", {
+    bu.testCase("AssertTest", {
         setUp: testHelper.setUp,
         tearDown: testHelper.tearDown,
 
-        "should allow true": function () {
+        "allows true": function () {
             var okListener = sinon.spy();
             ba.on("pass", okListener);
 
@@ -33,7 +31,7 @@ if (typeof require != "undefined") {
             assert.ok(okListener.calledWith("assert"));
         },
 
-        "should allow truthy values": function () {
+        "allows truthy values": function () {
             assert.doesNotThrow(function () {
                 ba.assert({});
                 ba.assert([]);
@@ -43,13 +41,13 @@ if (typeof require != "undefined") {
             });
         },
 
-        "should allow true with message": function () {
+        "allows true with message": function () {
             assert.doesNotThrow(function () {
                 ba.assert(true, "s'aright");
             });
         },
 
-        "should not allow false": function () {
+        "does not allow false": function () {
             var okListener = sinon.spy();
             ba.on("pass", okListener);
 
@@ -60,7 +58,7 @@ if (typeof require != "undefined") {
             assert.ok(!okListener.called);
         },
 
-        "should not allow falsy values": function () {
+        "does not allow falsy values": function () {
             assert.throws(function () {
                 ba.assert("");
             });
@@ -82,13 +80,13 @@ if (typeof require != "undefined") {
             });
         },
 
-        "should not allow false with message": function () {
+        "does not allow false with message": function () {
             assert.throws(function () {
                 ba.assert(false, "Some message");
             });
         },
 
-        "should fail with generated message": function () {
+        "fails with generated message": function () {
             try {
                 ba.assert(false);
                 throw new Error("Didn't fail");
@@ -98,7 +96,7 @@ if (typeof require != "undefined") {
             }
         },
 
-        "should fail with custom message": function () {
+        "fails with custom message": function () {
             try {
                 ba.assert(false, "False FTW");
                 throw new Error("Didn't fail");
@@ -108,7 +106,7 @@ if (typeof require != "undefined") {
             }
         },
 
-        "should update assertion count": function () {
+        "updates assertion count": function () {
             ba.count = 0;
 
             try {
@@ -119,7 +117,7 @@ if (typeof require != "undefined") {
             assert.equal(2, ba.count);
         },
 
-        "should format value with assert.format": function () {
+        "formats value with assert.format": function () {
             ba.format = sinon.spy();
 
             try {
@@ -130,7 +128,7 @@ if (typeof require != "undefined") {
             assert.ok(ba.format.calledWith(false));
         },
 
-        "should fail if not passed arguments": function () {
+        "fails if not passed arguments": function () {
             try {
                 ba.assert();
                 throw new Error("Expected assert to fail");
@@ -140,7 +138,7 @@ if (typeof require != "undefined") {
             }
         },
 
-        "should not throw if not configured to":
+        "does not throw if not configured to":
         testHelper.assertionFailureEventTest(function () {
             ba.assert(false);
         })
@@ -358,7 +356,7 @@ if (typeof require != "undefined") {
     });
 
     if (typeof document != "undefined") {
-        buster.util.testCase("AssertEqualsHostObjectTest", {
+        bu.testCase("AssertEqualsHostObjectTest", {
             setUp: testHelper.setUp,
             tearDown: testHelper.tearDown,
 
@@ -1294,7 +1292,7 @@ if (typeof require != "undefined") {
             "[refute.hasPrototype] Expected to receive at least 2 arguments");
     });
 
-    buster.util.testCase("CustomAssertionsTest", {
+    bu.testCase("CustomAssertionsTest", {
         setUp: testHelper.setUp,
         tearDown: function () {
             testHelper.tearDown.call(this);
@@ -1417,4 +1415,4 @@ if (typeof require != "undefined") {
             }
         }
     });
-}());
+}(this.buster, this.sinon, this.assert, this.testHelper));
