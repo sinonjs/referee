@@ -1062,7 +1062,7 @@
             throw new Error();
         }, "TypeError");
 
-        fail("when callback does not throw and specific type os expected",
+        fail("when callback does not throw and specific type is expected",
              function () {}, "TypeError");
 
         msg("fail with message when not throwing",
