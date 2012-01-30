@@ -1,7 +1,7 @@
 /*jslint onevar: false, browser: true, eqeqeq: false, nomen: false,
          plusplus: false, regexp: false*/
 /*global require, __dirname*/
-if (typeof require != "undefined") {
+if (typeof module === "object" && typeof require === "function") {
     var assert = require("assert");
     var sinon = require("sinon");
     var testHelper = require("../test-helper");

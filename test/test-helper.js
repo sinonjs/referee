@@ -1,4 +1,4 @@
-if (typeof require != "undefined") {
+if (typeof module === "object" && typeof require === "function") {
     var assert = require("assert");
     var sinon = require("sinon");
 
