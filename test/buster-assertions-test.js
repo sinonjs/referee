@@ -175,6 +175,37 @@
         fail("for undefined", undefined);
     });
 
+    testHelper.assertionTests("assert", "isTruthy", function (pass, fail, msg) {
+        pass("for true", true);
+        fail("for false", false);
+        msg("represent expected value in message",
+            "[assert.isTruthy] Expected false to be truthy", false);
+        msg("include custom message",
+            "[assert.isTruthy] Oh: Expected false to be truthy", false, "Oh");
+        pass("for object", {});
+        pass("for array", []);
+        pass("for string", "32");
+        pass("for number", 32);
+        msg("fail if not passed arguments",
+            "[assert.isTruthy] Expected to receive at least 1 argument");
+    });
+
+    testHelper.assertionTests("assert", "isFalsy", function (pass, fail, msg, callbacks) {
+        pass("for false", false);
+        fail("for true", true);
+        msg("fail with message",
+            "[assert.isFalsy] Expected true to be falsy", true);
+        msg("fail with custom message",
+            "[assert.isFalsy] Nooo! Expected true to be falsy", true, "Nooo!");
+        msg("represent expected value in message",
+            "[assert.isFalsy] Expected [object Object] to be falsy", {});
+        pass("for empty string", "");
+        pass("for 0", 0);
+        pass("for NaN", NaN);
+        pass("for null", null);
+        pass("for undefined", undefined);
+    });
+
     var obj = { id: 42 };
     var obj2 = { id: 42 };
 
