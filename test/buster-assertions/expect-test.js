@@ -80,8 +80,8 @@ buster.util.testCase("ExpectTest", {
     "should expose all assertions": function () {
         var obj = { id: 42 };
 
-        expect(obj).toBeSameAs(obj);
-        expect(obj).not().toBeSameAs({ id: 42 });
+        expect(obj).toBe(obj);
+        expect(obj).not().toBe({ id: 42 });
         expect(obj).toEqual({ id: 42 });
         expect(obj).not().toEqual({});
         expect(obj).toBeType("object");
@@ -102,5 +102,9 @@ buster.util.testCase("ExpectTest", {
         expect({ tagName: "ol" }).not().toHaveTagName("li");
         expect({ className: "a b c" }).toHaveClassName("b");
         expect({ className: "a b c" }).not().toHaveClassName("d");
+        expect(true).toBeTruthy();
+        expect(false).not().toBeTruthy();
+        expect(false).toBeFalsy();
+        expect(true).not().toBeFalsy();
     }
 });
