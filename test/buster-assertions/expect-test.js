@@ -102,5 +102,9 @@ buster.util.testCase("ExpectTest", {
         expect({ tagName: "ol" }).not().toHaveTagName("li");
         expect({ className: "a b c" }).toHaveClassName("b");
         expect({ className: "a b c" }).not().toHaveClassName("d");
+        expect(true).toBeTruthy();
+        expect(false).not().toBeTruthy();
+        expect(false).toBeFalsy();
+        expect(true).not().toBeFalsy();
     }
 });
