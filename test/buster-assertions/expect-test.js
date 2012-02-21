@@ -80,8 +80,8 @@ buster.util.testCase("ExpectTest", {
     "should expose all assertions": function () {
         var obj = { id: 42 };
 
-        expect(obj).toBeSameAs(obj);
-        expect(obj).not().toBeSameAs({ id: 42 });
+        expect(obj).toBe(obj);
+        expect(obj).not().toBe({ id: 42 });
         expect(obj).toEqual({ id: 42 });
         expect(obj).not().toEqual({});
         expect(obj).toBeType("object");
