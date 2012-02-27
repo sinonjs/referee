@@ -486,28 +486,6 @@
             {}, {}, "Eh?");
     });
 
-    testHelper.assertionTests("assert", "typeOf", function (pass, fail, msg) {
-        pass("when types match", function () {}, "function");
-        fail("when types don't match", {}, "function");
-        msg("generate failure message",
-            "[assert.typeOf] typeof [object Object] (object) expected to be function",
-            {}, "function");
-        msg("use custom message",
-            "[assert.typeOf] Aww: typeof [object Object] (object) expected to be function",
-            {}, "function", "Aww");
-    });
-
-    testHelper.assertionTests("refute", "typeOf", function (pass, fail, msg) {
-        fail("when types match", function () {}, "function");
-        pass("when types don't match", {}, "function");
-        msg("generate failure message",
-            "[refute.typeOf] typeof [object Object] expected not to be object",
-            {}, "object");
-        msg("use custom message",
-            "[refute.typeOf] Hmm: typeof [object Object] expected not to be object",
-            {}, "object", "Hmm");
-    });
-
     testHelper.assertionTests("assert", "isString", function (pass, fail, msg) {
         pass("for string", "Hey");
         fail("for object", {});

@@ -84,8 +84,6 @@ buster.util.testCase("ExpectTest", {
         expect(obj).not().toBe({ id: 42 });
         expect(obj).toEqual({ id: 42 });
         expect(obj).not().toEqual({});
-        expect(obj).toBeType("object");
-        expect(obj).not().toBeType("string");
         expect(obj).toBeObject();
         expect(false).not().toBeObject();
         expect(function () {}).toBeFunction();
