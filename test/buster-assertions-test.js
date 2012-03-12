@@ -486,6 +486,38 @@
             {}, {}, "Eh?");
     });
 
+    testHelper.assertionTests("assert", "greater", function (pass, fail, msg) {
+        pass("when greater than", 2, 1);
+        fail("when equal", 1, 1);
+        fail("when less than", 0, 1);
+        msg("fail with descriptive message",
+            "[assert.greater] Expected 1 to be greater than 2", 1, 2)
+    });
+
+    testHelper.assertionTests("refute", "greater", function (pass, fail, msg) {
+        fail("when greater than", 2, 1);
+        pass("when equal", 1, 1);
+        pass("when less than", 0, 1);
+        msg("fail with descriptive message",
+            "[refute.greater] Expected 2 to be less than or equal to 1", 2, 1)
+    });
+
+    testHelper.assertionTests("assert", "less", function (pass, fail, msg) {
+        fail("when greater than", 2, 1);
+        fail("when equal", 1, 1);
+        pass("when less than", 0, 1);
+        msg("fail with descriptive message",
+            "[assert.less] Expected 2 to be less than 1", 2, 1)
+    });
+
+    testHelper.assertionTests("refute", "less", function (pass, fail, msg) {
+        pass("when greater than", 2, 1);
+        pass("when equal", 1, 1);
+        fail("when less than", 0, 1);
+        msg("fail with descriptive message",
+            "[refute.less] Expected 1 to be greater than or equal to 2", 1, 2)
+    });
+
     testHelper.assertionTests("assert", "isString", function (pass, fail, msg) {
         pass("for string", "Hey");
         fail("for object", {});

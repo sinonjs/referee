@@ -106,5 +106,9 @@ buster.util.testCase("ExpectTest", {
         expect(true).not().toBeFalsy();
         expect(3).toBeCloseTo(3, 0);
         expect(2).not().toBeCloseTo(3, 0.5);
+        expect(2).toBeGreaterThan(1);
+        expect(1).not().toBeGreaterThan(2);
+        expect(1).toBeLessThan(2);
+        expect(2).not().toBeLessThan(1);
     }
 });
