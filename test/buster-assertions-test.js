@@ -486,6 +486,38 @@
             {}, {}, "Eh?");
     });
 
+    testHelper.assertionTests("assert", "greater", function (pass, fail, msg) {
+        pass("when greater than", 2, 1);
+        fail("when equal", 1, 1);
+        fail("when less than", 0, 1);
+        msg("fail with descriptive message",
+            "[assert.greater] Expected 1 to be greater than 2", 1, 2)
+    });
+
+    testHelper.assertionTests("refute", "greater", function (pass, fail, msg) {
+        fail("when greater than", 2, 1);
+        pass("when equal", 1, 1);
+        pass("when less than", 0, 1);
+        msg("fail with descriptive message",
+            "[refute.greater] Expected 2 to be less than or equal to 1", 2, 1)
+    });
+
+    testHelper.assertionTests("assert", "less", function (pass, fail, msg) {
+        fail("when greater than", 2, 1);
+        fail("when equal", 1, 1);
+        pass("when less than", 0, 1);
+        msg("fail with descriptive message",
+            "[assert.less] Expected 2 to be less than 1", 2, 1)
+    });
+
+    testHelper.assertionTests("refute", "less", function (pass, fail, msg) {
+        pass("when greater than", 2, 1);
+        pass("when equal", 1, 1);
+        fail("when less than", 0, 1);
+        msg("fail with descriptive message",
+            "[refute.less] Expected 1 to be greater than or equal to 2", 1, 2)
+    });
+
     testHelper.assertionTests("assert", "isString", function (pass, fail, msg) {
         pass("for string", "Hey");
         fail("for object", {});
@@ -1316,6 +1348,30 @@
             myThing, MyThing.prototype, "Oh");
         msg("fail if not passed arguments",
             "[refute.hasPrototype] Expected to receive at least 2 arguments");
+    });
+
+    testHelper.assertionTests("assert", "contains", function (pass, fail, msg) {
+        pass("when array contains value", [0,1,2], 1);
+        fail("when array does not contain value", [0,1,2], 3);
+        msg("with descriptive message",
+            "[assert.contains] Expected [0,1,2] to contain 3", [0,1,2], 3);
+        var thing = {};
+        var otherThing = {};
+        pass("when array contains the actual object", [thing], thing);
+        fail("when array contains different object with same value",
+            [thing], otherThing);
+    });
+
+    testHelper.assertionTests("refute", "contains", function (pass, fail, msg) {
+        fail("when array contains value", [0,1,2], 1);
+        pass("when array does not contain value", [0,1,2], 3);
+        msg("with descriptive message",
+            "[refute.contains] Expected [0,1,2] not to contain 2", [0,1,2], 2);
+        var thing = {};
+        var otherThing = {};
+        fail("when array contains the actual object", [thing], thing);
+        pass("when array contains different object with same value",
+            [thing], otherThing);
     });
 
     bu.testCase("CustomAssertionsTest", {
