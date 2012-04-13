@@ -1287,30 +1287,30 @@
         }
     });
 
-    testHelper.assertionTests("assert", "inDelta", function (pass, fail, msg) {
+    testHelper.assertionTests("assert", "near", function (pass, fail, msg) {
         pass("for equal numbers", 3, 3, 0);
         fail("for numbers out of delta range", 2, 3, 0.5);
         msg("fail with descriptive message",
-            "[assert.inDelta] Expected 3 to be equal to 2 +/- 0.6", 3, 2, 0.6);
+            "[assert.near] Expected 3 to be equal to 2 +/- 0.6", 3, 2, 0.6);
         msg("fail with custom message",
-            "[assert.inDelta] Ho! Expected 3 to be equal to 2 +/- 0.6",
+            "[assert.near] Ho! Expected 3 to be equal to 2 +/- 0.6",
             3, 2, 0.6, "Ho!");
         pass("for numbers in delta range", 2, 3, 1);
         msg("fail if not passed arguments",
-            "[assert.inDelta] Expected to receive at least 3 arguments");
+            "[assert.near] Expected to receive at least 3 arguments");
     });
 
-    testHelper.assertionTests("refute", "inDelta", function (pass, fail, msg) {
+    testHelper.assertionTests("refute", "near", function (pass, fail, msg) {
         fail("for equal numbers", 3, 3, 0);
         pass("for numbers out of delta range", 2, 3, 0.5);
         msg("with descriptive message",
-            "[refute.inDelta] Expected 3 not to be equal to 3 +/- 0", 3, 3, 0);
+            "[refute.near] Expected 3 not to be equal to 3 +/- 0", 3, 3, 0);
         msg("with custom message",
-            "[refute.inDelta] Hey: Expected 3 not to be equal to 3 +/- 0",
+            "[refute.near] Hey: Expected 3 not to be equal to 3 +/- 0",
             3, 3, 0, "Hey");
         fail("for numbers in delta range", 2, 3, 1);
         msg("fail if not passed arguments",
-            "[refute.inDelta] Expected to receive at least 3 arguments");
+            "[refute.near] Expected to receive at least 3 arguments");
     });
 
     function MyThing() {}
