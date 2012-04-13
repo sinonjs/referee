@@ -66,51 +66,47 @@ buster.util.testCase("ExpectTest", {
 
     "should expose refutation as expectation too": function () {
         try {
-            expect({ id: 42 }).not().toEqual({ id: 42 });
+            expect({ id: 42 }).not.toEqual({ id: 42 });
             throw new Error("Did not throw");
         } catch (e) {
             assert.equal(e.message, "[expect.not.toEqual] [object Object] expected not to be equal to [object Object]");
         }
     },
 
-    "should allow double not": function () {
-        expect({ id: 42 }).not().not().toEqual({ id: 42 });
-    },
-
     "should expose all assertions": function () {
         var obj = { id: 42 };
 
         expect(obj).toBe(obj);
-        expect(obj).not().toBe({ id: 42 });
+        expect(obj).not.toBe({ id: 42 });
         expect(obj).toEqual({ id: 42 });
-        expect(obj).not().toEqual({});
+        expect(obj).not.toEqual({});
         expect(obj).toBeObject();
-        expect(false).not().toBeObject();
+        expect(false).not.toBeObject();
         expect(function () {}).toBeFunction();
-        expect({}).not().toBeFunction();
+        expect({}).not.toBeFunction();
         expect(null).toBeDefined();
-        expect(undefined).not().toBeDefined();
+        expect(undefined).not.toBeDefined();
         expect(null).toBeNull();
-        expect(42).not().toBeNull();
+        expect(42).not.toBeNull();
         expect(obj).toMatch({ id: 42 });
-        expect(obj).not().toMatch({ id: 37 });
+        expect(obj).not.toMatch({ id: 37 });
         expect(function () { throw new TypeError("Oops"); }).toThrow("TypeError");
-        expect(function () {}).not().toThrow();
+        expect(function () {}).not.toThrow();
         expect({ tagName: "li" }).toHaveTagName("li");
-        expect({ tagName: "ol" }).not().toHaveTagName("li");
+        expect({ tagName: "ol" }).not.toHaveTagName("li");
         expect({ className: "a b c" }).toHaveClassName("b");
-        expect({ className: "a b c" }).not().toHaveClassName("d");
+        expect({ className: "a b c" }).not.toHaveClassName("d");
         expect(true).toBeTruthy();
-        expect(false).not().toBeTruthy();
+        expect(false).not.toBeTruthy();
         expect(false).toBeFalsy();
-        expect(true).not().toBeFalsy();
+        expect(true).not.toBeFalsy();
         expect(3).toBeCloseTo(3, 0);
-        expect(2).not().toBeCloseTo(3, 0.5);
+        expect(2).not.toBeCloseTo(3, 0.5);
         expect(2).toBeGreaterThan(1);
-        expect(1).not().toBeGreaterThan(2);
+        expect(1).not.toBeGreaterThan(2);
         expect(1).toBeLessThan(2);
-        expect(2).not().toBeLessThan(1);
+        expect(2).not.toBeLessThan(1);
         expect([0,1,2]).toContain(1);
-        expect([0,1,2]).not().toContain(3);
+        expect([0,1,2]).not.toContain(3);
     }
 });
