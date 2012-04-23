@@ -189,13 +189,14 @@
         fail("when comparing falsy values without coercion", 0, "");
         pass("when comparing null to null", null, null);
         pass("when comparing undefined to undefined", undefined, undefined);
-        fail("when comparing NaN to NaN", NaN, NaN);
         msg("include objects in message",
             "[assert.same] Obj expected to be the same object as [object Object]",
             "Obj", {});
         msg("include custom message",
             "[assert.same] Back again: Obj expected to be the same object as [object Object]",
             "Obj", {}, "Back again");
+        pass("when comparing NaN to NaN", NaN, NaN);
+        fail("when comparing -0 to +0", -0, +0);
     });
 
     testHelper.assertionTests("refute", "same", function (pass, fail, msg) {
@@ -205,7 +206,6 @@
         fail("when comparing booleans", true, true);
         fail("when comparing numbers", 32, 32);
         fail("when comparing infinity", Infinity, Infinity);
-        pass("when comparing NaN", NaN, NaN);
         fail("when comparing null to null", null, null);
         fail("when comparing undefined to undefined", undefined, undefined);
         msg("include objects in message",
@@ -213,6 +213,8 @@
         msg("include custom message",
            "[refute.same] Sigh... [object Object] expected not to be the same object as [object Object]",
             obj, obj, "Sigh...");
+        fail("when comparing NaN to NaN", NaN, NaN);
+        pass("when comparing -0 to +0", -0, +0);
     });
 
     testHelper.assertionTests("assert", "equals", function (pass, fail, msg) {
@@ -242,6 +244,8 @@
         pass("when comparing falsy values reverse with coercion", "", 0);
         pass("when comparing string boxing with coercion", "4", new String("4"));
         pass("when comparing string boxing reverse with coercion", new String("4"), "4");
+        pass("when comparing NaN to NaN", NaN, NaN);
+        pass("when comparing -0 to +0", -0, +0);
         fail("when comparing objects with different own properties",
              { id: 42 }, { id: 42, di: 24 });
         fail("when comparing objects with different own properties #2",
@@ -408,20 +412,17 @@
         fail("when comparing with coercion", 0, "");
         pass("when comparing objects with different own properties",
              { id: 42 }, { id: 42, di: 24 });
-
         pass("when comparing objects with different own properties #2",
              { id: undefined }, { di: 24 });
-
         pass("when comparing objects with different own properties #3",
              { id: 24 }, { di: undefined });
-
         fail("when comparing objects with one property", { id: 42 }, { id: 42 });
-
         fail("when comparing objects with one object property",
              { obj: { id: 42 } }, { obj: { id: 42 } });
-
         pass("when comparing objects with one property with different values",
              { id: 42 }, { id: 24 });
+        fail("when comparing NaN to NaN", NaN, NaN);
+        fail("when comparing -0 to +0", -0, +0);
 
         var deepObject = {
             id: 42,
