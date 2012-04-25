@@ -1,6 +1,6 @@
 {
     "name": "buster-assertions",
-    "version": "0.10.0",
+    "version": "0.10.1",
     "description": "Assertions for any JavaScript test framework and environment",
     "homepage": "http://busterjs.org/docs/buster-assertions",
     "author": { "name": "August Lilleaas and Christian Johansen" },
