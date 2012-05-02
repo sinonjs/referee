@@ -90,7 +90,10 @@ buster.util.testCase("ExpectTest", {
         expect(42).not.toBeNull();
         expect(obj).toMatch({ id: 42 });
         expect(obj).not.toMatch({ id: 37 });
-        expect(function () { throw new TypeError("Oops"); }).toThrow("TypeError");
+        expect(function () { throw new TypeError("Oops"); }).toThrow(TypeError);
+        expect(function () { throw new TypeError("Oops"); }).toThrow("Oops");
+        expect(function () { throw new TypeError("Oops"); }).toThrow(/Oo/);
+        expect(function () { throw new TypeError("Oops"); }).toThrow(function(err) { return err.message === "Oops";});
         expect(function () {}).not.toThrow();
         expect({ tagName: "li" }).toHaveTagName("li");
         expect({ tagName: "ol" }).not.toHaveTagName("li");
