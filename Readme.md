@@ -3,7 +3,7 @@
 Test-framework agnostic assertions and expectations. Features an API for
 adding custom assertions.
 
-"!https://secure.travis-ci.org/busterjs/buster-assertions.png?branch=master!":http://travis-ci.org/busterjs/buster-assertions
+![Build status](https://secure.travis-ci.org/busterjs/buster-assertions.png?branch=master)
 
 # Running tests
 
