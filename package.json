@@ -18,6 +18,9 @@
         "type": "git",
         "url": "git://gitorious.org/buster/buster-assertions.git"
     },
+    "scripts": {
+        "test": "./run-tests"
+    },
     "dependencies": {
         "buster-core": ">=0.6.0"
     },
