@@ -1067,34 +1067,94 @@
 
         pass("when callback throws expected type", function () {
             throw new TypeError("Oh hmm");
-        }, "TypeError");
+        }, TypeError);
 
         fail("when callback does not throw expected type", function () {
             throw new Error();
-        }, "TypeError");
+        }, TypeError);
 
         fail("when callback does not throw and specific type is expected",
-             function () {}, "TypeError");
+             function () {}, TypeError);
+
+        pass("when exception message matches provided string", function () {
+            throw new TypeError("Oh hmm");
+        }, "Oh hmm");
+
+        fail("when exception message does not match provided string", function () {
+            throw new TypeError("Oh hai");
+        }, "Oh hmm");
+
+        pass("when exception message matches provided RegExp", function () {
+            throw new TypeError("Oh hmm");
+        }, /hmm/);
+
+        fail("when exception message does not match provided RegExp", function () {
+            throw new TypeError("Oh hai");
+        }, /hmm/);
+
+        pass("when provided callback returns true", function () {
+            throw new TypeError("Oh hmm");
+        }, function(err) { return err.message === "Oh hmm";});
+
+        fail("when provided callback returns false", function () {
+            throw new TypeError("Oh hai");
+        }, function(err) { return false; });
 
         msg("fail with message when not throwing",
             "[assert.exception] Expected TypeError but no exception was thrown",
-            function () {}, "TypeError").expectedFormats = 0;
+            function () {}, TypeError).expectedFormats = 0;
 
         msg("fail with custom message",
             "[assert.exception] Hmm: Expected TypeError but no exception was thrown",
-            function () {}, "TypeError", "Hmm").expectedFormats = 0;
+            function () {}, TypeError, "Hmm").expectedFormats = 0;
 
         msg("fail with message when throwing wrong kind of exception",
             "[assert.exception] Expected TypeError but threw Error (:()",
             function () {
                 throw new Error(":(");
-            }, "TypeError").expectedFormats = 0;
+            }, TypeError).expectedFormats = 0;
 
         msg("fail with custom message when throwing wrong kind of exception",
             "[assert.exception] Wow: Expected TypeError but threw Error (:()",
             function () {
                 throw new Error(":(");
-            }, "TypeError", "Wow").expectedFormats = 0;
+            }, TypeError, "Wow").expectedFormats = 0;
+
+        msg("fail with message when exception message does not match string",
+            "[assert.exception] Expected exception message to match :) but threw Error (:()",
+            function () {
+                throw new Error(":(");
+            }, ":)").expectedFormats = 0;
+
+        msg("fail with custom message when exception message does not match string",
+            "[assert.exception] Wow: Expected exception message to match :) but threw Error (:()",
+            function () {
+                throw new Error(":(");
+            }, ":)", "Wow").expectedFormats = 0;
+
+        msg("fail with message when exception message does not match RegExp",
+            "[assert.exception] Expected exception message to match /bar/ but threw Error (foo)",
+            function () {
+                throw new Error("foo");
+            }, /bar/).expectedFormats = 0;
+
+        msg("fail with custom message when exception message does not match RegExp",
+            "[assert.exception] Wow: Expected exception message to match /bar/ but threw Error (foo)",
+            function () {
+                throw new Error("foo");
+            }, /bar/, "Wow").expectedFormats = 0;
+
+        msg("fail with message when callback returns false",
+            "[assert.exception] Expected function (err) { return false; } to return true for Error (foo)",
+            function () {
+                throw new Error("foo");
+            }, function(err) { return false; }).expectedFormats = 0;
+
+        msg("fail with custom message when callback returns false",
+            "[assert.exception] Wow: Expected function (err) { return false; } to return true for Error (foo)",
+            function () {
+                throw new Error("foo");
+            }, function(err) { return false; }, "Wow").expectedFormats = 0;
 
         msg("if not passed arguments",
             "[assert.exception] Expected to receive at least 1 argument");
