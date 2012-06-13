@@ -1102,7 +1102,7 @@
 
     testHelper.assertionTests("refute", "exception", function (pass, fail, msg) {
         fail("when callback throws", function () {
-            throw new Error("Yo, mister");
+            throw new Error("Yo, Malcolm");
         });
 
         pass("when callback does not throw", function () {});
