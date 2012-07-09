@@ -920,6 +920,9 @@
                 }
             }
         });
+
+        pass("for empty strings", "", "");
+        pass("for empty strings as object properties", { foo: "" }, { foo: "" });
     });
 
     testHelper.assertionTests("refute", "match", function (pass, fail, msg) {
