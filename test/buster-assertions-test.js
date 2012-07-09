@@ -143,7 +143,6 @@
             ba.assert(false);
         })
     });
-
     testHelper.assertionTests("assert", "isTrue", function (pass, fail, msg) {
         pass("for true", true);
         fail("for false", false);
@@ -250,7 +249,7 @@
              { id: 42 }, { id: 42, di: 24 });
         fail("when comparing objects with different own properties #2",
              { id: undefined }, { di: 24 });
-        fail("when comparing objects with different own properties #2",
+        fail("when comparing objects with different own properties #3",
              { id: 24 }, { di: undefined });
         pass("when comparing objects with one property", { id: 42 }, { id: 42 });
         pass("when comparing objects with one object property",
