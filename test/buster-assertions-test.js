@@ -1072,44 +1072,78 @@
     });
 
     testHelper.assertionTests("assert", "exception", function (pass, fail, msg) {
-        pass("when callback throws", function () {
-            throw new Error();
-        });
-
+        pass("when callback throws", function () { throw new Error(); });
         fail("when callback does not throw", function () {});
+
         msg("fail with message", "[assert.exception] Expected exception",
             function () {}).expectedFormats = 0;
 
-        pass("when callback throws expected type", function () {
+        pass("when callback throws expected name", function () {
             throw new TypeError("Oh hmm");
-        }, "TypeError");
+        }, { name: "TypeError" });
 
-        fail("when callback does not throw expected type", function () {
+        fail("when callback does not throw expected name", function () {
             throw new Error();
-        }, "TypeError");
+        }, { name: "TypeError" });
+
+        fail("when thrown message does not match", function () {
+            throw new Error("Aright");
+        }, { message: "Aww" });
+
+        pass("when message and type matches", function () {
+            throw new TypeError("Aright");
+        }, { name: "Type", message: "Ar" });
 
         fail("when callback does not throw and specific type is expected",
-             function () {}, "TypeError");
+             function () {}, { name: "TypeError" });
 
         msg("fail with message when not throwing",
-            "[assert.exception] Expected TypeError but no exception was thrown",
-            function () {}, "TypeError").expectedFormats = 0;
+            "[assert.exception] Expected [object Object] but no exception was thrown",
+            function () {}, { name: "TypeError" }).expectedFormats = 1;
 
         msg("fail with custom message",
-            "[assert.exception] Hmm: Expected TypeError but no exception was thrown",
-            function () {}, "TypeError", "Hmm").expectedFormats = 0;
+            "[assert.exception] Hmm: Expected exception",
+            function () {}, "Hmm").expectedFormats = 0;
+
+        msg("fail with matcher and custom message",
+            "[assert.exception] Hmm: Expected [object Object] but no exception was thrown",
+            function () {}, { name: "TypeError" }, "Hmm").expectedFormats = 1;
 
         msg("fail with message when throwing wrong kind of exception",
-            "[assert.exception] Expected TypeError but threw Error (:()",
+            "[assert.exception] Expected [object Object] but threw Error (:()",
             function () {
                 throw new Error(":(");
-            }, "TypeError").expectedFormats = 0;
+            }, { name: "TypeError" }).expectedFormats = 1;
 
         msg("fail with custom message when throwing wrong kind of exception",
-            "[assert.exception] Wow: Expected TypeError but threw Error (:()",
+            "[assert.exception] Wow: Expected [object Object] but threw Error (:()",
             function () {
                 throw new Error(":(");
-            }, "TypeError", "Wow").expectedFormats = 0;
+            }, { name: "TypeError" }, "Wow").expectedFormats = 1;
+
+        msg("fail with custom message when throwing wrong message",
+            "[assert.exception] Wow: Expected [object Object] but threw Error (:()",
+            function () {
+                throw new Error(":(");
+            }, { name: "TypeError", message: "Aww" }, "Wow").expectedFormats = 1;
+
+        pass("when matcher function returns true", function () {
+            throw new TypeError("Aright");
+        }, function (err) { return err.name === "TypeError"; });
+
+        fail("when matcher function returns truthy", function () {
+            throw new TypeError("Aright");
+        }, function (err) { return err.name; });
+
+        fail("when matcher function returns false", function () {
+            throw new TypeError("Aright");
+        }, function (err) { return err.name === "Error"; });
+
+        msg("when matcher function fails",
+            "[assert.exception] Expected thrown TypeError (Aright) to pass matcher function",
+            function () {
+                throw new TypeError("Aright");
+            }, function (err) { return err.name === "Error"; }).expectedFormats = 0;
 
         msg("if not passed arguments",
             "[assert.exception] Expected to receive at least 1 argument");
@@ -1125,9 +1159,7 @@
 
         msg("fail with message",
             "[refute.exception] Expected not to throw but threw Error (:()",
-            function () {
-                throw new Error(":(");
-            });
+            function () { throw new Error(":("); });
 
         msg("fail with custom message",
             "[refute.exception] Jeez: Expected not to throw but threw Error (:()",
