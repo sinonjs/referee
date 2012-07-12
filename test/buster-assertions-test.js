@@ -922,6 +922,12 @@
 
         pass("for empty strings", "", "");
         pass("for empty strings as object properties", { foo: "" }, { foo: "" });
+        pass("for similar arrays", [1, 2, 3], [1, 2, 3]);
+        pass("for array subset", [1, 2, 3], [2, 3]);
+        pass("for single-element array subset", [1, 2, 3], [1]);
+        pass("for matching array subset", [1, 2, 3, { id: 42 }], [{ id: 42 }]);
+        fail("for mis-matching array 'subset'", [1, 2, 3], [2, 3, 4]);
+        fail("for mis-ordered array 'subset'", [1, 2, 3], [1, 3]);
     });
 
     testHelper.assertionTests("refute", "match", function (pass, fail, msg) {
@@ -1056,6 +1062,13 @@
                 }
             }
         });
+
+        fail("for similar arrays", [1, 2, 3], [1, 2, 3]);
+        fail("for array subset", [1, 2, 3], [2, 3]);
+        fail("for single-element array subset", [1, 2, 3], [1]);
+        fail("for matching array subset", [1, 2, 3, { id: 42 }], [{ id: 42 }]);
+        pass("for mis-matching array 'subset'", [1, 2, 3], [2, 3, 4]);
+        pass("for mis-ordered array 'subset'", [1, 2, 3], [1, 3]);
     });
 
     testHelper.assertionTests("assert", "exception", function (pass, fail, msg) {
