@@ -2,7 +2,7 @@
 Referee
 =======
 
-    Referee is in you unit tests, deciding who passes and who fails
+    Referee is in your unit tests, deciding who passes and who fails
 
 .. raw:: html
 

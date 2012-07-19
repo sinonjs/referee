@@ -1,4 +1,0 @@
-#!/usr/bin/env node
-
-require("./test/referee-.js");
-require("./test/expect-test.js");
