@@ -21,6 +21,11 @@ Some highlights:
 
 Documentation: `busterjs.org/docs/assertions <http://busterjs.org/docs/assertions>`_.
 
+
+``referee`` works in browsers (including old and rowdy ones, like IE6) and Node.
+It will define itself as an AMD module if you want it to (i.e. if there's a
+``define`` function available).
+
 Developers - Running tests
 ==========================
 
