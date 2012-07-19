@@ -4,7 +4,11 @@ Referee
 
     Referee is in you unit tests, deciding who passes and who fails
 
-[![Build status](https://secure.travis-ci.org/busterjs/referee.png?branch=master)](http://travis-ci.org/busterjs/referee)
+.. raw:: html
+
+    <a href="http://travis-ci.org/busterjs/referee" class="travis">
+      <img src="https://secure.travis-ci.org/busterjs/referee.png">
+    </a>
 
 ``referee`` is a test-framework agnostic assertion and expectation library.
 Some highlights:
@@ -14,6 +18,8 @@ Some highlights:
 - Evented: Emits success and failure events
 - Failing assertions throw exceptions by default, but can be configured to not
 - API to add custom assertions that provides quite a bit of plumbing for free
+
+Documentation: `busterjs.org/docs/assertions <http://busterjs.org/docs/assertions>`_.
 
 Developers - Running tests
 ==========================
