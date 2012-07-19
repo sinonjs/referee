@@ -1,9 +1,0 @@
-[submodule "vendor/buster-util"]
-	path = vendor/buster-util
-	url = https://gitorious.org/buster/buster-util.git
-[submodule "vendor/buster-core"]
-	path = vendor/buster-core
-	url = https://gitorious.org/buster/buster-core.git
-[submodule "vendor/sinon"]
-	path = vendor/sinon
-	url = https://github.com/cjohansen/Sinon.JS.git

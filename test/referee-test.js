@@ -1,155 +1,148 @@
-/*jslint onevar: false, browser: true, eqeqeq: false, nomen: false,
-  plusplus: false, regexp: false*/
-/*global require, __dirname*/
-(function (B, sinon, assert, testHelper) {
-    var bu, ba;
-
-    if (typeof require == "function" && typeof module == "object") {
-        sinon = require("sinon");
-        assert = require("assert");
+/*jslint maxlen:160*/
+(function (referee, testHelper, buster) {
+    if (typeof require === "function" && typeof module === "object") {
+        referee = require("../lib/referee");
         testHelper = require("./test-helper");
-        bu = require("buster-util");
-        ba = require("./../lib/buster-assertions");
-    } else {
-        bu = buster.util;
-        ba = buster.assertions;
+        buster = require("buster");
     }
 
-    bu.testCase("AssertTest", {
+    buster.testCase("assert", {
         setUp: testHelper.setUp,
         tearDown: testHelper.tearDown,
 
         "allows true": function () {
-            var okListener = sinon.spy();
-            ba.on("pass", okListener);
+            var okListener = this.spy();
+            referee.on("pass", okListener);
 
-            assert.doesNotThrow(function () {
-                ba.assert(true);
+            refute.exception(function () {
+                referee.assert(true);
             });
 
-            assert.ok(okListener.calledOnce);
-            assert.ok(okListener.calledWith("assert"));
+            assert.calledOnce(okListener);
+            assert.calledWith(okListener, "assert");
         },
 
         "allows truthy values": function () {
-            assert.doesNotThrow(function () {
-                ba.assert({});
-                ba.assert([]);
-                ba.assert("Truthy");
-                ba.assert(1);
-                ba.assert(/a/);
+            refute.exception(function () {
+                referee.assert({});
+                referee.assert([]);
+                referee.assert("Truthy");
+                referee.assert(1);
+                referee.assert(/a/);
             });
         },
 
         "allows true with message": function () {
-            assert.doesNotThrow(function () {
-                ba.assert(true, "s'aright");
+            refute.exception(function () {
+                referee.assert(true, "s'aright");
             });
         },
 
         "does not allow false": function () {
-            var okListener = sinon.spy();
-            ba.on("pass", okListener);
+            var okListener = this.spy();
+            referee.on("pass", okListener);
 
-            assert.throws(function () {
-                ba.assert(false);
+            assert.exception(function () {
+                referee.assert(false);
             });
 
-            assert.ok(!okListener.called);
+            refute.called(okListener);
         },
 
         "does not allow falsy values": function () {
-            assert.throws(function () {
-                ba.assert("");
+            assert.exception(function () {
+                referee.assert("");
             });
 
-            assert.throws(function () {
-                ba.assert(0);
+            assert.exception(function () {
+                referee.assert(0);
             });
 
-            assert.throws(function () {
-                ba.assert(NaN);
+            assert.exception(function () {
+                referee.assert(NaN);
             });
 
-            assert.throws(function () {
-                ba.assert(null);
+            assert.exception(function () {
+                referee.assert(null);
             });
 
-            assert.throws(function () {
-                ba.assert(undefined);
+            assert.exception(function () {
+                referee.assert(undefined);
             });
         },
 
         "does not allow false with message": function () {
-            assert.throws(function () {
-                ba.assert(false, "Some message");
+            assert.exception(function () {
+                referee.assert(false, "Some message");
             });
         },
 
         "fails with generated message": function () {
             try {
-                ba.assert(false);
+                referee.assert(false);
                 throw new Error("Didn't fail");
             } catch (e) {
-                assert.equal("AssertionError", e.name);
-                assert.equal("[assert] Expected false to be truthy", e.message);
+                assert.equals(e.name, "AssertionError");
+                assert.equals(e.message, "[assert] Expected false to be truthy");
             }
         },
 
         "fails with custom message": function () {
             try {
-                ba.assert(false, "False FTW");
+                referee.assert(false, "False FTW");
                 throw new Error("Didn't fail");
             } catch (e) {
-                assert.equal("AssertionError", e.name);
-                assert.equal("False FTW", e.message);
+                assert.equals(e.name, "AssertionError");
+                assert.equals(e.message, "False FTW");
             }
         },
 
         "updates assertion count": function () {
-            ba.count = 0;
+            referee.count = 0;
 
             try {
-                ba.assert(true);
-                ba.assert(false);
+                referee.assert(true);
+                referee.assert(false);
             } catch (e) {}
 
-            assert.equal(2, ba.count);
+            assert.equals(referee.count, 2);
         },
 
         "formats value with assert.format": function () {
-            ba.format = sinon.spy();
+            referee.format = this.spy();
 
             try {
-                ba.assert(false);
+                referee.assert(false);
             } catch (e) {}
 
-            assert.ok(ba.format.calledOnce);
-            assert.ok(ba.format.calledWith(false));
+            assert.calledOnce(referee.format);
+            assert.calledWith(referee.format, false);
         },
 
         "fails if not passed arguments": function () {
             try {
-                ba.assert();
+                referee.assert();
                 throw new Error("Expected assert to fail");
             } catch (e) {
-                assert.equal("[assert] Expected to receive at least 1 argument",
-                             e.message);
+                assert.equals(e.message, "[assert] Expected to receive at least 1 argument");
             }
         },
 
         "does not throw if not configured to":
-        testHelper.assertionFailureEventTest(function () {
-            ba.assert(false);
-        })
+            testHelper.assertionFailureEventTest(function () {
+                referee.assert(false);
+            })
     });
+
     testHelper.assertionTests("assert", "isTrue", function (pass, fail, msg) {
         pass("for true", true);
         fail("for false", false);
         msg("represent expected value in message",
             "[assert.isTrue] Expected [object Object] to be true", {});
         msg("include custom message",
-            "[assert.isTrue] Oh: Expected [object Object] to be true", {}, "Oh");
+            "[assert.isTrue] Oh: Expected [object Object] to be true",
+            {},
+            "Oh");
         fail("for object", {});
         fail("for array", []);
         fail("for string", "32");
@@ -208,9 +201,9 @@
         fail("when comparing null to null", null, null);
         fail("when comparing undefined to undefined", undefined, undefined);
         msg("include objects in message",
-           "[refute.same] [object Object] expected not to be the same object as [object Object]", obj, obj);
+            "[refute.same] [object Object] expected not to be the same object as [object Object]", obj, obj);
         msg("include custom message",
-           "[refute.same] Sigh... [object Object] expected not to be the same object as [object Object]",
+            "[refute.same] Sigh... [object Object] expected not to be the same object as [object Object]",
             obj, obj, "Sigh...");
         fail("when comparing NaN to NaN", NaN, NaN);
         pass("when comparing -0 to +0", -0, +0);
@@ -235,16 +228,16 @@
         pass("when comparing date objects with same date", date, sameDate);
         fail("when comparing date objects with different dates", date, anotherDate);
         fail("when comparing date objects to null", date, null);
-        pass("when comparing strings and numbers with coercion", "4", 4);
-        pass("when comparing numbers and strings with coercion", 4, "4");
-        pass("when comparing number object with coercion", 32, new Number(32));
-        pass("when comparing number object reverse with coercion", new Number(32), 32);
-        pass("when comparing falsy values with coercion", 0, "");
-        pass("when comparing falsy values reverse with coercion", "", 0);
-        pass("when comparing string boxing with coercion", "4", new String("4"));
-        pass("when comparing string boxing reverse with coercion", new String("4"), "4");
+        fail("when comparing strings and numbers with coercion", "4", 4);
+        fail("when comparing numbers and strings with coercion", 4, "4");
+        fail("when comparing number object with coercion", 32, new Number(32));
+        fail("when comparing number object reverse with coercion", new Number(32), 32);
+        fail("when comparing falsy values with coercion", 0, "");
+        fail("when comparing falsy values reverse with coercion", "", 0);
+        fail("when comparing string boxing with coercion", "4", new String("4"));
+        fail("when comparing string boxing reverse with coercion", new String("4"), "4");
         pass("when comparing NaN to NaN", NaN, NaN);
-        pass("when comparing -0 to +0", -0, +0);
+        fail("when comparing -0 to +0", -0, +0);
         fail("when comparing objects with different own properties",
              { id: 42 }, { id: 42, di: 24 });
         fail("when comparing objects with different own properties #2",
@@ -276,8 +269,6 @@
             name: "Hey"
         });
 
-        function func() {}
-
         pass("when comparing arrays",
              [1, 2, "Hey there", func, { id: 42, prop: [2, 3] }],
              [1, 2, "Hey there", func, { id: 42, prop: [2, 3] }]);
@@ -306,7 +297,7 @@
         function gather() { return arguments; }
         var arrayLike = { length: 4, "0": 1, "1": 2, "2": {}, "3": [] };
 
-        pass("when comparing arguments to array", [1,2,{},[]], gather(1, 2, {}, []));
+        pass("when comparing arguments to array", [1, 2, {}, []], gather(1, 2, {}, []));
         pass("when comparing array to arguments", gather(), []);
 
         pass("when comparing arguments to array like object",
@@ -362,29 +353,28 @@
             "Yo", "Hey");
     });
 
-    if (typeof document != "undefined") {
-        bu.testCase("AssertEqualsHostObjectTest", {
-            setUp: testHelper.setUp,
-            tearDown: testHelper.tearDown,
+    buster.testCase("assert.equals host objects", {
+        requiresSupportFor: { "DOM": typeof document !== "undefined" },
+        setUp: testHelper.setUp,
+        tearDown: testHelper.tearDown,
 
-            "should pass when comparing DOM element to itself": function () {
-                var element = document.createElement("div");
+        "should pass when comparing DOM element to itself": function () {
+            var element = document.createElement("div");
 
-                assert.doesNotThrow(function () {
-                    ba.assert.equals(element, element);
-                });
-            },
+            refute.exception(function () {
+                referee.assert.equals(element, element);
+            });
+        },
 
-            "should fail when comparing different DOM elements": function () {
-                var div = document.createElement("div");
-                var span = document.createElement("span");
+        "should fail when comparing different DOM elements": function () {
+            var div = document.createElement("div");
+            var span = document.createElement("span");
 
-                assert.throws(function () {
-                    ba.assert.equals(div, span);
-                });
-            }
-        });
-    }
+            assert.exception(function () {
+                referee.assert.equals(div, span);
+            });
+        }
+    });
 
     testHelper.assertionTests("refute", "equals", function (pass, fail, msg) {
         fail("when comparing object to itself", obj, obj);
@@ -406,9 +396,9 @@
         fail("when comparing date objects with same date", date, sameDate);
         pass("when comparing date objects with different dates", date, anotherDate);
         pass("when comparing date objects to null", new Date(), null);
-        fail("when comparing string with number with coercion", "4", 4);
-        fail("when comparing number with string with coercion", 32, "32");
-        fail("when comparing with coercion", 0, "");
+        pass("when comparing string with number with coercion", "4", 4);
+        pass("when comparing number with string with coercion", 32, "32");
+        pass("when comparing with coercion", 0, "");
         pass("when comparing objects with different own properties",
              { id: 42 }, { id: 42, di: 24 });
         pass("when comparing objects with different own properties #2",
@@ -421,7 +411,7 @@
         pass("when comparing objects with one property with different values",
              { id: 42 }, { id: 24 });
         fail("when comparing NaN to NaN", NaN, NaN);
-        fail("when comparing -0 to +0", -0, +0);
+        pass("when comparing -0 to +0", -0, +0);
 
         var deepObject = {
             id: 42,
@@ -473,7 +463,7 @@
         function gather() { return arguments; }
         var arrayLike = { length: 4, "0": 1, "1": 2, "2": {}, "3": [] };
 
-        fail("when comparing arguments to array", [1,2,{},[]], gather(1, 2, {}, []));
+        fail("when comparing arguments to array", [1, 2, {}, []], gather(1, 2, {}, []));
         fail("when comparing array to arguments", gather(), []);
         fail("when comparing arguments to array like object",
              arrayLike, gather(1, 2, {}, []));
@@ -490,32 +480,48 @@
         pass("when greater than", 2, 1);
         fail("when equal", 1, 1);
         fail("when less than", 0, 1);
-        msg("fail with descriptive message",
-            "[assert.greater] Expected 1 to be greater than 2", 1, 2)
+        msg(
+            "fail with descriptive message",
+            "[assert.greater] Expected 1 to be greater than 2",
+            1,
+            2
+        );
     });
 
     testHelper.assertionTests("refute", "greater", function (pass, fail, msg) {
         fail("when greater than", 2, 1);
         pass("when equal", 1, 1);
         pass("when less than", 0, 1);
-        msg("fail with descriptive message",
-            "[refute.greater] Expected 2 to be less than or equal to 1", 2, 1)
+        msg(
+            "fail with descriptive message",
+            "[refute.greater] Expected 2 to be less than or equal to 1",
+            2,
+            1
+        );
     });
 
     testHelper.assertionTests("assert", "less", function (pass, fail, msg) {
         fail("when greater than", 2, 1);
         fail("when equal", 1, 1);
         pass("when less than", 0, 1);
-        msg("fail with descriptive message",
-            "[assert.less] Expected 2 to be less than 1", 2, 1)
+        msg(
+            "fail with descriptive message",
+            "[assert.less] Expected 2 to be less than 1",
+            2,
+            1
+        );
     });
 
     testHelper.assertionTests("refute", "less", function (pass, fail, msg) {
         pass("when greater than", 2, 1);
         pass("when equal", 1, 1);
         fail("when less than", 0, 1);
-        msg("fail with descriptive message",
-            "[refute.less] Expected 1 to be greater than or equal to 2", 1, 2)
+        msg(
+            "fail with descriptive message",
+            "[refute.less] Expected 1 to be greater than or equal to 2",
+            1,
+            2
+        );
     });
 
     testHelper.assertionTests("assert", "isString", function (pass, fail, msg) {
@@ -627,7 +633,7 @@
         pass("for function", function () {});
         pass("for null", null);
         msg("fail with descriptive message",
-            "[refute.isNumber] Ho ho! Expected 42 to be NaN or another non-number value",
+            "[refute.isNumber] Ho ho! Expected 42 to be NaN or a non-number value",
             42, "Ho ho!");
     });
 
@@ -833,33 +839,27 @@
 
         fail("if match object is false", "Assertions 123", false);
         fail("if matching a number against a string", "Assertions 123", 23);
-        pass("if matching a number against a similar string", "23", 23);
+        fail("if matching a number against a similar string", "23", 23);
         pass("if matching a number against itself", 23, 23);
 
         pass("if matcher is a function that returns true",
-             "Assertions 123", function (obj) {
-                 return true;
-             });
+             "Assertions 123", function (obj) { return true; });
 
         fail("if matcher is a function that returns false",
-             "Assertions 123", function (obj) {
-                 return false;
-             });
+             "Assertions 123", function (obj) { return false; });
 
         fail("if matcher is a function that returns falsy",
              "Assertions 123", function () {});
 
         fail("if matcher does not return explicit true",
-             "Assertions 123", function () {
-                 return "Hey";
-             });
+             "Assertions 123", function () { return "Hey"; });
 
         this["should call matcher with assertion argument"] = function () {
-            var listener = sinon.stub().returns(true);
+            var listener = this.stub().returns(true);
 
-            ba.assert.match("Assertions 123", listener);
+            referee.assert.match("Assertions 123", listener);
 
-            assert.ok(listener.calledWith("Assertions 123"));
+            assert.calledWith(listener, "Assertions 123");
         };
 
         pass("if matcher is substring of matchee", "Diskord", "or");
@@ -915,7 +915,7 @@
             owner: {
                 someDude: "Yes",
                 hello: function (value) {
-                    return value == "ok";
+                    return value === "ok";
                 }
             }
         });
@@ -960,29 +960,23 @@
         fail("if matching a number against a similar string", 23, "23");
         fail("if matching a number against itself", 23, 23);
         fail("if matcher is a function that returns true", "Assertions 123",
-             function (obj) {
-                 return true;
-             });
+             function (obj) { return true; });
 
         pass("if matcher is a function that returns false",
-             "Assertions 123", function (obj) {
-                 return false;
-             });
+             "Assertions 123", function (obj) { return false; });
 
         pass("if matcher is a function that returns falsy",
              "Assertions 123", function () {});
 
         pass("if matcher does not return explicit true",
-             "Assertions 123", function () {
-                 return "Hey";
-             });
+             "Assertions 123", function () { return "Hey"; });
 
         this["should call matcher with assertion argument"] = function () {
-            var listener = sinon.stub().returns(false);
+            var listener = this.stub().returns(false);
 
-            ba.refute.match("Assertions 123", listener);
+            referee.refute.match("Assertions 123", listener);
 
-            assert.ok(listener.calledWith("Assertions 123"));
+            assert.calledWith(listener, "Assertions 123");
         };
 
         fail("if matcher is substring of matchee", "Diskord", "or");
@@ -1035,7 +1029,7 @@
             owner: {
                 someDude: "Yes",
                 hello: function (value) {
-                    return value == "ok";
+                    return value === "ok";
                 }
             }
         });
@@ -1058,7 +1052,7 @@
             owner: {
                 someDude: "No",
                 hello: function (value) {
-                    return value == "ok";
+                    return value === "ok";
                 }
             }
         });
@@ -1202,7 +1196,7 @@
             "[assert.tagName] Yikes! Expected [object Object] to have tagName property",
             {}, "li", "Yikes!");
 
-        if (typeof document != "undefined") {
+        if (typeof document !== "undefined") {
             pass("for DOM elements", document.createElement("li"), "li");
         }
     });
@@ -1241,7 +1235,7 @@
             "[refute.tagName] Yes: Expected [object Object] to have tagName property",
             {}, "li", "Yes");
 
-        if (typeof document != "undefined") {
+        if (typeof document !== "undefined") {
             pass("for DOM elements", document.createElement("li"), "p");
         }
     });
@@ -1281,9 +1275,9 @@
         pass("when element includes all class names in different order",
              { className: "a b c d e" }, "e a d");
 
-        pass("with class names as array", { className: "a b c d e" }, ["e","a","d"]);
+        pass("with class names as array", { className: "a b c d e" }, ["e", "a", "d"]);
 
-        if (typeof document != "undefined") {
+        if (typeof document !== "undefined") {
             var li = document.createElement("li");
             li.className = "some thing in here";
 
@@ -1324,10 +1318,10 @@
              { className: "feed item post" }, "item post");
         fail("when element includes all class names in different order",
              { className: "a b c d e" }, "e a d");
-        fail("with class names as array", { className: "a b c d e" }, ["e","a","d"]);
-        pass("with class names as array", { className: "a b c d e" }, ["f","a","d"]);
+        fail("with class names as array", { className: "a b c d e" }, ["e", "a", "d"]);
+        pass("with class names as array", { className: "a b c d e" }, ["f", "a", "d"]);
 
-        if (typeof document != "undefined") {
+        if (typeof document !== "undefined") {
             var li = document.createElement("li");
             li.className = "some thing in here";
 
@@ -1399,10 +1393,10 @@
     });
 
     testHelper.assertionTests("assert", "contains", function (pass, fail, msg) {
-        pass("when array contains value", [0,1,2], 1);
-        fail("when array does not contain value", [0,1,2], 3);
+        pass("when array contains value", [0, 1, 2], 1);
+        fail("when array does not contain value", [0, 1, 2], 3);
         msg("with descriptive message",
-            "[assert.contains] Expected [0,1,2] to contain 3", [0,1,2], 3);
+            "[assert.contains] Expected [0,1,2] to contain 3", [0, 1, 2], 3);
         var thing = {};
         var otherThing = {};
         pass("when array contains the actual object", [thing], thing);
@@ -1411,10 +1405,10 @@
     });
 
     testHelper.assertionTests("refute", "contains", function (pass, fail, msg) {
-        fail("when array contains value", [0,1,2], 1);
-        pass("when array does not contain value", [0,1,2], 3);
+        fail("when array contains value", [0, 1, 2], 1);
+        pass("when array does not contain value", [0, 1, 2], 3);
         msg("with descriptive message",
-            "[refute.contains] Expected [0,1,2] not to contain 2", [0,1,2], 2);
+            "[refute.contains] Expected [0,1,2] not to contain 2", [0, 1, 2], 2);
         var thing = {};
         var otherThing = {};
         fail("when array contains the actual object", [thing], thing);
@@ -1422,16 +1416,16 @@
             [thing], otherThing);
     });
 
-    bu.testCase("CustomAssertionsTest", {
+    buster.testCase("CustomAssertionsTest", {
         setUp: testHelper.setUp,
         tearDown: function () {
             testHelper.tearDown.call(this);
-            delete ba.assert.custom;
-            delete ba.refute.custom;
+            delete referee.assert.custom;
+            delete referee.refute.custom;
         },
 
         "should expose properties on this as message values": function () {
-            ba.add("custom", {
+            referee.add("custom", {
                 assert: function (actual, expected) {
                     this.actual = actual + "?";
                     this.expected = expected + "!";
@@ -1441,15 +1435,15 @@
             });
 
             try {
-                ba.assert.custom(2, 3);
+                referee.assert.custom(2, 3);
                 throw new Error("Didn't throw");
             } catch (e) {
-                assert.equal(e.message, "[assert.custom] 2? 3!");
+                assert.equals("[assert.custom] 2? 3!", e.message);
             }
         },
 
         "should format interpolated property with format": function () {
-            ba.add("custom", {
+            referee.add("custom", {
                 assert: function (actual, expected) {
                     this.actual = actual + "?";
                     this.expected = expected + "!";
@@ -1459,15 +1453,15 @@
             });
 
             try {
-                ba.assert.custom(2, 3);
+                referee.assert.custom(2, 3);
             } catch (e) {}
 
-            assert.ok(ba.format.calledWith("2?"));
-            assert.ok(ba.format.calledWith("3!"));
+            assert.calledWith(referee.format, "2?");
+            assert.calledWith(referee.format, "3!");
         },
 
         "should not expose fail property": function () {
-            ba.add("custom", {
+            referee.add("custom", {
                 assert: function (actual, expected) {
                     return false;
                 },
@@ -1475,19 +1469,19 @@
             });
 
             try {
-                ba.assert.custom(2, 3);
+                referee.assert.custom(2, 3);
                 throw new Error("Didn't throw");
             } catch (e) {
-                assert.equal(e.message, "[assert.custom] ${fail}");
+                assert.equals("[assert.custom] ${fail}", e.message);
             }
         },
 
         "should not leak properties between calls": function () {
             var i = 0;
 
-            ba.add("custom", {
+            referee.add("custom", {
                 assert: function (actual, expected) {
-                    if (i == 0) {
+                    if (i === 0) {
                         this.actual = "A";
                     } else {
                         this.expected = "B";
@@ -1500,19 +1494,19 @@
             });
 
             try {
-                ba.assert.custom(4, 5);
+                referee.assert.custom(4, 5);
             } catch (e) {}
 
             try {
-                ba.assert.custom(2, 3);
+                referee.assert.custom(2, 3);
                 throw new Error("Didn't throw");
-            } catch (e) {
-                assert.equal(e.message, "[assert.custom] ${actual} B");
+            } catch (err) {
+                assert.equals("[assert.custom] ${actual} B", err.message);
             }
         },
 
         "should interpolate same property multiple times": function () {
-            ba.add("custom", {
+            referee.add("custom", {
                 assert: function (actual, expected) {
                     this.actual = actual + "?";
                     return false;
@@ -1521,15 +1515,15 @@
             });
 
             try {
-                ba.assert.custom(2, 3);
+                referee.assert.custom(2, 3);
                 throw new Error("Didn't throw");
             } catch (e) {
-                assert.equal(e.message, "[assert.custom] 2? 2?");
+                assert.equals("[assert.custom] 2? 2?", e.message);
             }
         },
 
         "should interpolate numeric placeholders multiple times": function () {
-            ba.add("custom", {
+            referee.add("custom", {
                 assert: function (actual, expected) {
                     this.actual = actual + "?";
                     return false;
@@ -1538,11 +1532,26 @@
             });
 
             try {
-                ba.assert.custom(2, 3);
+                referee.assert.custom(2, 3);
                 throw new Error("Didn't throw");
             } catch (e) {
-                assert.equal(e.message, "[assert.custom] 2 2");
+                assert.equals("[assert.custom] 2 2", e.message);
             }
+        },
+
+        "should add expectation if expect property is set": function () {
+            referee.add("custom", {
+                assert: function (actual) {
+                    return actual === "foo";
+                },
+                assertMessage: "Expected ${1} to be foo!",
+                refuteMessage: "Expected not to be foo!",
+                expectation: "toBeFoo"
+            });
+
+            refute.exception(function () {
+                referee.expect("foo").toBeFoo();
+            });
         }
     });
-}(this.buster, this.sinon, this.assert, this.testHelper));
+}(this.referee, this.testHelper, this.buster));

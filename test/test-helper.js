@@ -1,15 +1,8 @@
-if (typeof module === "object" && typeof require === "function") {
-    var assert = require("assert");
-    var sinon = require("sinon");
-
-    var buster = {
-        assertions: require("./../lib/buster-assertions"),
-        util: require("buster-util")
-    };
-}
-
-var testHelper = (function () {
-    var ba = buster.assertions;
+var testHelper = (function (referee, buster) {
+    if (typeof module === "object" && typeof require === "function") {
+        referee = require("../lib/referee");
+        buster = require("buster");
+    }
 
     function slice(args, index) {
         return Array.prototype.slice.call(args, index);
@@ -18,7 +11,7 @@ var testHelper = (function () {
     function assertFailureEvent(callback) {
         var fails = this.failListener.callCount;
         var passes = this.okListener.callCount;
-        ba.throwOnFailure = false;
+        referee.throwOnFailure = false;
 
         try {
             callback();
@@ -26,11 +19,11 @@ var testHelper = (function () {
             assert.fail("Assertion threw when it should not: " + e.message);
         }
 
-        assert.equal(this.failListener.callCount, fails + 1,
-                     "Fail listener was not called once: " +
-                     this.failListener.callCount - fails);
-        assert.equal(this.okListener.callCount, passes,
-                     "Pass listener was unexpectedly called");
+        assert.equals(this.failListener.callCount, fails + 1,
+                      "Fail listener was not called once: " +
+                      this.failListener.callCount - fails);
+        assert.equals(this.okListener.callCount, passes,
+                      "Pass listener was unexpectedly called");
     }
 
     function assertionFailureEventTest(callback) {
@@ -41,54 +34,60 @@ var testHelper = (function () {
 
     function passingAssertionTest(type, assertion, args) {
         return function () {
-            var initialCount = ba.count;
+            var initialCount = referee.count;
             var callStr = type + "." + assertion + "(" + args.join(", ") + ")";
 
             try {
-                ba[type][assertion].apply(ba, args);
+                referee[type][assertion].apply(referee, args);
             } catch (e) {
-                if (typeof console != "undefined") {
+                if (typeof console !== "undefined") {
                     console.log("Failed: " + callStr);
                 } else {
                     buster.util.puts("Failed: " + callStr);
                 }
             }
 
-            assert.equal(
-                this.okListener.callCount, 1,
-                "Expected buster.assertions to emit the pass event once for " + callStr);
-            sinon.assert.calledWith(this.okListener, type + "." + assertion);
-            assert.equal(1, ba.count - initialCount);
-            sinon.assert.notCalled(ba.fail);
-            sinon.assert.notCalled(this.failListener);
+            assert.equals(
+                this.okListener.callCount,
+                1,
+                "Expected referee to emit the pass event once for " + callStr
+            );
+            assert.calledWith(this.okListener, type + "." + assertion);
+            assert.equals(referee.count - initialCount, 1);
+            refute.called(referee.fail);
+            refute.called(this.failListener);
         };
     }
 
     function failingAssertionTest(type, assertion, args) {
         return function () {
-            var initialCount = ba.count;
+            var initialCount = referee.count;
             var callStr = type + "." + assertion + "(" + args.join(", ") + ")";
 
             try {
-                ba[type][assertion].apply(ba, args);
+                referee[type][assertion].apply(referee, args);
 
-                if (typeof console != "undefined") {
+                if (typeof console !== "undefined") {
                     console.log("Unexpectedly passed: " + callStr);
                 } else {
                     buster.util.puts("Unexpectedly passed: " + callStr);
                 }
             } catch (e) {}
 
-            assert.equal(ba.fail.callCount, 1,
-                     "Expected buster.assertions.fail to be called once for " + callStr +
-                         ", was called " + ba.fail.callCount + " times");
+            assert.equals(
+                referee.fail.callCount,
+                1,
+                "Expected referee.fail to be called once for " +
+                    callStr + ", was called " + referee.fail.callCount +
+                    " times"
+            );
 
-            assert.equal(1, ba.count - initialCount);
-            sinon.assert.notCalled(this.okListener);
-            sinon.assert.calledOnce(this.failListener);
+            assert.equals(referee.count - initialCount, 1);
+            refute.called(this.okListener);
+            assert.calledOnce(this.failListener);
 
             assertFailureEvent.call(this, function () {
-                ba[type][assertion].apply(ba, args);
+                referee[type][assertion].apply(referee, args);
             });
         };
     }
@@ -98,37 +97,40 @@ var testHelper = (function () {
             var msg;
 
             try {
-                ba[type][assertion].apply(ba, args);
+                referee[type][assertion].apply(referee, args);
                 throw new Error(type + "." + assertion + " expected to fail");
             } catch (e) {
-                assert.equal(e.name, "AssertionError", e.name + ": " + e.message);
-                assert.equal(e.message, message, "Message was " + e.message + ", " +
-                             "expected " + message);
+                assert.equals(e.name, "AssertionError",
+                             e.name + ": " + e.message);
+                assert.equals(
+                    e.message,
+                    message,
+                    "Message was " + e.message + ", " + "expected " + message
+                );
                 msg = e.message;
             }
 
             var expected = test.expectedFormats;
 
-            if (typeof expected != "number") {
+            if (typeof expected !== "number") {
                 expected = args.length;
 
-                if (typeof args[args.length - 1] == "string") {
+                if (typeof args[args.length - 1] === "string") {
                     expected -= 1;
                 }
             }
 
-            assert.ok(ba.format.callCount >= expected);
+            assert(referee.format.callCount >= expected);
 
-            for (var i = 0, l = expected; i < l; ++i) {
-                if (isNaN(args[i]) && isNaN(ba.format.args[i][0])) {
-                    continue;
+            var i, l;
+            for (i = 0, l = expected; i < l; ++i) {
+                if (!isNaN(args[i]) || !isNaN(referee.format.args[i][0])) {
+                    assert.calledWith(referee.format, args[i]);
                 }
-
-                assert.ok(ba.format.calledWith(args[i]));
             }
 
-            assert.equal(this.failListener.args[0][0].name, "AssertionError");
-            assert.equal(this.failListener.args[0][0].message, msg);
+            assert.equals(this.failListener.args[0][0].name, "AssertionError");
+            assert.equals(this.failListener.args[0][0].message, msg);
         };
 
         return test;
@@ -144,7 +146,11 @@ var testHelper = (function () {
 
         function pass(name) {
             tests[prefix + "pass " + name] = passingAssertionTest(
-                type, assertion, slice(arguments, 1), name);
+                type,
+                assertion,
+                slice(arguments, 1),
+                name
+            );
         }
 
         function fail(name) {
@@ -153,44 +159,45 @@ var testHelper = (function () {
         }
 
         function msg(name, message) {
-            tests[prefix + name] =
-                assertionMessageTest(type, assertion, message, slice(arguments, 2));
+            tests[prefix + name] = assertionMessageTest(
+                type,
+                assertion,
+                message,
+                slice(arguments, 2)
+            );
 
             return tests[prefix + name];
         }
 
         callback.call(tests, pass, fail, msg);
-        return buster.util.testCase(type + "." + assertion + "Test", tests);
+        return buster.testCase(type + "." + assertion, tests);
     }
 
     return {
         setUp: function () {
-            this.sandbox = sinon.sandbox.create();
-            this.sandbox.spy(ba, "fail");
+            this.spy(referee, "fail");
 
-            ba.format = sinon.spy(function (object) {
-                return "" + object;
+            referee.format = this.spy(function (object) {
+                return String(object);
             });
 
-            this.okListener = sinon.spy();
-            ba.on("pass", this.okListener);
-            this.failListener = sinon.spy();
-            ba.on("failure", this.failListener);
+            this.okListener = this.spy();
+            referee.on("pass", this.okListener);
+            this.failListener = this.spy();
+            referee.on("failure", this.failListener);
         },
 
         tearDown: function () {
-            delete ba.listeners;
-            ba.count = 0;
-            this.sandbox.restore();
-
-            delete ba.throwOnFailure;
+            delete referee.listeners;
+            referee.count = 0;
+            delete referee.throwOnFailure;
         },
 
         assertionFailureEventTest: assertionFailureEventTest,
         assertionTests: assertionTests
     };
-}());
+}(this.referee, this.buster));
 
-if (typeof module == "object") {
+if (typeof module === "object") {
     module.exports = testHelper;
 }
