@@ -19,7 +19,7 @@
         "url": "https://github.com/busterjs/referee"
     },
     "scripts": {
-        "test": "./run-tests"
+        "test": "./node_modules/buster/bin/buster-test"
     },
     "dependencies": {
         "underscore": "~0.4",
