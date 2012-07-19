@@ -64,7 +64,6 @@ Assertions
 - ``assert.tagName(element, tagName[, message])``
 - ``assert.className(element, className[, message])``
 
-
 Refutations
 ===========
 
