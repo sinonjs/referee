@@ -22,7 +22,7 @@
         "test": "./node_modules/buster/bin/buster-test"
     },
     "dependencies": {
-        "underscore": "~0.4",
+        "lodash": "~0.4",
         "samsam": "~0.1",
         "bane": "~0.1"
     },
