@@ -3,7 +3,7 @@
     "version": "0.11.0",
     "description": "Assertions for any JavaScript test framework and environment",
     "homepage": "http://busterjs.org/docs/referee",
-    "author": { "name": "August Lilleaas and Christian Johansen" },
+    "author": "Christian Johansen",
     "contributors": [{
         "name": "Christian Johansen",
         "email": "christian@cjohansen.no",
@@ -12,6 +12,15 @@
         "name": "August Lilleaas",
         "email": "august.lilleaas@gmail.com",
         "url": "http://augustl.com"
+    }, {
+        "name": "Dave Geddes",
+        "email": "davidcgeddes@gmail.com"
+    }, {
+        "name": "Malcolm Locke",
+        "email": "malc@wholemeal.co.nz"
+    }, {
+        "name": "Stein Magnus Jodal",
+        "email": "stein.magnus@jodal.no"
     }],
     "main": "./lib/referee",
     "repository": {
