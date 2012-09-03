@@ -1103,24 +1103,6 @@
             "[assert.exception] Hmm: Expected [object Object] but no exception was thrown",
             function () {}, { name: "TypeError" }, "Hmm").expectedFormats = 1;
 
-        msg("fail with message when throwing wrong kind of exception",
-            "[assert.exception] Expected [object Object] but threw Error (:()",
-            function () {
-                throw new Error(":(");
-            }, { name: "TypeError" }).expectedFormats = 1;
-
-        msg("fail with custom message when throwing wrong kind of exception",
-            "[assert.exception] Wow: Expected [object Object] but threw Error (:()",
-            function () {
-                throw new Error(":(");
-            }, { name: "TypeError" }, "Wow").expectedFormats = 1;
-
-        msg("fail with custom message when throwing wrong message",
-            "[assert.exception] Wow: Expected [object Object] but threw Error (:()",
-            function () {
-                throw new Error(":(");
-            }, { name: "TypeError", message: "Aww" }, "Wow").expectedFormats = 1;
-
         pass("when matcher function returns true", function () {
             throw new TypeError("Aright");
         }, function (err) { return err.name === "TypeError"; });
@@ -1141,6 +1123,34 @@
 
         msg("if not passed arguments",
             "[assert.exception] Expected to receive at least 1 argument");
+    });
+
+    buster.testCase("assert.exception unexpected exception", {
+        "fails with custom message": function () {
+            try {
+                referee.assert.exception(function () {
+                    throw new Error(":(");
+                }, { name: "TypeError" }, "Wow");
+                throw new Error("Expected to throw");
+            } catch (e) {
+                assert.match(e.message, "[assert.exception] Wow: Expected " +
+                                        "[object Object] but threw Error " +
+                                        "(:()\nError: :(\n");
+            }
+        },
+
+        "fails with custom message when message is wrong": function () {
+            try {
+                referee.assert.exception(function () {
+                    throw new Error(":(");
+                }, { name: "Error", message: "Aww" }, "Wow");
+                throw new Error("Expected to throw");
+            } catch (e) {
+                assert.match(e.message, "[assert.exception] Wow: Expected " +
+                                        "[object Object] but threw " +
+                                        "Error (:()\nError: :(\n");
+            }
+        }
     });
 
     testHelper.assertionTests("refute", "exception", function (pass, fail, msg) {
