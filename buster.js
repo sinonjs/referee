@@ -13,6 +13,7 @@ exports["Browser"] = {
 };
 
 exports["Node"] = {
-    extends: "Browser",
-    environment: "node"
+    environment: "node",
+    testHelpers: ["test/test-helper.js"],
+    tests: ["test/*-test.js"]
 };
