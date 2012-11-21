@@ -20,7 +20,7 @@ Some highlights:
 - API to add custom assertions that provides quite a bit of plumbing for free
 
 Full documentation:
-`busterjs.org/docs/assertions <http://docs.busterjs.org/en/latest/modules/buster-assertions/>`_.
+`docs.busterjs.org/en/latest/modules/buster-assertions <http://docs.busterjs.org/en/latest/modules/buster-assertions/>`_.
 
 ``referee`` works in browsers (including old and rowdy ones, like IE6) and Node.
 It will define itself as an AMD module if you want it to (i.e. if there's a
