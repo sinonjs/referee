@@ -1065,6 +1065,28 @@
         pass("for mis-ordered array 'subset'", [1, 2, 3], [1, 3]);
     });
 
+    testHelper.assertionTests("=>assert", "keys", function (pass, fail, msg) {
+        function Class(o) {
+            for (var key in o) {
+                if (o.hasOwnProperty(key)) {
+                    this[key] = o[key];
+                }
+            }
+        }
+        Class.prototype.methodA = function() {};
+        Class.prototype.methodB = function() {};
+  
+        pass("when keys are exact", {a: 1, b: 2, c: 3}, ['a', 'b', 'c']);
+        //fail("when keys are missing", {a: 1, b: 2, c: 3}, ['a', 'b']);
+        //fail("when keys are excess", {a: 1, b: 2, c: 3}, ['a', 'b', 'c', 'd']);
+        //fail("when keys are not exact", {a: 1, b: 2, c: 3}, ['a', 'b', 'd']);
+        //pass("when there are no keys", {}, []);
+        //pass("when values are special", {a: -1, b: null, c: undefined}, ['a', 'b', 'c']);
+        //pass("and ignore object methods", new Class({a: 1, b: 2, c: 3}), ['a', 'b', 'c']);
+        //pass("and allow overwriting object methods",
+        //    new Class({a: 1, methodA: 2}), ['a', 'methodA']);
+    });
+
     testHelper.assertionTests("assert", "exception", function (pass, fail, msg) {
         pass("when callback throws", function () { throw new Error(); });
         fail("when callback does not throw", function () {});
