@@ -1075,7 +1075,7 @@
         }
         Class.prototype.methodA = function() {};
         Class.prototype.methodB = function() {};
-        
+
         pass("when keys are exact", {a: 1, b: 2, c: 3}, ['a', 'b', 'c']);
         fail("when keys are missing", {a: 1, b: 2, c: 3}, ['a', 'b']);
         fail("when keys are excess", {a: 1, b: 2, c: 3}, ['a', 'b', 'c', 'd']);
@@ -1084,6 +1084,28 @@
         pass("when values are special", {a: -1, b: null, c: undefined}, ['a', 'b', 'c']);
         pass("and ignore object methods", new Class({a: 1, b: 2, c: 3}), ['a', 'b', 'c']);
         pass("and allow overwriting object methods",
+            new Class({a: 1, methodA: 2}), ['a', 'methodA']);
+    });
+
+    testHelper.assertionTests("refute", "keys", function (pass, fail, msg) {
+        function Class(o) {
+            for (var key in o) {
+                if (o.hasOwnProperty(key)) {
+                    this[key] = o[key];
+                }
+            }
+        }
+        Class.prototype.methodA = function() {};
+        Class.prototype.methodB = function() {};
+        
+        fail("when keys are exact", {a: 1, b: 2, c: 3}, ['a', 'b', 'c']);
+        pass("when keys are missing", {a: 1, b: 2, c: 3}, ['a', 'b']);
+        pass("when keys are excess", {a: 1, b: 2, c: 3}, ['a', 'b', 'c', 'd']);
+        pass("when keys are not exact", {a: 1, b: 2, c: 3}, ['a', 'b', 'd']);
+        fail("when there are no keys", {}, []);
+        fail("when values are special", {a: -1, b: null, c: undefined}, ['a', 'b', 'c']);
+        fail("and ignore object methods", new Class({a: 1, b: 2, c: 3}), ['a', 'b', 'c']);
+        fail("and allow overwriting object methods",
             new Class({a: 1, methodA: 2}), ['a', 'methodA']);
     });
 
