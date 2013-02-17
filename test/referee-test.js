@@ -134,6 +134,12 @@
             })
     });
 
+    buster.testCase("internal asserts", {
+        "assertions exposes internal": function() {
+            assert.isFunction(referee.assert.equals.internal);
+        }
+    });
+
     testHelper.assertionTests("assert", "isTrue", function (pass, fail, msg) {
         pass("for true", true);
         fail("for false", false);
