@@ -137,6 +137,16 @@
     buster.testCase("internal asserts", {
         "assertions exposes internal": function() {
             assert.isFunction(referee.assert.equals.internal);
+        },
+        "internal returns promise": function() {
+            assert.isFunction(referee.assert.equals.internal("", "").then);
+        },
+        "failed assertion returns error": function(done) {
+            referee.assert.equals.internal("actual", "expected").
+                then(undefined, function(message) {
+                    assert.defined(message);
+                    done();
+                });
         }
     });
 
