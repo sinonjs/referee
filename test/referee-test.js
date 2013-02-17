@@ -134,6 +134,7 @@
             })
     });
 
+
     buster.testCase("internal asserts", {
         "assertions exposes internal": function() {
             assert.isFunction(referee.assert.equals.internal);
@@ -151,8 +152,16 @@
         "proper default failure message": function(done) {
             referee.assert.equals.internal("actual", "expected").
                 then(undefined, function(message) {
-
                     assert.equals(message, "[assert.equals] actual expected to be equal to expected");
+                    done();
+                });
+        },
+        "proper custom failure message without args": function(done) {
+            referee.assert.equals.internal("actual", 
+                                           "expected", 
+                                           "custom message").
+                then(undefined, function(message) {
+                    assert.equals(message, "[assert.equals] custom message: actual expected to be equal to expected");
                     done();
                 });
         },
