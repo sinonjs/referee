@@ -142,35 +142,40 @@
         "internal returns promise": function() {
             assert.isFunction(referee.assert.equals.internal("", "").then);
         },
-        "failed resolves to error": function(done) {
-            referee.assert.equals.internal("actual", "expected").
+        "failed resolves to error": function() {
+            return referee.assert.equals.internal("actual", "expected").
                 then(undefined, function(message) {
                     assert.defined(message);
-                    done();
                 });
         },
-        "proper default failure message": function(done) {
-            referee.assert.equals.internal("actual", "expected").
+        "proper default failure message": function() {
+            return referee.assert.equals.internal("actual", "expected").
                 then(undefined, function(message) {
                     assert.equals(message, "[assert.equals] actual expected to be equal to expected");
-                    done();
                 });
         },
-        "proper custom failure message without args": function(done) {
-            referee.assert.equals.internal("actual", 
+        "proper custom failure message without args": function() {
+            return referee.assert.equals.internal("actual", 
                                            "expected", 
                                            "custom message").
                 then(undefined, function(message) {
                     assert.equals(message, "[assert.equals] custom message: actual expected to be equal to expected");
-                    done();
                 });
         },
-        "successful resolves success": function(done) {
-            referee.assert.equals.internal("expected", "expected").
+        "successful resolves success": function() {
+            return referee.assert.equals.internal("expected", "expected").
                 then(function(actual) {
                     assert.defined(actual);
-                    done();
                 });
+        },
+        "this.fail works from assertions": function() {
+            return referee.assert.className.internal({}, "Item").
+                then(undefined,
+                     function(message) {
+                         assert.equals(message,
+                                       "[assert.className] ItemExpected object's className to include"+
+                                       " noClassNameMessage but was undefined");
+                     });
         }
 
     });
