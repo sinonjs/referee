@@ -141,13 +141,29 @@
         "internal returns promise": function() {
             assert.isFunction(referee.assert.equals.internal("", "").then);
         },
-        "failed assertion returns error": function(done) {
+        "failed resolves to error": function(done) {
             referee.assert.equals.internal("actual", "expected").
                 then(undefined, function(message) {
                     assert.defined(message);
                     done();
                 });
+        },
+        "proper default failure message": function(done) {
+            referee.assert.equals.internal("actual", "expected").
+                then(undefined, function(message) {
+
+                    assert.equals(message, "[assert.equals] actual expected to be equal to expected");
+                    done();
+                });
+        },
+        "successful resolves success": function(done) {
+            referee.assert.equals.internal("expected", "expected").
+                then(function(actual) {
+                    assert.defined(actual);
+                    done();
+                });
         }
+
     });
 
     testHelper.assertionTests("assert", "isTrue", function (pass, fail, msg) {
