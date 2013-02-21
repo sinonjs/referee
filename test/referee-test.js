@@ -1,9 +1,10 @@
 /*jslint maxlen:160*/
-(function (referee, testHelper, buster) {
+(function (referee, testHelper, buster, when) {
     if (typeof require === "function" && typeof module === "object") {
         referee = require("../lib/referee");
         testHelper = require("./test-helper");
         buster = require("buster");
+        when = require("when");
     }
 
     buster.testCase("assert", {
@@ -178,6 +179,49 @@
                      });
         }
 
+    });
+
+   
+    function rawAssertionTests(assertion, declareTests) {
+        function withExpected(expected, tests) {
+            return tests({
+                pass: function(actual) {
+                    return function() {
+                        return when(assertion(actual, expected)).
+                            then( buster.assert.defined, buster.refute.defined);
+                    }
+                },
+                fail: function(actual) {
+                    return function() {
+                        return when(assertion(actual, expected)).
+                            then(buster.refute.defined, buster.assert.defined);
+                    }
+                },
+                yieldMsg: function(actual, expectedMessage) {
+                    return function() {
+                        return when(assertion(actual, expected)).
+                            then(buster.refute.defined, function(actualMessage) {
+                                buster.assert.equals(actualMessage, "["+assertion.type+"."+assertion.description+"] "+expectedMessage)
+                            });
+                    }
+                }
+            });
+        }
+
+        var declared = declareTests(withExpected);
+        buster.testCase("raw - "+assertion.type+"."+assertion.description, declared);
+    }
+
+    rawAssertionTests(referee.assert.equals.internal, function(given) {
+        return {
+            "expected string -" : given("the string", function(must){
+                return {
+                    "pass for equal":    must.pass("the string"),
+                    "fail for different":must.fail("different"),
+                    "message is ok":     must.yieldMsg("other", "other expected to be equal to the string")
+                }
+            })
+        };
     });
 
     testHelper.assertionTests("assert", "isTrue", function (pass, fail, msg) {
@@ -1610,4 +1654,4 @@
             });
         }
     });
-}(this.referee, this.testHelper, this.buster));
+}(this.referee, this.testHelper, this.buster, this.when));
