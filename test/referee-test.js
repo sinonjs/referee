@@ -174,8 +174,7 @@
                 then(undefined,
                      function(message) {
                          assert.equals(message,
-                                       "[assert.className] ItemExpected object's className to include"+
-                                       " noClassNameMessage but was undefined");
+                                       "[assert.className] Expected object to have className property");
                      });
         }
 
@@ -197,7 +196,7 @@
                             then(buster.refute.defined, buster.assert.defined);
                     }
                 },
-                yieldMsg: function(actual, expectedMessage) {
+                yieldMsg: function(expectedMessage, actual) {
                     return function() {
                         return when(assertion(actual, expected)).
                             then(buster.refute.defined, function(actualMessage) {
@@ -218,11 +217,23 @@
                 return {
                     "pass for equal":    must.pass("the string"),
                     "fail for different":must.fail("different"),
-                    "message is ok":     must.yieldMsg("other", "other expected to be equal to the string")
+                    "message is ok":     must.yieldMsg("other expected to be equal to the string", "other")
                 }
             })
         };
     });
+
+    rawAssertionTests(referee.assert.className.internal, function (given) {
+        return {
+            "classname -": given("item", function(must){
+                return  {
+                    "fail when element does not include class name" : must.yieldMsg(
+                        "Expected object's className to include item but was ", {className: ""})
+                }
+            })
+        }
+    });
+
 
     testHelper.assertionTests("assert", "isTrue", function (pass, fail, msg) {
         pass("for true", true);
