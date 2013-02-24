@@ -137,26 +137,26 @@
 
 
     buster.testCase("internal asserts", {
-        "assertions exposes internal": function() {
-            assert.isFunction(referee.assert.equals.internal);
+        "assertions exposes raw": function() {
+            assert.isFunction(referee.assert.equals.raw);
         },
-        "internal returns promise": function() {
-            assert.isFunction(referee.assert.equals.internal("", "").then);
+        "raw returns promise": function() {
+            assert.isFunction(referee.assert.equals.raw("", "").then);
         },
         "failed resolves to error": function() {
-            return referee.assert.equals.internal("actual", "expected").
+            return referee.assert.equals.raw("actual", "expected").
                 then(undefined, function(message) {
                     assert.defined(message);
                 });
         },
         "proper default failure message": function() {
-            return referee.assert.equals.internal("actual", "expected").
+            return referee.assert.equals.raw("actual", "expected").
                 then(undefined, function(message) {
                     assert.equals(message, "[assert.equals] actual expected to be equal to expected");
                 });
         },
         "proper custom failure message without args": function() {
-            return referee.assert.equals.internal("actual", 
+            return referee.assert.equals.raw("actual", 
                                            "expected", 
                                            "custom message").
                 then(undefined, function(message) {
@@ -164,13 +164,13 @@
                 });
         },
         "successful resolves success": function() {
-            return referee.assert.equals.internal("expected", "expected").
+            return referee.assert.equals.raw("expected", "expected").
                 then(function(actual) {
                     assert.defined(actual);
                 });
         },
         "this.fail works from assertions": function() {
-            return referee.assert.className.internal({}, "Item").
+            return referee.assert.className.raw({}, "Item").
                 then(undefined,
                      function(message) {
                          assert.equals(message,
@@ -211,7 +211,7 @@
         buster.testCase("raw - "+assertion.type+"."+assertion.description, declared);
     }
 
-    rawAssertionTests(referee.assert.equals.internal, function(given) {
+    rawAssertionTests(referee.assert.equals.raw, function(given) {
         return {
             "expected string -" : given(["the string"], function(must){
                 return {
@@ -223,7 +223,7 @@
         };
     });
 
-    rawAssertionTests(referee.assert.className.internal, function (given) {
+    rawAssertionTests(referee.assert.className.raw, function (given) {
         return {
             "classname -": given(["item"], function(must){
                 return  {
@@ -234,7 +234,7 @@
         }
     });
 
-    rawAssertionTests(referee.refute.tagName.internal, function (given) {
+    rawAssertionTests(referee.refute.tagName.raw, function (given) {
         return {
             "tagname -": given(["li", "Yes"], function(must){
                 return  {
