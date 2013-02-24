@@ -136,7 +136,7 @@
     });
 
 
-    buster.testCase("internal asserts", {
+    buster.testCase("raw asserts", {
         "assertions exposes raw": function() {
             assert.isFunction(referee.assert.equals.raw);
         },
@@ -244,8 +244,6 @@
             })
         }
     });
-
-
 
     testHelper.assertionTests("assert", "isTrue", function (pass, fail, msg) {
         pass("for true", true);
