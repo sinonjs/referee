@@ -1,9 +1,10 @@
 /*jslint maxlen:160*/
-(function (referee, testHelper, buster) {
+(function (referee, testHelper, buster, when) {
     if (typeof require === "function" && typeof module === "object") {
         referee = require("../lib/referee");
         testHelper = require("./test-helper");
         buster = require("buster");
+        when = require("when");
     }
 
     buster.testCase("assert", {
@@ -132,6 +133,116 @@
             testHelper.assertionFailureEventTest(function () {
                 referee.assert(false);
             })
+    });
+
+
+    buster.testCase("raw asserts", {
+        "assertions exposes raw": function() {
+            assert.isFunction(referee.assert.equals.raw);
+        },
+        "raw returns promise": function() {
+            assert.isFunction(referee.assert.equals.raw("", "").then);
+        },
+        "failed resolves to error": function() {
+            return referee.assert.equals.raw("actual", "expected").
+                then(undefined, function(message) {
+                    assert.defined(message);
+                });
+        },
+        "proper default failure message": function() {
+            return referee.assert.equals.raw("actual", "expected").
+                then(undefined, function(message) {
+                    assert.equals(message, "[assert.equals] actual expected to be equal to expected");
+                });
+        },
+        "proper custom failure message without args": function() {
+            return referee.assert.equals.raw("actual", 
+                                           "expected", 
+                                           "custom message").
+                then(undefined, function(message) {
+                    assert.equals(message, "[assert.equals] custom message: actual expected to be equal to expected");
+                });
+        },
+        "successful resolves success": function() {
+            return referee.assert.equals.raw("expected", "expected").
+                then(function(actual) {
+                    assert.defined(actual);
+                });
+        },
+        "this.fail works from assertions": function() {
+            return referee.assert.className.raw({}, "Item").
+                then(undefined,
+                     function(message) {
+                         assert.equals(message,
+                                       "[assert.className] Expected object to have className property");
+                     });
+        }
+
+    });
+
+   
+    function rawAssertionTests(assertion, declareTests) {
+        function withExpected(expected, tests) {
+            return tests({
+                pass: function(actual) {
+                    return function() {
+                        return when(assertion.apply(this, [actual].concat(expected))).
+                            then( buster.assert.defined, buster.refute.defined);
+                    }
+                },
+                fail: function(actual) {
+                    return function() {
+                        return when(assertion.apply(this, [actual].concat(expected))).
+                            then(buster.refute.defined, buster.assert.defined);
+                    }
+                },
+                yieldMsg: function(expectedMessage, actual) {
+                    return function() {
+                        return when(assertion.apply(this, [actual].concat(expected))).
+                            then(buster.refute.defined, function(actualMessage) {
+                                buster.assert.equals(actualMessage, "["+assertion.type+"."+assertion.description+"] "+expectedMessage)
+                            });
+                    }
+                }
+            });
+        }
+
+        var declared = declareTests(withExpected);
+        buster.testCase("raw - "+assertion.type+"."+assertion.description, declared);
+    }
+
+    rawAssertionTests(referee.assert.equals.raw, function(given) {
+        return {
+            "expected string -" : given(["the string"], function(must){
+                return {
+                    "pass for equal":    must.pass("the string"),
+                    "fail for different":must.fail("different"),
+                    "message is ok":     must.yieldMsg("other expected to be equal to the string", "other")
+                }
+            })
+        };
+    });
+
+    rawAssertionTests(referee.assert.className.raw, function (given) {
+        return {
+            "classname -": given(["item"], function(must){
+                return  {
+                    "fail when element does not include class name" : must.yieldMsg(
+                        "Expected object's className to include item but was ", {className: ""})
+                }
+            })
+        }
+    });
+
+    rawAssertionTests(referee.refute.tagName.raw, function (given) {
+        return {
+            "tagname -": given(["li", "Yes"], function(must){
+                return  {
+                    "fail with custom message if object does not have tagName property" : must.yieldMsg(
+                        "Yes: Expected [object Object] to have tagName property", {})
+                }
+            })
+        }
     });
 
     testHelper.assertionTests("assert", "isTrue", function (pass, fail, msg) {
@@ -1526,7 +1637,7 @@
                 referee.assert.custom(2, 3);
                 throw new Error("Didn't throw");
             } catch (e) {
-                assert.equals("[assert.custom] ${fail}", e.message);
+                assert.equals(e.message, "[assert.custom] ${fail}");
             }
         },
 
@@ -1608,4 +1719,4 @@
             });
         }
     });
-}(this.referee, this.testHelper, this.buster));
+}(this.referee, this.testHelper, this.buster, this.when));
