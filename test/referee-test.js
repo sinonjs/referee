@@ -186,19 +186,19 @@
             return tests({
                 pass: function(actual) {
                     return function() {
-                        return when(assertion(actual, expected)).
+                        return when(assertion.apply(this, [actual].concat(expected))).
                             then( buster.assert.defined, buster.refute.defined);
                     }
                 },
                 fail: function(actual) {
                     return function() {
-                        return when(assertion(actual, expected)).
+                        return when(assertion.apply(this, [actual].concat(expected))).
                             then(buster.refute.defined, buster.assert.defined);
                     }
                 },
                 yieldMsg: function(expectedMessage, actual) {
                     return function() {
-                        return when(assertion(actual, expected)).
+                        return when(assertion.apply(this, [actual].concat(expected))).
                             then(buster.refute.defined, function(actualMessage) {
                                 buster.assert.equals(actualMessage, "["+assertion.type+"."+assertion.description+"] "+expectedMessage)
                             });
@@ -213,7 +213,7 @@
 
     rawAssertionTests(referee.assert.equals.internal, function(given) {
         return {
-            "expected string -" : given("the string", function(must){
+            "expected string -" : given(["the string"], function(must){
                 return {
                     "pass for equal":    must.pass("the string"),
                     "fail for different":must.fail("different"),
@@ -225,7 +225,7 @@
 
     rawAssertionTests(referee.assert.className.internal, function (given) {
         return {
-            "classname -": given("item", function(must){
+            "classname -": given(["item"], function(must){
                 return  {
                     "fail when element does not include class name" : must.yieldMsg(
                         "Expected object's className to include item but was ", {className: ""})
@@ -233,6 +233,18 @@
             })
         }
     });
+
+    rawAssertionTests(referee.refute.tagName.internal, function (given) {
+        return {
+            "tagname -": given(["li", "Yes"], function(must){
+                return  {
+                    "fail with custom message if object does not have tagName property" : must.yieldMsg(
+                        "Yes: Expected [object Object] to have tagName property", {})
+                }
+            })
+        }
+    });
+
 
 
     testHelper.assertionTests("assert", "isTrue", function (pass, fail, msg) {
@@ -1583,7 +1595,7 @@
                 referee.assert.custom(2, 3);
                 throw new Error("Didn't throw");
             } catch (e) {
-                assert.equals("[assert.custom] ${fail}", e.message);
+                assert.equals(e.message, "[assert.custom] ${fail}");
             }
         },
 
