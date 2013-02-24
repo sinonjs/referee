@@ -1717,6 +1717,57 @@
             refute.exception(function () {
                 referee.expect("foo").toBeFoo();
             });
+        },
+        
+        "resolved promise counts as passed": function () {
+            referee.add("custom", {
+                assert: function (actual) {
+                    var result = when.defer();
+                    if(actual === "foo") {
+                        result.resolve(actual);
+                    }
+                    else {
+                        result.reject(actual);
+                    }
+                    return result.promise;
+                },
+                assertMessage: "Expected ${1} to be foo!",
+                refuteMessage: "Expected not to be foo!",
+            });
+
+            refute.exception(function() {
+                referee.assert.custom("foo");
+            });
+
+            assert.calledWith(this.okListener, "assert.custom");
+            refute.called(referee.fail);
+            refute.called(this.failListener);
+        },
+
+        "rejected promise counts as failed": function () {
+            referee.add("custom", {
+                assert: function (actual) {
+                    var result = when.defer();
+                    if(actual === "foo") {
+                        result.resolve(actual);
+                    }
+                    else {
+                        result.reject(actual);
+                    }
+                    return result.promise;
+                },
+                assertMessage: "Expected ${1} to be foo!",
+                refuteMessage: "Expected not to be foo!",
+            });
+
+            assert.exception(function() {
+                referee.assert.custom("not foo");
+            });
+
+            assert.calledOnce(this.failListener);
+            assert.called(referee.fail);
+            refute.called(this.okListener);
         }
+
     });
 }(this.referee, this.testHelper, this.buster, this.when));
