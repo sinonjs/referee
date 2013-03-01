@@ -1719,7 +1719,7 @@
             });
         },
         
-        "resolved promise counts as passed": function () {
+        "resolved promise counts as passed for assert": function () {
             referee.add("custom", {
                 assert: function (actual) {
                     var result = when.defer();
@@ -1743,8 +1743,7 @@
             refute.called(referee.fail);
             refute.called(this.failListener);
         },
-
-        "rejected promise counts as failed": function () {
+        "rejected promise counts as failed for assert": function () {
             referee.add("custom", {
                 assert: function (actual) {
                     var result = when.defer();
@@ -1767,6 +1766,56 @@
             assert.calledOnce(this.failListener);
             assert.called(referee.fail);
             refute.called(this.okListener);
+        },
+
+        "resolved promise counts as failed for refute": function () {
+            referee.add("custom", {
+                assert: function (actual) {
+                    var result = when.defer();
+                    if(actual === "foo") {
+                        result.resolve(actual);
+                    }
+                    else {
+                        result.reject(actual);
+                    }
+                    return result.promise;
+                },
+                assertMessage: "Expected ${1} to be foo!",
+                refuteMessage: "Expected not to be foo!",
+            });
+
+            assert.exception(function() {
+                referee.refute.custom("foo");
+            });
+
+            refute.calledWith(this.okListener, "assert.custom");
+            assert.called(referee.fail);
+            assert.called(this.failListener);
+        },
+
+        "rejected promise counts as passed for refute": function () {
+            referee.add("custom", {
+                assert: function (actual) {
+                    var result = when.defer();
+                    if(actual === "foo") {
+                        result.resolve(actual);
+                    }
+                    else {
+                        result.reject(actual);
+                    }
+                    return result.promise;
+                },
+                assertMessage: "Expected ${1} to be foo!",
+                refuteMessage: "Expected not to be foo!",
+            });
+
+            refute.exception(function() {
+                referee.refute.custom("not foo");
+            });
+
+            refute.calledOnce(this.failListener);
+            refute.called(referee.fail);
+            assert.called(this.okListener);
         }
 
     });
