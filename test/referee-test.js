@@ -1581,6 +1581,24 @@
             [thing], otherThing);
     });
 
+
+    function addCustomPromiseBasedAssert() {
+        referee.add("custom", {
+            assert: function (actual) {
+                var result = when.defer();
+                if(actual === "foo") {
+                    result.resolve(actual);
+                }
+                else {
+                    result.reject(actual);
+                }
+                return result.promise;
+            },
+            assertMessage: "Expected ${1} to be foo!",
+            refuteMessage: "Expected not to be foo!",
+        });
+    }
+
     buster.testCase("CustomAssertionsTest", {
         setUp: testHelper.setUp,
         tearDown: function () {
@@ -1720,20 +1738,7 @@
         },
         
         "resolved promise counts as passed for assert": function () {
-            referee.add("custom", {
-                assert: function (actual) {
-                    var result = when.defer();
-                    if(actual === "foo") {
-                        result.resolve(actual);
-                    }
-                    else {
-                        result.reject(actual);
-                    }
-                    return result.promise;
-                },
-                assertMessage: "Expected ${1} to be foo!",
-                refuteMessage: "Expected not to be foo!",
-            });
+            addCustomPromiseBasedAssert();
 
             refute.exception(function() {
                 referee.assert.custom("foo");
@@ -1744,20 +1749,7 @@
             refute.called(this.failListener);
         },
         "rejected promise counts as failed for assert": function () {
-            referee.add("custom", {
-                assert: function (actual) {
-                    var result = when.defer();
-                    if(actual === "foo") {
-                        result.resolve(actual);
-                    }
-                    else {
-                        result.reject(actual);
-                    }
-                    return result.promise;
-                },
-                assertMessage: "Expected ${1} to be foo!",
-                refuteMessage: "Expected not to be foo!",
-            });
+            addCustomPromiseBasedAssert();
 
             assert.exception(function() {
                 referee.assert.custom("not foo");
@@ -1769,20 +1761,7 @@
         },
 
         "resolved promise counts as failed for refute": function () {
-            referee.add("custom", {
-                assert: function (actual) {
-                    var result = when.defer();
-                    if(actual === "foo") {
-                        result.resolve(actual);
-                    }
-                    else {
-                        result.reject(actual);
-                    }
-                    return result.promise;
-                },
-                assertMessage: "Expected ${1} to be foo!",
-                refuteMessage: "Expected not to be foo!",
-            });
+            addCustomPromiseBasedAssert();
 
             assert.exception(function() {
                 referee.refute.custom("foo");
@@ -1794,20 +1773,7 @@
         },
 
         "rejected promise counts as passed for refute": function () {
-            referee.add("custom", {
-                assert: function (actual) {
-                    var result = when.defer();
-                    if(actual === "foo") {
-                        result.resolve(actual);
-                    }
-                    else {
-                        result.reject(actual);
-                    }
-                    return result.promise;
-                },
-                assertMessage: "Expected ${1} to be foo!",
-                refuteMessage: "Expected not to be foo!",
-            });
+            addCustomPromiseBasedAssert();
 
             refute.exception(function() {
                 referee.refute.custom("not foo");
