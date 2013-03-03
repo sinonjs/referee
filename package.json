@@ -34,7 +34,7 @@
         "lodash": "~0.4",
         "samsam": "~0.1",
         "bane": "~0.1",
-	"when": "~1.8"
+        "when": "~1.8"
     },
     "devDependencies": {
         "sinon": ">=1.4",
