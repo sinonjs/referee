@@ -166,7 +166,7 @@
         "successful resolves success": function() {
             return referee.assert.equals.raw("expected", "expected").
                 then(function(actual) {
-                    assert.defined(actual);
+                    assert.equals(actual, "expected");
                 });
         },
         "this.fail works from assertions": function() {
