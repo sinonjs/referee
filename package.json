@@ -31,7 +31,7 @@
         "test": "./node_modules/buster/bin/buster-test --node"
     },
     "dependencies": {
-        "lodash": "~0.4",
+        "lodash": "~1.0",
         "samsam": "~0.1",
         "bane": "~0.1"
     },
