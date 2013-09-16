@@ -1,6 +1,6 @@
 {
     "name": "referee",
-    "version": "0.11.1",
+    "version": "1.0.0",
     "description": "Assertions for any JavaScript test framework and environment",
     "homepage": "http://busterjs.org/docs/referee",
     "author": "Christian Johansen",
@@ -33,7 +33,7 @@
     "dependencies": {
         "lodash": "~1.0",
         "samsam": "~0.1",
-        "bane": "~0.1"
+        "bane": "~1.0"
     },
     "devDependencies": {
         "sinon": ">=1.4",
