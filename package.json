@@ -37,6 +37,6 @@
     },
     "devDependencies": {
         "sinon": ">=1.4",
-        "buster-util": ">=0.5"
+        "buster": "=0.6.14"
     }
 }
