@@ -1,6 +1,6 @@
 exports["Browser"] = {
     libs: [
-        "node_modules/lodash/lodash.js",
+        "node_modules/lodash/dist/lodash.js",
         "node_modules/samsam/lib/samsam.js",
         "node_modules/bane/lib/bane.js"
     ],

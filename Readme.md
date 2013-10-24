@@ -22,7 +22,14 @@ It will define itself as an AMD module if you want it to (i.e. if there's a
 
 ## Developers - Running tests
 
-    npm install
-    ./node_modules/.bin/buster-test --node
-    ./node_modules/.bin/buster-server
-    ./node_modules/.bin/buster-test --browser
+### Node
+
+  1. `npm install` - installs dev dependencies
+  1. `npm test` - runs node tests
+    
+### Browsers
+
+  1. `npm install` - installs dev dependencies
+  1. `npm start` - starts buster server
+  1. open url localhost:1111/capture in the browser(s) you want to test with
+  1. `npm run-script test-browser` - runs browser tests

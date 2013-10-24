@@ -28,7 +28,9 @@
         "url": "https://github.com/busterjs/referee"
     },
     "scripts": {
-        "test": "./node_modules/buster/bin/buster-test --node"
+        "test": "buster-test --node",
+        "start": "buster-server",
+        "test-browser": "buster-test --browser"
     },
     "dependencies": {
         "lodash": "~1.0",
