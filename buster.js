@@ -1,4 +1,5 @@
 exports["Browser"] = {
+	environment: "browser",
     libs: [
         "node_modules/lodash/dist/lodash.js",
         "node_modules/samsam/lib/samsam.js",

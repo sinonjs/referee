@@ -3,6 +3,9 @@ var testHelper = (function (referee, buster) {
         referee = require("../lib/referee");
         buster = require("buster");
     }
+    
+    var assert = buster.referee.assert;
+    var refute = buster.referee.refute;
 
     function slice(args, index) {
         return Array.prototype.slice.call(args, index);

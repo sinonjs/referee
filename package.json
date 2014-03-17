@@ -28,9 +28,10 @@
         "url": "https://github.com/busterjs/referee"
     },
     "scripts": {
-        "test": "buster-test --node",
-        "start": "buster-server",
-        "test-browser": "buster-test --browser"
+        "test": "node node_modules/buster/bin/buster-test --node",
+        "test-debug": "node --debug-brk node_modules/buster/bin/buster-test --node",
+        "start": "node node_modules/buster/bin/buster-server",
+        "test-browser": "node node_modules/buster/bin/buster-test --browser"
     },
     "dependencies": {
         "lodash": "~1.0",
@@ -39,6 +40,6 @@
     },
     "devDependencies": {
         "sinon": ">=1.4",
-        "buster": "=0.6.13"
+        "buster": "*"
     }
 }

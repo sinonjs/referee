@@ -8,6 +8,8 @@
     }
 
     var expect = referee.expect;
+    var assert = buster.referee.assert;
+    var refute = buster.referee.refute;
 
     buster.testCase("expect", {
         setUp: testHelper.setUp,

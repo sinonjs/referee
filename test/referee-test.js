@@ -6,6 +6,9 @@
         buster = require("buster");
     }
 
+    var assert = buster.referee.assert;
+    var refute = buster.referee.refute;
+    
     buster.testCase("assert", {
         setUp: testHelper.setUp,
         tearDown: testHelper.tearDown,
