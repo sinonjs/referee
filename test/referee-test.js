@@ -1100,7 +1100,7 @@
         }
         Class.prototype.methodA = function() {};
         Class.prototype.methodB = function() {};
-        
+
         fail("when keys are exact", {a: 1, b: 2, c: 3}, ['a', 'b', 'c']);
         pass("when keys are missing", {a: 1, b: 2, c: 3}, ['a', 'b']);
         pass("when keys are excess", {a: 1, b: 2, c: 3}, ['a', 'b', 'c', 'd']);
@@ -1126,6 +1126,14 @@
         fail("when callback does not throw expected name", function () {
             throw new Error();
         }, { name: "TypeError" });
+
+        pass("when callback throws expected name (as string)", function () {
+            throw new TypeError("Oh hmm");
+        }, "TypeError");
+
+        fail("when callback does not throw expected name (as string)", function () {
+            throw new Error();
+        }, "TypeError");
 
         fail("when thrown message does not match", function () {
             throw new Error("Aright");
