@@ -20,6 +20,14 @@ Full documentation:
 It will define itself as an AMD module if you want it to (i.e. if there's a
 `define` function available).
 
+
+## Changelog
+
+**1.0.3** (30.04.2014)
+
+* fix for issue [#387 - Referee: assert.exception does not check exception type (when given as string)](https://github.com/busterjs/buster/issues/387)
+
+
 ## Developers - Running tests
 
 ### Node

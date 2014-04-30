@@ -1,6 +1,6 @@
 {
     "name": "referee",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Assertions for any JavaScript test framework and environment",
     "homepage": "http://busterjs.org/docs/referee",
     "author": "Christian Johansen",
