@@ -8,7 +8,7 @@
 
     var assert = buster.referee.assert;
     var refute = buster.referee.refute;
-    
+
     buster.testCase("assert", {
         setUp: testHelper.setUp,
         tearDown: testHelper.tearDown,
@@ -1088,6 +1088,14 @@
         pass("and ignore object methods", new Class({a: 1, b: 2, c: 3}), ['a', 'b', 'c']);
         pass("and allow overwriting object methods",
             new Class({a: 1, methodA: 2}), ['a', 'methodA']);
+
+        msg("fail with message",
+            "[assert.keys] Expected [object Object] to have exact keys a,b",
+            {a: 1, b: 2, c: 3}, ['a', 'b']);
+
+        msg("fail with custom message",
+            "[assert.keys] Too bad: Expected [object Object] to have exact keys a,b",
+            {a: 1, b: 2, c: 3}, ['a', 'b'], "Too bad");
     });
 
     testHelper.assertionTests("refute", "keys", function (pass, fail, msg) {
@@ -1110,6 +1118,14 @@
         fail("and ignore object methods", new Class({a: 1, b: 2, c: 3}), ['a', 'b', 'c']);
         fail("and allow overwriting object methods",
             new Class({a: 1, methodA: 2}), ['a', 'methodA']);
+
+        msg("fail with message",
+            "[refute.keys] Expected not to have exact keys a,b,c",
+            {a: 1, b: 2, c: 3}, ['a', 'b', 'c']);
+
+        msg("fail with custom message",
+            "[refute.keys] Too bad: Expected not to have exact keys a,b,c",
+            {a: 1, b: 2, c: 3}, ['a', 'b', 'c'], "Too bad");
     });
 
     testHelper.assertionTests("assert", "exception", function (pass, fail, msg) {
