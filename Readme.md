@@ -23,6 +23,10 @@ It will define itself as an AMD module if you want it to (i.e. if there's a
 
 ## Changelog
 
+**1.1.0** (31.10.2014)
+
+* fix for issue [#402 - referee.expect fails if path.resolve gets stubbed](https://github.com/busterjs/buster/issues/402)
+
 **1.0.3** (30.04.2014)
 
 * fix for issue [#387 - Referee: assert.exception does not check exception type (when given as string)](https://github.com/busterjs/buster/issues/387)
@@ -34,7 +38,7 @@ It will define itself as an AMD module if you want it to (i.e. if there's a
 
   1. `npm install` - installs dev dependencies
   1. `npm test` - runs node tests
-    
+
 ### Browsers
 
   1. `npm install` - installs dev dependencies
