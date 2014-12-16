@@ -1143,14 +1143,6 @@
             throw new Error();
         }, { name: "TypeError" });
 
-        pass("when callback throws expected name (as string)", function () {
-            throw new TypeError("Oh hmm");
-        }, "TypeError");
-
-        fail("when callback does not throw expected name (as string)", function () {
-            throw new Error();
-        }, "TypeError");
-
         fail("when thrown message does not match", function () {
             throw new Error("Aright");
         }, { message: "Aww" });
