@@ -832,12 +832,9 @@
 
         fail("if match object is null", "Assertions 123", null);
 
-        msg("fail if match object is undefined",
-            "[assert.match] Matcher (undefined) was not a string, a number, a function, a boolean or an object",
-            "Assertions 123", undefined);
+        fail("if match object is undefined", "Assertions 123", undefined);
 
-        msg("fail with custom message if match object is undefined",
-            "[assert.match] No: Matcher (undefined) was not a string, a number, a function, a boolean or an object",
+        fail("with custom message if match object is undefined",
             "Assertions 123", undefined, "No");
 
         fail("if match object is false", "Assertions 123", false);
@@ -956,8 +953,8 @@
             "[refute.match] NO! Assertions 123 expected not to match /^.+$/",
             "Assertions 123", /^.+$/, "NO!");
 
-        fail("if match object is null", "Assertions 123", null);
-        fail("if match object is undefined", "Assertions 123", undefined);
+        pass("if match object is null", "Assertions 123", null);
+        pass("if match object is undefined", "Assertions 123", undefined);
         pass("if match object is false", "Assertions 123", false);
         pass("if matching a number against a string", "Assertions 123", 23);
         fail("if matching a number against a similar string", 23, "23");
