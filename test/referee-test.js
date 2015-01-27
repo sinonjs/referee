@@ -1,9 +1,9 @@
-/*jslint maxlen:160*/
 (function (referee, testHelper, buster) {
     if (typeof require === "function" && typeof module === "object") {
         referee = require("../lib/referee");
         testHelper = require("./test-helper");
         buster = require("buster");
+        when = require("when");
     }
 
     var assert = buster.referee.assert;
@@ -135,6 +135,105 @@
             testHelper.assertionFailureEventTest(function () {
                 referee.assert(false);
             })
+    });
+
+    buster.testCase("plain asserts", {
+        "assertions expose plain asserts via method test": function () {
+            assert.isFunction(referee.assert.equals.test);
+        },
+        "test returns promise": function () {
+            assert.isFunction(referee.assert.equals.test("", "").then);
+        },
+        "failed resolves to error": function () {
+            return referee.assert.equals.test("actual", "expected").then(undefined, function (message) {
+                    assert.defined(message);
+                });
+        },
+        "proper default failure message": function () {
+            return referee.assert.equals.test("actual", "expected").then(undefined, function (message) {
+                    assert.equals(message, "[assert.equals] actual expected to be equal to expected");
+                });
+        },
+        "proper custom failure message without args": function () {
+            return referee.assert.equals.test("actual",
+                                           "expected",
+                                           "custom message").then(undefined, function (message) {
+                    assert.equals(message, "[assert.equals] custom message: actual expected to be equal to expected");
+                });
+        },
+        "successful resolves success": function () {
+            return referee.assert.equals.test("expected", "expected").then(function (message) {
+                    assert.equals(message, ["pass", "assert.equals", "expected", "expected"]);
+                });
+        },
+        "this.fail works from assertions": function () {
+            return referee.assert.className.test({}, "Item").then(undefined, function (message) {
+                    assert.equals(message,
+                                  "[assert.className] Expected object to have className property");
+                });
+        }
+
+    });
+
+    function plainAssertionTests(assertion, type, name, declareTests) {
+        function withExpected(expected, tests) {
+            return tests({
+                pass: function (actual) {
+                    return function () {
+                        return when(assertion.apply(this, [actual].concat(expected))).then(buster.assert.defined, buster.refute.defined);
+                    }
+                },
+                fail: function (actual) {
+                    return function () {
+                        return when(assertion.apply(this, [actual].concat(expected))).then(buster.refute.defined, buster.assert.defined);
+                    }
+                },
+                yieldMsg: function (expectedMessage, actual) {
+                    return function () {
+                        return when(assertion.apply(this, [actual].concat(expected))).then(buster.refute.defined, function (actualMessage) {
+                                buster.assert.equals(actualMessage, "[" + type + "." + name + "] " + expectedMessage)
+                            });
+                    }
+                }
+            });
+        }
+
+        var declared = declareTests(withExpected);
+        buster.testCase(type + "." + name + ".test", declared);
+    }
+
+    plainAssertionTests(referee.assert.equals.test, "assert", "equals", function (given) {
+        return {
+            "expected string -" : given(["the string"], function (must) {
+                return {
+                    "pass for equal":     must.pass("the string"),
+                    "fail for different": must.fail("different"),
+                    "message is ok":      must.yieldMsg("other expected to be equal to the string", "other")
+                }
+            })
+        };
+    });
+
+    plainAssertionTests(referee.assert.className.test, "assert", "className", function (given) {
+        return {
+            "classname -": given(["item"], function (must) {
+                return  {
+                    "fail when element does not include class name" : must.yieldMsg(
+                        "Expected object's className to include item but was ", {className: ""})
+                }
+            })
+        }
+    });
+
+    plainAssertionTests(referee.refute.tagName.test, "refute", "tagName", function (given) {
+        return {
+            "tagname -": given(["li", "Yes"], function (must) {
+                return  {
+                    "fail with custom message if object does not have tagName property" : must.yieldMsg(
+                        "Yes: Expected [object Object] to have tagName property", {})
+                }
+            })
+        }
     });
 
     testHelper.assertionTests("assert", "isTrue", function (pass, fail, msg) {
@@ -1073,8 +1172,8 @@
                 }
             }
         }
-        Class.prototype.methodA = function() {};
-        Class.prototype.methodB = function() {};
+        Class.prototype.methodA = function () {};
+        Class.prototype.methodB = function () {};
 
         pass("when keys are exact", {a: 1, b: 2, c: 3}, ['a', 'b', 'c']);
         fail("when keys are missing", {a: 1, b: 2, c: 3}, ['a', 'b']);
@@ -1103,8 +1202,8 @@
                 }
             }
         }
-        Class.prototype.methodA = function() {};
-        Class.prototype.methodB = function() {};
+        Class.prototype.methodA = function () {};
+        Class.prototype.methodB = function () {};
 
         fail("when keys are exact", {a: 1, b: 2, c: 3}, ['a', 'b', 'c']);
         pass("when keys are missing", {a: 1, b: 2, c: 3}, ['a', 'b']);
@@ -1624,4 +1723,4 @@
             });
         }
     });
-}(this.referee, this.testHelper, this.buster));
+}(this.referee, this.testHelper, this.buster, this.when));
