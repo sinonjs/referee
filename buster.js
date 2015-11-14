@@ -1,4 +1,4 @@
-exports["Browser"] = {
+exports["browser"] = {
 	environment: "browser",
     libs: [
         "node_modules/lodash/dist/lodash.js",
@@ -13,7 +13,7 @@ exports["Browser"] = {
     tests: ["test/*-test.js"]
 };
 
-exports["Node"] = {
+exports["node"] = {
     environment: "node",
     testHelpers: ["test/test-helper.js"],
     tests: ["test/*-test.js"]
