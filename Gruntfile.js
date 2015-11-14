@@ -18,7 +18,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask("test", "Clean build, minify and run tests",
-        ["buster:node:test"/*, "buster:browser:server", "buster:browser:phantomjs", "buster:browser:test"*/]
+        ["buster:node:test", "buster:browser:server", "buster:browser:phantomjs", "buster:browser:test"]
     );
 
 };

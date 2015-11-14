@@ -1,5 +1,5 @@
 /*jslint maxlen:160*/
-(function (referee, testHelper, buster) {
+(function (referee, testHelper, buster, sinon) {
     if (typeof require === "function" && typeof module === "object") {
         referee = require("../lib/referee");
         testHelper = require("./test-helper");
