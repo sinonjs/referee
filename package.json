@@ -1,48 +1,54 @@
 {
-    "name": "referee",
-    "version": "1.1.1",
-    "description": "Assertions for any JavaScript test framework and environment",
-    "homepage": "http://docs.busterjs.org/en/latest/modules/referee/",
-    "author": "Christian Johansen",
-    "contributors": [{
-        "name": "Christian Johansen",
-        "email": "christian@cjohansen.no",
-        "url": "http://cjohansen.no"
-    }, {
-        "name": "August Lilleaas",
-        "email": "august.lilleaas@gmail.com",
-        "url": "http://augustl.com"
-    }, {
-        "name": "Dave Geddes",
-        "email": "davidcgeddes@gmail.com"
-    }, {
-        "name": "Malcolm Locke",
-        "email": "malc@wholemeal.co.nz"
-    }, {
-        "name": "Stein Magnus Jodal",
-        "email": "stein.magnus@jodal.no"
-    }],
-    "license": "BSD-3-Clause",
-    "main": "./lib/referee",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/busterjs/referee"
+  "name": "referee",
+  "version": "1.2.0",
+  "description": "Assertions for any JavaScript test framework and environment",
+  "homepage": "http://docs.busterjs.org/en/latest/modules/referee/",
+  "author": "Christian Johansen",
+  "contributors": [
+    {
+      "name": "Christian Johansen",
+      "email": "christian@cjohansen.no",
+      "url": "http://cjohansen.no"
     },
-    "scripts": {
-        "test": "grunt test"
+    {
+      "name": "August Lilleaas",
+      "email": "august.lilleaas@gmail.com",
+      "url": "http://augustl.com"
     },
-    "dependencies": {
-        "lodash": "3.x",
-        "samsam": "1.x",
-        "bane": "1.x"
+    {
+      "name": "Dave Geddes",
+      "email": "davidcgeddes@gmail.com"
     },
-    "devDependencies": {
-        "grunt": "0.4.x",
-        "grunt-buster": "0.4.x",
-        "grunt-cli": "0.1.x",
-        "buster": "0.7.x",
-        "phantomjs": "1.9.x",
-        "sinon": "1.x",
-        "when": "3.x"
+    {
+      "name": "Malcolm Locke",
+      "email": "malc@wholemeal.co.nz"
+    },
+    {
+      "name": "Stein Magnus Jodal",
+      "email": "stein.magnus@jodal.no"
     }
+  ],
+  "license": "BSD-3-Clause",
+  "main": "./lib/referee",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/busterjs/referee"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {
+    "lodash": "3.x",
+    "samsam": "1.x",
+    "bane": "1.x"
+  },
+  "devDependencies": {
+    "grunt": "0.4.x",
+    "grunt-buster": "0.4.x",
+    "grunt-cli": "0.1.x",
+    "buster": "0.7.x",
+    "phantomjs": "1.9.x",
+    "sinon": "1.x",
+    "when": "3.x"
+  }
 }
