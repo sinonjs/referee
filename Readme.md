@@ -23,15 +23,21 @@ It will define itself as an AMD module if you want it to (i.e. if there's a
 
 ## Changelog
 
-**1.1.1** (16.12.2014)
+**1.2.0** (2015-Nov-16)
+
+* Updated dependencies [#13](https://github.com/busterjs/referee/pull/13)
+* Added license info in package.json [#12](https://github.com/busterjs/referee/pull/12)
+* A `test` method on assertions, returning a promise which is resolved, when assertion passes, and rejected when it fails; relies on a `Promise` global (shimmable) [#9](https://github.com/busterjs/referee/pull/9) 
+
+**1.1.1** (2014-Dec-12)
 
 * part of fix for issue [#274 - quoting in assertion failures](https://github.com/busterjs/buster/issues/274)
 
-**1.1.0** (31.10.2014)
+**1.1.0** (2014-Oct-31)
 
 * fix for issue [#402 - referee.expect fails if path.resolve gets stubbed](https://github.com/busterjs/buster/issues/402)
 
-**1.0.3** (30.04.2014)
+**1.0.3** (2014-Apr-30)
 
 * fix for issue [#387 - Referee: assert.exception does not check exception type (when given as string)](https://github.com/busterjs/buster/issues/387)
 
