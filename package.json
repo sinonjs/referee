@@ -29,19 +29,20 @@
         "url": "https://github.com/busterjs/referee"
     },
     "scripts": {
-        "test": "node node_modules/buster/bin/buster-test --node",
-        "test-debug": "node --debug-brk node_modules/buster/bin/buster-test --node",
-        "start": "node node_modules/buster/bin/buster-server",
-        "test-browser": "node node_modules/buster/bin/buster-test --browser"
+        "test": "grunt test"
     },
     "dependencies": {
-        "lodash": "~1.0",
-        "samsam": "~1.1",
-        "bane": "~1.0",
-        "when": "~3.6"
+        "lodash": "3.x",
+        "samsam": "1.x",
+        "bane": "1.x"
     },
     "devDependencies": {
-        "sinon": ">=1.4",
-        "buster": "*"
+        "grunt": "0.4.x",
+        "grunt-buster": "0.4.x",
+        "grunt-cli": "0.1.x",
+        "buster": "0.7.x",
+        "phantomjs": "1.9.x",
+        "sinon": "1.x",
+        "when": "3.x"
     }
 }

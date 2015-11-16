@@ -3,7 +3,6 @@
         referee = require("../lib/referee");
         testHelper = require("./test-helper");
         buster = require("buster");
-        when = require("when");
     }
 
     var assert = buster.referee.assert;
@@ -180,17 +179,17 @@
             return tests({
                 pass: function (actual) {
                     return function () {
-                        return when(assertion.apply(this, [actual].concat(expected))).then(buster.assert.defined, buster.refute.defined);
+                        return Promise.resolve(assertion.apply(this, [actual].concat(expected))).then(buster.assert.defined, buster.refute.defined);
                     }
                 },
                 fail: function (actual) {
                     return function () {
-                        return when(assertion.apply(this, [actual].concat(expected))).then(buster.refute.defined, buster.assert.defined);
+                        return Promise.resolve(assertion.apply(this, [actual].concat(expected))).then(buster.refute.defined, buster.assert.defined);
                     }
                 },
                 yieldMsg: function (expectedMessage, actual) {
                     return function () {
-                        return when(assertion.apply(this, [actual].concat(expected))).then(buster.refute.defined, function (actualMessage) {
+                        return Promise.resolve(assertion.apply(this, [actual].concat(expected))).then(buster.refute.defined, function (actualMessage) {
                                 buster.assert.equals(actualMessage, "[" + type + "." + name + "] " + expectedMessage)
                             });
                     }
@@ -1723,4 +1722,4 @@
             });
         }
     });
-}(this.referee, this.testHelper, this.buster, this.when));
+}(this.referee, this.testHelper, this.buster));
