@@ -13,45 +13,85 @@ Some highlights:
 - Failing assertions throw exceptions by default, but can be configured to not
 - API to add custom assertions that provides quite a bit of plumbing for free
 
-Full documentation:
-[docs.busterjs.org/en/latest/modules/referee](http://docs.busterjs.org/en/latest/modules/referee/).
-
 **referee** works in browsers (including old and rowdy ones, like IE6) and Node.
 It will define itself as an AMD module if you want it to (i.e. if there's a
 `define` function available).
 
+## Documentation
 
-## Changelog
+https://sinonjs.github.io/referee/
 
-**1.2.0** (2015-Nov-16)
+## Backers
 
-* Updated dependencies [#13](https://github.com/busterjs/referee/pull/13)
-* Added license info in package.json [#12](https://github.com/busterjs/referee/pull/12)
-* A `test` method on assertions, returning a promise which is resolved, when assertion passes, and rejected when it fails; relies on a `Promise` global (shimmable) [#9](https://github.com/busterjs/referee/pull/9) 
+Support us with a monthly donation and help us continue our activities. [[Become a backer](https://opencollective.com/sinon#backer)]
 
-**1.1.1** (2014-Dec-12)
+<a href="https://opencollective.com/sinon/backer/0/website" target="_blank"><img src="https://opencollective.com/sinon/backer/0/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/1/website" target="_blank"><img src="https://opencollective.com/sinon/backer/1/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/2/website" target="_blank"><img src="https://opencollective.com/sinon/backer/2/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/3/website" target="_blank"><img src="https://opencollective.com/sinon/backer/3/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/4/website" target="_blank"><img src="https://opencollective.com/sinon/backer/4/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/5/website" target="_blank"><img src="https://opencollective.com/sinon/backer/5/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/6/website" target="_blank"><img src="https://opencollective.com/sinon/backer/6/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/7/website" target="_blank"><img src="https://opencollective.com/sinon/backer/7/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/8/website" target="_blank"><img src="https://opencollective.com/sinon/backer/8/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/9/website" target="_blank"><img src="https://opencollective.com/sinon/backer/9/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/10/website" target="_blank"><img src="https://opencollective.com/sinon/backer/10/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/11/website" target="_blank"><img src="https://opencollective.com/sinon/backer/11/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/12/website" target="_blank"><img src="https://opencollective.com/sinon/backer/12/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/13/website" target="_blank"><img src="https://opencollective.com/sinon/backer/13/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/14/website" target="_blank"><img src="https://opencollective.com/sinon/backer/14/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/15/website" target="_blank"><img src="https://opencollective.com/sinon/backer/15/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/16/website" target="_blank"><img src="https://opencollective.com/sinon/backer/16/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/17/website" target="_blank"><img src="https://opencollective.com/sinon/backer/17/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/18/website" target="_blank"><img src="https://opencollective.com/sinon/backer/18/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/19/website" target="_blank"><img src="https://opencollective.com/sinon/backer/19/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/20/website" target="_blank"><img src="https://opencollective.com/sinon/backer/20/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/21/website" target="_blank"><img src="https://opencollective.com/sinon/backer/21/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/22/website" target="_blank"><img src="https://opencollective.com/sinon/backer/22/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/23/website" target="_blank"><img src="https://opencollective.com/sinon/backer/23/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/24/website" target="_blank"><img src="https://opencollective.com/sinon/backer/24/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/25/website" target="_blank"><img src="https://opencollective.com/sinon/backer/25/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/26/website" target="_blank"><img src="https://opencollective.com/sinon/backer/26/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/27/website" target="_blank"><img src="https://opencollective.com/sinon/backer/27/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/28/website" target="_blank"><img src="https://opencollective.com/sinon/backer/28/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/backer/29/website" target="_blank"><img src="https://opencollective.com/sinon/backer/29/avatar.svg"></a>
 
-* part of fix for issue [#274 - quoting in assertion failures](https://github.com/busterjs/buster/issues/274)
 
-**1.1.0** (2014-Oct-31)
+## Sponsors
 
-* fix for issue [#402 - referee.expect fails if path.resolve gets stubbed](https://github.com/busterjs/buster/issues/402)
+Become a sponsor and get your logo on our README on GitHub with a link to your site. [[Become a sponsor](https://opencollective.com/sinon#sponsor)]
 
-**1.0.3** (2014-Apr-30)
+<a href="https://opencollective.com/sinon/sponsor/0/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/1/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/2/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/3/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/4/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/5/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/6/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/7/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/8/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/9/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/9/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/10/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/10/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/11/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/11/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/12/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/12/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/13/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/13/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/14/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/14/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/15/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/15/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/16/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/16/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/17/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/17/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/18/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/18/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/19/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/19/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/20/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/20/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/21/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/21/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/22/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/22/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/23/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/23/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/24/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/24/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/25/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/25/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/26/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/26/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/27/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/27/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/28/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/28/avatar.svg"></a>
+<a href="https://opencollective.com/sinon/sponsor/29/website" target="_blank"><img src="https://opencollective.com/sinon/sponsor/29/avatar.svg"></a>
 
-* fix for issue [#387 - Referee: assert.exception does not check exception type (when given as string)](https://github.com/busterjs/buster/issues/387)
+## Licence
 
-
-## Developers - Running tests
-
-### Node
-
-  1. `npm install` - installs dev dependencies
-  1. `npm test` - runs node tests
-
-### Browsers
-
-  1. `npm install` - installs dev dependencies
-  1. `npm start` - starts buster server
-  1. open url [localhost:1111/capture](http://localhost:1111/capture) in the browser(s) you want to test with
-  1. `npm run-script test-browser` - runs browser tests
+referee was released under [BSD-3](LICENSE)
