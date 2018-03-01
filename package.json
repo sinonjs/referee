@@ -11,6 +11,7 @@
   },
   "scripts": {
     "lint": "eslint .",
+    "prepublishOnly": "mkdocs gh-deploy -r upstream || mkdocs gh-deploy -r origin",
     "test": "mocha 'lib/**/*.test.js'",
     "test-coverage": "nyc --reporter text --reporter html --reporter lcovonly npm run test"
   },
