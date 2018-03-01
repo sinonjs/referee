@@ -21,6 +21,13 @@
     "lodash": "3.x",
     "samsam": "1.x"
   },
+  "nyc": {
+    "exclude": [
+      "coverage/**",
+      "**/*.test.js",
+      "lib/test-helper.js"
+    ]
+  },
   "devDependencies": {
     "eslint": "4.18.1",
     "eslint-config-sinon": "1.0.3",
