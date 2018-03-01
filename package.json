@@ -11,9 +11,13 @@
   },
   "scripts": {
     "lint": "eslint .",
+    "precommit": "lint-staged",
     "prepublishOnly": "mkdocs gh-deploy -r upstream || mkdocs gh-deploy -r origin",
     "test": "mocha 'lib/**/*.test.js'",
     "test-coverage": "nyc --reporter text --reporter html --reporter lcovonly npm run test"
+  },
+  "lint-staged": {
+    "*.js": "eslint"
   },
   "dependencies": {
     "bane": "1.x",
@@ -33,6 +37,8 @@
     "eslint-config-sinon": "1.0.3",
     "eslint-plugin-ie11": "1.0.0",
     "eslint-plugin-mocha": "4.11.0",
+    "husky": "0.14.3",
+    "lint-staged": "7.0.0",
     "mocha": "5.0.0",
     "nyc": "11.4.1",
     "sinon": "4.3.0"
