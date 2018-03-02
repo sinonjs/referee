@@ -1,54 +1,46 @@
 {
-  "name": "referee",
-  "version": "1.2.0",
+  "name": "@sinonjs/referee",
+  "version": "2.0.0",
   "description": "Assertions for any JavaScript test framework and environment",
-  "homepage": "http://docs.busterjs.org/en/latest/modules/referee/",
   "author": "Christian Johansen",
-  "contributors": [
-    {
-      "name": "Christian Johansen",
-      "email": "christian@cjohansen.no",
-      "url": "http://cjohansen.no"
-    },
-    {
-      "name": "August Lilleaas",
-      "email": "august.lilleaas@gmail.com",
-      "url": "http://augustl.com"
-    },
-    {
-      "name": "Dave Geddes",
-      "email": "davidcgeddes@gmail.com"
-    },
-    {
-      "name": "Malcolm Locke",
-      "email": "malc@wholemeal.co.nz"
-    },
-    {
-      "name": "Stein Magnus Jodal",
-      "email": "stein.magnus@jodal.no"
-    }
-  ],
   "license": "BSD-3-Clause",
   "main": "./lib/referee",
   "repository": {
     "type": "git",
-    "url": "https://github.com/busterjs/referee"
+    "url": "https://github.com/sinonjs/referee"
   },
   "scripts": {
-    "test": "grunt test"
+    "lint": "eslint .",
+    "precommit": "lint-staged",
+    "prepublishOnly": "mkdocs gh-deploy -r upstream || mkdocs gh-deploy -r origin",
+    "test": "mocha 'lib/**/*.test.js'",
+    "test-coverage": "nyc --reporter text --reporter html --reporter lcovonly npm run test"
+  },
+  "lint-staged": {
+    "*.js": "eslint"
   },
   "dependencies": {
+    "bane": "1.x",
+    "es6-promise": "4.2.4",
     "lodash": "3.x",
-    "samsam": "1.x",
-    "bane": "1.x"
+    "samsam": "1.x"
+  },
+  "nyc": {
+    "exclude": [
+      "coverage/**",
+      "**/*.test.js",
+      "lib/test-helper.js"
+    ]
   },
   "devDependencies": {
-    "grunt": "0.4.x",
-    "grunt-buster": "0.4.x",
-    "grunt-cli": "0.1.x",
-    "buster": "0.7.x",
-    "phantomjs": "1.9.x",
-    "sinon": "1.x",
-    "when": "3.x"
+    "eslint": "4.18.1",
+    "eslint-config-sinon": "1.0.3",
+    "eslint-plugin-ie11": "1.0.0",
+    "eslint-plugin-mocha": "4.11.0",
+    "husky": "0.14.3",
+    "lint-staged": "7.0.0",
+    "mocha": "5.0.0",
+    "nyc": "11.4.1",
+    "sinon": "4.3.0"
   }
 }

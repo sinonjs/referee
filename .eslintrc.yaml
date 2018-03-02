@@ -1,0 +1,42 @@
+extends: 'eslint-config-sinon'
+
+env:
+  amd: true
+  browser: true
+  node: true
+
+plugins:
+  - ie11
+
+rules:
+  strict: [error, 'function']
+
+  ie11/no-collection-args: error
+  ie11/no-for-in-const: error
+  ie11/no-loop-func: warn
+  ie11/no-weak-collections: error
+
+  max-len: [error, {code: 120, ignoreStrings: true}]
+
+overrides:
+    files: ['*.test.*', 'test-helper.js']
+    plugins:
+        - mocha
+    env:
+        mocha: true
+    rules:
+        max-nested-callbacks: [error, 6]
+        strict: [error, 'global']
+
+        mocha/handle-done-callback: error
+        mocha/no-exclusive-tests: error
+        mocha/no-global-tests: error
+        mocha/no-hooks-for-single-case: off
+        mocha/no-identical-title: error
+        mocha/no-mocha-arrows: error
+        mocha/no-nested-tests: error
+        mocha/no-return-and-callback: error
+        mocha/no-sibling-hooks: error
+        mocha/no-skipped-tests: error
+        mocha/no-top-level-hooks: error
+
