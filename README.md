@@ -1,6 +1,6 @@
 # referee
 
-[![Build status](https://secure.travis-ci.org/busterjs/referee.png?branch=master)](http://travis-ci.org/busterjs/referee)
+[![Build status](https://secure.travis-ci.org/sinonjs/referee.png?branch=master)](http://travis-ci.org/sinonjs/referee)
 
 **referee** is in your unit tests, deciding who passes and who fails.
 
