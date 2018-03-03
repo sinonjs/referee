@@ -12,7 +12,7 @@ cache:
   - node_modules
 
 before_install:
-  - npm install coveralls
+  - if [ "x$TRAVIS_NODE_VERSION" = "x8" ]; then npm install coveralls; fi
 
 before_script:
   # Make npm run work for the script phase:
