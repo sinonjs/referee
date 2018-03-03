@@ -58,7 +58,6 @@
     "nyc": "^11.4.1",
     "rollup": "^0.56.3",
     "rollup-plugin-commonjs": "^8.3.0",
-    "run-s": "0.0.0",
     "sinon": "^4.3.0"
   }
 }
