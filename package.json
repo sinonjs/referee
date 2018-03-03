@@ -32,6 +32,12 @@
       "lib/test-helper.js"
     ]
   },
+  "files": [
+    "docs/",
+    "lib/",
+    "!lib/test-helper.js",
+    "!lib/**/*.test.js"
+  ],
   "devDependencies": {
     "eslint": "^4.18.1",
     "eslint-config-sinon": "^1.0.3",
