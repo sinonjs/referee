@@ -27,6 +27,7 @@
     "bane": "^1.x",
     "es6-promise": "^4.2.4",
     "lodash": "^3.x",
+    "lodash.isarguments": "^3.1.0",
     "object-assign": "^4.1.1",
     "samsam": "^1.x"
   },
