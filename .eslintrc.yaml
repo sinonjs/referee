@@ -1,7 +1,6 @@
 extends: 'eslint-config-sinon'
 
 env:
-  amd: true
   browser: true
   node: true
 
@@ -9,7 +8,7 @@ plugins:
   - ie11
 
 rules:
-  strict: [error, 'function']
+  strict: [error, 'global']
 
   ie11/no-collection-args: error
   ie11/no-for-in-const: error
