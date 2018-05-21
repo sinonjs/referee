@@ -79,6 +79,7 @@ prepended to the failure message.
 * [`isNumber()`](#isnumber)
 * [`isNaN()`](#isnan)
 * [`isArray()`](#isarray)
+* [`isArrayBuffer()`](#isarraybuffer)
 * [`isArrayLike()`](#isarraylike)
 * [`exception()`](#exception)
 * [`near()`](#near)
@@ -547,6 +548,26 @@ assert.isArray({});        // Fails
 ```js
 assert.isArray.message = "Expected ${actual} to be array";
 refute.isArray.message = "Expected ${actual} not to be array";
+```
+
+### `isArrayBuffer()`
+
+```js
+assert.isArrayBuffer(actual[, message])
+```
+
+Fails if the object type of `actual` is not `ArrayBuffer`.
+
+```js
+assert.isArrayBuffer(new ArrayBuffer(8)); // Passes
+assert.isArrayBuffer({});                 // Fails
+```
+
+#### Messages
+
+```js
+assert.isArrayBuffer.message = "Expected ${actual} to be an ArrayBuffer";
+refute.isArrayBuffer.message = "Expected ${actual} not to be an ArrayBuffer";
 ```
 
 
