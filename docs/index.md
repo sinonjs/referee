@@ -704,6 +704,26 @@ assert.isFloat64Array.message = "Expected ${actual} to be a Float64Array";
 refute.isFloat64Array.message = "Expected ${actual} not to be a Float64Array";
 ```
 
+### `isInfinity()`
+
+```js
+assert.isInfinity(actual[, message])
+```
+
+Fails if `actual` is not `Infinity`.
+
+```js
+assert.isInfinity(Infinity); // Passes
+assert.isInfinity(42);       // Fails
+```
+
+#### Messages
+
+```js
+assert.isInfinity.message = "Expected ${actual} to be Infinity";
+refute.isInfinity.message = "Expected ${actual} not to be Infinity";
+```
+
 
 ### `keys()`
 
