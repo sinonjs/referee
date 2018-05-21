@@ -1018,6 +1018,27 @@ refute.isSyntaxError.message = "Expected ${actual} not to be a SyntaxError";
 ```
 
 
+### `isTypeError()`
+
+```js
+assert.isTypeError(actual[, message])
+```
+
+Fails if `actual` is not an instance of `TypeError`.
+
+```js
+assert.isTypeError(new TypeError("this is a type error"));  // Passes
+assert.isTypeError(new Error("this is not a type error"));  // Fails
+```
+
+#### Messages
+
+```js
+assert.isTypeError.message = "Expected ${actual} to be a TypeError";
+refute.isTypeError.message = "Expected ${actual} not to be a TypeError";
+```
+
+
 
 
 
