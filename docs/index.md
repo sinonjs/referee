@@ -559,7 +559,7 @@ assert.isArrayLike(actual[, message])
 Fails if none of the following conditions are fulfilled:
 
 * the object type of `actual` is `Array`
-* `actual` is an `arguments object
+* `actual` is an `arguments` object
 * `actual` is an object providing a property `length` of type "number" and a `property` splice of type "function"
 
 ```js
