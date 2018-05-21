@@ -642,6 +642,27 @@ refute.isError.message = "Expected ${actual} not to be an Error";
 ```
 
 
+### `isEvalError()`
+
+```js
+assert.isEvalError(actual[, message])
+```
+
+Fails if `actual` is not an instance of `EvalError`.
+
+```js
+assert.isEvalError(new EvalError("this is an eval error"));  // Passes
+assert.isEvalError(new Error("this is not an eval error")); // Fails
+```
+
+#### Messages
+
+```js
+assert.isEvalError.message = "Expected ${actual} to be an EvalError";
+refute.isEvalError.message = "Expected ${actual} not to be an EvalError";
+```
+
+
 ### `keys()`
 
 ```js
