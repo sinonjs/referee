@@ -724,6 +724,27 @@ assert.isInfinity.message = "Expected ${actual} to be Infinity";
 refute.isInfinity.message = "Expected ${actual} not to be Infinity";
 ```
 
+### `isInt16Array()`
+
+```js
+assert.isInt16Array(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Int16Array`.
+
+```js
+assert.isInt16Array(new Int16Array(2)); // Passes
+assert.isInt16Array(new Int32Array(2)); // Fails
+```
+
+#### Messages
+
+```js
+assert.isInt16Array.message = "Expected ${actual} to be an Int16Array";
+refute.isInt16Array.message = "Expected ${actual} not to be an Int16Array";
+```
+
+
 
 ### `keys()`
 
