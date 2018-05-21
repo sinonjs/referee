@@ -684,6 +684,27 @@ refute.isFloat32Array.message = "Expected ${actual} not to be n Float32Array";
 ```
 
 
+### `isFloat64Array()`
+
+```js
+assert.isFloat64Array(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Float64Array`.
+
+```js
+assert.isFloat64Array(new Float64Array(2)); // Passes
+assert.isFloat64Array(new Float32Array(2)); // Fails
+```
+
+#### Messages
+
+```js
+assert.isFloat64Array.message = "Expected ${actual} to be a Float64Array";
+refute.isFloat64Array.message = "Expected ${actual} not to be a Float64Array";
+```
+
+
 ### `keys()`
 
 ```js
