@@ -12,6 +12,7 @@ globals:
   Int32Array: false
   Map: false
   Promise: false
+  Set: false
 
 plugins:
   - ie11
