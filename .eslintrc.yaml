@@ -14,6 +14,9 @@ globals:
   Promise: false
   Set: false
   Symbol: false
+  Uint8Array: false
+  Uint16Array: false
+  Uint32Array: false
 
 plugins:
   - ie11

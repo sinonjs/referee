@@ -1060,6 +1060,28 @@ refute.isURIError.message = "Expected ${actual} not to be a URIError";
 ```
 
 
+### `isUint16Array()`
+
+```js
+assert.isUint16Array(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Uint16Array`.
+
+```js
+assert.isUint16Array(new Uint16Array());  // Passes
+assert.isUint16Array(new Uint32Array());  // Fails
+assert.isUint16Array(new Uint8Array());   // Fails
+```
+
+#### Messages
+
+```js
+assert.isUint16Array.message = "Expected ${actual} to be a Uint16Array";
+refute.isUint16Array.message = "Expected ${actual} not to be a Uint16Array";
+```
+
+
 
 
 
