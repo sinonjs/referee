@@ -849,6 +849,27 @@ refute.isIntlNumberFormat.message = "Expected ${actual} not to be an Intl.Number
 ```
 
 
+### `isMap()`
+
+```js
+assert.Map(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Map`.
+
+```js
+assert.isMap(new Map()); // Passes
+assert.isMap({});        // Fails
+```
+
+#### Messages
+
+```js
+assert.isMap.message = "Expected ${actual} to be a Map";
+refute.isMap.message = "Expected ${actual} not to be a Map";
+```
+
+
 
 
 ### `keys()`

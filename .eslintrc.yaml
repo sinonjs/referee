@@ -10,6 +10,7 @@ globals:
   Int8Array: false
   Int16Array: false
   Int32Array: false
+  Map: false
 
 plugins:
   - ie11
