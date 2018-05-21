@@ -1147,6 +1147,27 @@ refute.isUint8ClampedArray.message = "Expected ${actual} not to be a Uint8Clampe
 ```
 
 
+### `isWeakMap()`
+
+```js
+assert.isWeakMap(actual[, message])
+```
+
+Fails if `actual` is not an instance of `WeakMap`.
+
+```js
+assert.isWeakMap(new WeakMap());   // Passes
+assert.isWeakMap(new Map());       // Fails
+```
+
+#### Messages
+
+```js
+assert.isWeakMap.message = "Expected ${actual} to be a WeakMap";
+refute.isWeakMap.message = "Expected ${actual} not to be a WeakMap";
+```
+
+
 
 ### `keys()`
 
