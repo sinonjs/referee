@@ -870,6 +870,27 @@ refute.isMap.message = "Expected ${actual} not to be a Map";
 ```
 
 
+### `isPromise()`
+
+```js
+assert.Promise(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Promise`.
+
+```js
+assert.isPromise(new Promise()); // Passes
+assert.isPromise({});            // Fails
+```
+
+#### Messages
+
+```js
+assert.isPromise.message = "Expected ${actual} to be a Promise";
+refute.isPromise.message = "Expected ${actual} not to be a Promise";
+```
+
+
 
 
 ### `keys()`
