@@ -912,6 +912,27 @@ refute.isRangeError.message = "Expected ${actual} not to be an RangeError";
 ```
 
 
+### `isReferenceError()`
+
+```js
+assert.isReferenceError(actual[, message])
+```
+
+Fails if `actual` is not an instance of `ReferenceError`.
+
+```js
+assert.isReferenceError(new ReferenceError("this is a range error"));  // Passes
+assert.isReferenceError(new Error("this is not a range error"));   // Fails
+```
+
+#### Messages
+
+```js
+assert.isReferenceError.message = "Expected ${actual} to be a ReferenceError";
+refute.isReferenceError.message = "Expected ${actual} not to be a ReferenceError";
+```
+
+
 
 
 ### `keys()`
