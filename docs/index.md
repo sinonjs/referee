@@ -1082,6 +1082,28 @@ refute.isUint16Array.message = "Expected ${actual} not to be a Uint16Array";
 ```
 
 
+### `isUint32Array()`
+
+```js
+assert.isUint32Array(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Uint32Array`.
+
+```js
+assert.isUint32Array(new Uint16Array());  // Fails
+assert.isUint32Array(new Uint32Array());  // Passes
+assert.isUint32Array(new Uint8Array());   // Fails
+```
+
+#### Messages
+
+```js
+assert.isUint32Array.message = "Expected ${actual} to be a Uint32Array";
+refute.isUint32Array.message = "Expected ${actual} not to be a Uint32Array";
+```
+
+
 
 
 
