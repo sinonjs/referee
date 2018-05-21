@@ -663,6 +663,27 @@ refute.isEvalError.message = "Expected ${actual} not to be an EvalError";
 ```
 
 
+### `isFloat32Array()`
+
+```js
+assert.isFloat32Array(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Float32Array`.
+
+```js
+assert.isFloat32Array(new Float32Array(2)); // Passes
+assert.isFloat32Array(new Float64Array(2)); // Fails
+```
+
+#### Messages
+
+```js
+assert.isFloat32Array.message = "Expected ${actual} to be a Float32Array";
+refute.isFloat32Array.message = "Expected ${actual} not to be n Float32Array";
+```
+
+
 ### `keys()`
 
 ```js
