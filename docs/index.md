@@ -786,6 +786,28 @@ refute.isInt32Array.message = "Expected ${actual} not to be an Int32Array";
 ```
 
 
+### `isIntlCollator()`
+
+```js
+assert.isIntlCollator(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Intl.Collator`.
+
+```js
+assert.isIntlCollator(new Intl.Collator()); // Passes
+assert.isIntlCollator({});                   // Fails
+```
+
+#### Messages
+
+```js
+assert.isIntlCollator.message = "Expected ${actual} to be an Intl.Collator";
+refute.isIntlCollator.message = "Expected ${actual} not to be an Intl.Collator";
+```
+
+
+
 
 ### `keys()`
 
