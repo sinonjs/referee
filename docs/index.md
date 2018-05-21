@@ -828,6 +828,27 @@ refute.isIntlDateTimeFormat.message = "Expected ${actual} not to be an Intl.Date
 ```
 
 
+### `isIntlNumberFormat()`
+
+```js
+assert.isIntlNumberFormat(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Intl.NumberFormat`.
+
+```js
+assert.isIntlNumberFormat(new Intl.NumberFormat()); // Passes
+assert.isIntlNumberFormat({});                      // Fails
+```
+
+#### Messages
+
+```js
+assert.isIntlNumberFormat.message = "Expected ${actual} to be an Intl.NumberFormat";
+refute.isIntlNumberFormat.message = "Expected ${actual} not to be an Intl.NumberFormat";
+```
+
+
 
 
 ### `keys()`
