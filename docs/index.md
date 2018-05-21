@@ -933,6 +933,28 @@ refute.isReferenceError.message = "Expected ${actual} not to be a ReferenceError
 ```
 
 
+### `isRegExp()`
+
+```js
+assert.isRegExp(actual[, message])
+```
+
+Fails if `actual` is not an instance of `RegExp`.
+
+```js
+assert.isRegExp(new RegExp("apple pie"));  // Passes
+assert.isRegExp(/apple pie/);              // Passes
+assert.isRegExp("apple pie");              // Fails
+```
+
+#### Messages
+
+```js
+assert.isRegExp.message = "Expected ${actual} to be an RegExp";
+refute.isRegExp.message = "Expected ${actual} not to be an RegExp";
+```
+
+
 
 
 ### `keys()`
