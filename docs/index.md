@@ -1126,6 +1126,25 @@ refute.isUint8Array.message = "Expected ${actual} not to be a Uint8Array";
 ```
 
 
+### `isUint8ClampedArray()`
+
+```js
+assert.isUint8ClampedArray(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Uint8ClampedArray`.
+
+```js
+assert.isUint8ClampedArray(new Uint8ClampedArray());   // Passes
+assert.isUint8ClampedArray(new Uint8Array());          // Fails
+```
+
+#### Messages
+
+```js
+assert.isUint8ClampedArray.message = "Expected ${actual} to be a Uint8ClampedArray";
+refute.isUint8ClampedArray.message = "Expected ${actual} not to be a Uint8ClampedArray";
+```
 
 
 
