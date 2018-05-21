@@ -997,6 +997,28 @@ refute.isSymbol.message = "Expected ${actual} not to be a Symbol";
 ```
 
 
+### `isSyntaxError()`
+
+```js
+assert.isSyntaxError(actual[, message])
+```
+
+Fails if `actual` is not an instance of `SyntaxError`.
+
+```js
+assert.isSyntaxError(new SyntaxError("this is a syntax error"));  // Passes
+assert.isSyntaxError(new Error("this is not a syntax error"));    // Fails
+```
+
+#### Messages
+
+```js
+assert.isSyntaxError.message = "Expected ${actual} to be a SyntaxError";
+refute.isSyntaxError.message = "Expected ${actual} not to be a SyntaxError";
+```
+
+
+
 
 
 ### `keys()`
