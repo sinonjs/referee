@@ -724,6 +724,27 @@ assert.isInfinity.message = "Expected ${actual} to be Infinity";
 refute.isInfinity.message = "Expected ${actual} not to be Infinity";
 ```
 
+### `isInt8Array()`
+
+```js
+assert.isInt8Array(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Int8Array`.
+
+```js
+assert.isInt8Array(new Int8Array(2)); // Passes
+assert.isInt8Array(new Int16Array(2)); // Fails
+```
+
+#### Messages
+
+```js
+assert.isInt8Array.message = "Expected ${actual} to be an Int8Array";
+refute.isInt8Array.message = "Expected ${actual} not to be an Int8Array";
+```
+
+
 ### `isInt16Array()`
 
 ```js
