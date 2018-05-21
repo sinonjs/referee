@@ -744,6 +744,26 @@ assert.isInt16Array.message = "Expected ${actual} to be an Int16Array";
 refute.isInt16Array.message = "Expected ${actual} not to be an Int16Array";
 ```
 
+### `isInt32Array()`
+
+```js
+assert.isInt32Array(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Int32Array`.
+
+```js
+assert.isInt32Array(new Int32Array(2)); // Passes
+assert.isInt32Array(new Int16Array(2)); // Fails
+```
+
+#### Messages
+
+```js
+assert.isInt32Array.message = "Expected ${actual} to be an Int32Array";
+refute.isInt32Array.message = "Expected ${actual} not to be an Int32Array";
+```
+
 
 
 ### `keys()`
