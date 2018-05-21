@@ -13,6 +13,7 @@ globals:
   Map: false
   Promise: false
   Set: false
+  Symbol: false
 
 plugins:
   - ie11

@@ -976,6 +976,27 @@ refute.isSet.message = "Expected ${actual} not to be a Set";
 ```
 
 
+### `isSymbol()`
+
+```js
+assert.isSymbol(actual[, message])
+```
+
+Fails if `actual` is not a value of type `Symbol`.
+
+```js
+assert.isSymbol(Symbol("apple pie"));  // Passes
+assert.isSymbol("apple pie");          // Fails
+```
+
+#### Messages
+
+```js
+assert.isSymbol.message = "Expected ${actual} to be a Symbol";
+refute.isSymbol.message = "Expected ${actual} not to be a Symbol";
+```
+
+
 
 
 ### `keys()`
