@@ -807,6 +807,27 @@ refute.isIntlCollator.message = "Expected ${actual} not to be an Intl.Collator";
 ```
 
 
+### `isIntlDateTimeFormat()`
+
+```js
+assert.isIntlDateTimeFormat(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Intl.DateTimeFormat`.
+
+```js
+assert.isIntlDateTimeFormat(new Intl.DateTimeFormat()); // Passes
+assert.isIntlDateTimeFormat({});                        // Fails
+```
+
+#### Messages
+
+```js
+assert.isIntlDateTimeFormat.message = "Expected ${actual} to be an Intl.DateTimeFormat";
+refute.isIntlDateTimeFormat.message = "Expected ${actual} not to be an Intl.DateTimeFormat";
+```
+
+
 
 
 ### `keys()`
