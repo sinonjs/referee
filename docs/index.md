@@ -81,6 +81,7 @@ prepended to the failure message.
 * [`isArray()`](#isarray)
 * [`isArrayBuffer()`](#isarraybuffer)
 * [`isArrayLike()`](#isarraylike)
+* [`isDataView()`](#isdataview)
 * [`exception()`](#exception)
 * [`near()`](#near)
 * [`hasPrototype()`](#hasprototype)
@@ -595,6 +596,27 @@ assert.isArrayLike({});                                   // Fails
 ```js
 assert.isArrayLike.message = "Expected ${actual} to be array like";
 refute.isArrayLike.message = "Expected ${actual} not to be array like";
+```
+
+
+### `isDataView()`
+
+```js
+assert.isDataView(actual[, message])
+```
+
+Fails if the object type of `actual` is not `DataView`.
+
+```js
+assert.isDataView(new DataView(new ArrayBuffer(16)); // Passes
+assert.isDataView({});                               // Fails
+```
+
+#### Messages
+
+```js
+assert.isDataView.message = "Expected ${actual} to be a DataView";
+refute.isDataView.message = "Expected ${actual} not to be a DataView";
 ```
 
 
