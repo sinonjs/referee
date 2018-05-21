@@ -955,6 +955,27 @@ refute.isRegExp.message = "Expected ${actual} not to be an RegExp";
 ```
 
 
+### `isSet()`
+
+```js
+assert.isSet(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Set`.
+
+```js
+assert.isSet(new Set());  // Passes
+assert.isSet([]);         // Fails
+```
+
+#### Messages
+
+```js
+assert.isSet.message = "Expected ${actual} to be a Set";
+refute.isSet.message = "Expected ${actual} not to be a Set";
+```
+
+
 
 
 ### `keys()`
