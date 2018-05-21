@@ -620,6 +620,28 @@ refute.isDataView.message = "Expected ${actual} not to be a DataView";
 ```
 
 
+### `isError()`
+
+```js
+assert.isError(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Error`.
+Passes for all [built in error types](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#Error_types) and errors derived from a built in error type.
+
+```js
+assert.isError(new Error("this is an error"); // Passes
+assert.isError("this is not an error");       // Fails
+```
+
+#### Messages
+
+```js
+assert.isError.message = "Expected ${actual} to be an Error";
+refute.isError.message = "Expected ${actual} not to be an Error";
+```
+
+
 ### `keys()`
 
 ```js
