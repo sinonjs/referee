@@ -1039,6 +1039,27 @@ refute.isTypeError.message = "Expected ${actual} not to be a TypeError";
 ```
 
 
+### `isURIError()`
+
+```js
+assert.isURIError(actual[, message])
+```
+
+Fails if `actual` is not an instance of `URIError`.
+
+```js
+assert.isURIError(new URIError("this is a uri error"));  // Passes
+assert.isURIError(new Error("this is not a uri error")); // Fails
+```
+
+#### Messages
+
+```js
+assert.isURIError.message = "Expected ${actual} to be a URIError";
+refute.isURIError.message = "Expected ${actual} not to be a URIError";
+```
+
+
 
 
 
