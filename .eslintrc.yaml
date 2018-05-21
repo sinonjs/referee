@@ -19,6 +19,7 @@ globals:
   Uint32Array: false
   Uint8ClampedArray: false
   WeakMap: false
+  WeakSet: false
 
 plugins:
   - ie11

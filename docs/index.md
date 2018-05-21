@@ -1168,6 +1168,27 @@ refute.isWeakMap.message = "Expected ${actual} not to be a WeakMap";
 ```
 
 
+### `isWeakSet()`
+
+```js
+assert.isWeakSet(actual[, message])
+```
+
+Fails if `actual` is not an instance of `WeakSet`.
+
+```js
+assert.isWeakSet(new WeakSet());   // Passes
+assert.isWeakSet(new Set());       // Fails
+```
+
+#### Messages
+
+```js
+assert.isWeakSet.message = "Expected ${actual} to be a WeakSet";
+refute.isWeakSet.message = "Expected ${actual} not to be a WeakSet";
+```
+
+
 
 ### `keys()`
 
