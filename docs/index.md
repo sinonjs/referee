@@ -891,6 +891,27 @@ refute.isPromise.message = "Expected ${actual} not to be a Promise";
 ```
 
 
+### `isRangeError()`
+
+```js
+assert.isRangeError(actual[, message])
+```
+
+Fails if `actual` is not an instance of `RangeError`.
+
+```js
+assert.isRangeError(new RangeError("this is a range error"));  // Passes
+assert.isRangeError(new Error("this is not a range error"));   // Fails
+```
+
+#### Messages
+
+```js
+assert.isRangeError.message = "Expected ${actual} to be an RangeError";
+refute.isRangeError.message = "Expected ${actual} not to be an RangeError";
+```
+
+
 
 
 ### `keys()`
