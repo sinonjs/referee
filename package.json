@@ -1,6 +1,6 @@
 {
   "name": "@sinonjs/referee",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Assertions for any JavaScript test framework and environment",
   "author": "Christian Johansen",
   "license": "BSD-3-Clause",
