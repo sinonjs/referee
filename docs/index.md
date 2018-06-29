@@ -76,6 +76,8 @@ prepended to the failure message.
 * [`contains()`](#contains)
 * [`tagName()`](#tagname)
 * [`className()`](#classname)
+* [`json()`](#json)
+* [`matchJson()`](#matchjson)
 
 * [`isArray()`](#isarray)
 * [`isArrayBuffer()`](#isarraybuffer)
@@ -1415,6 +1417,59 @@ refute.className.noClassNameMessage = "Expected object to have className propert
 refute.className.message = "Expected object's className not to include ${expected}";
 ```
 
+### `json()`
+
+```js
+assert.json(actual, json[, message])
+```
+
+Fails if `actual` is not valid JSON or the parsed JSON is not equal to `json`. Uses the same comparison algorithm as [`equals()`](#equals).
+
+```js
+var serialized = JSON.stringify({ is: 42 });
+
+assert.json(serialized, { is: 42 }); // Passes
+assert.json(serialized, { or: 42 }); // Fails
+assert.json(serialized, { is: 7 });  // Fails
+assert.json("no-json", {});          // Fails
+```
+
+#### Messages
+
+```js
+assert.json.message = "Expected ${actual} to equal ${expected}";
+assert.json.jsonParseExceptionMessage = "Expected ${actual} to be valid JSON";
+refute.json.message = "Expected ${actual} not to equal ${expected}";
+refute.json.jsonParseExceptionMessage = "Expected ${actual} to be valid JSON";
+```
+
+### `matchJson()`
+
+```js
+assert.matchJson(actual, json[, message])
+```
+
+Fails if `actual` is not valid JSON or the parsed JSON does not match `json`. Uses the same matcher algorithm as [`match()`](#match).
+
+```js
+var serialized = JSON.stringify({ is: 42, and: 3 });
+
+assert.matchJson(serialized, { is: 42 }); // Passes
+assert.matchJson(serialized, { and: 3 }); // Passes
+assert.matchJson(serialized, { or: 42 }); // Fails
+assert.matchJson(serialized, { is: 7 });  // Fails
+assert.matchJson("no-json", {});          // Fails
+```
+
+#### Messages
+
+```js
+assert.json.message = "Expected ${actual} to match ${expected}";
+assert.json.jsonParseExceptionMessage = "Expected ${actual} to be valid JSON";
+refute.json.message = "Expected ${actual} not to match ${expected}";
+refute.json.jsonParseExceptionMessage = "Expected ${actual} to be valid JSON";
+```
+
 ## Custom assertions
 
 Custom, domain-specific assertions helps improve clarity and reveal intent in tests. They also facilitate much better feedback when they fail. You can add custom assertions that behave exactly like the built-in ones (i.e. with counting, message formatting, expectations and
@@ -1683,6 +1738,22 @@ expect(actual).toHaveClassName(expected)
 ```
 
 See [`className()`](#classname)
+
+### `expect.toEqualJson()`
+
+```js
+expect(actual).toEqualJson(expected)
+```
+
+See [`json()`](#json)
+
+### `expect.toMatchJson()`
+
+```js
+expect(actual).toMatchJson(expected)
+```
+
+See [`matchJson()`](#matchJson)
 
 ### `expect.toHaveBeenCalled()`
 
