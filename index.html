@@ -8,7 +8,7 @@
   <meta name="description" content="None">
   
   <link rel="shortcut icon" href="./img/favicon.ico">
-  <title>Home - referee</title>
+  <title>referee - referee</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="./css/theme.css" type="text/css" />
@@ -17,7 +17,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Home";
+    var mkdocs_page_name = "referee";
     var mkdocs_page_input_path = "index.md";
     var mkdocs_page_url = "/";
   </script>
@@ -49,7 +49,7 @@
           
             <li class="toctree-l1 current">
 		
-    <a class="current" href=".">Home</a>
+    <a class="current" href=".">referee</a>
     <ul class="subnav">
             
     <li class="toctree-l2"><a href="#referee">referee</a></li>
@@ -104,7 +104,7 @@
     
       
     
-    <li>Home</li>
+    <li>referee</li>
     <li class="wy-breadcrumbs-aside">
       
         <a href="https://github.com/sinonjs/referee/edit/master/docs/index.md"
@@ -174,8 +174,10 @@ prepended to the failure message.</p>
 <li><a href="#hasprototype"><code>hasPrototype()</code></a></li>
 <li><a href="#contains"><code>contains()</code></a></li>
 <li><a href="#tagname"><code>tagName()</code></a></li>
+<li><a href="#classname"><code>className()</code></a></li>
+<li><a href="#json"><code>json()</code></a></li>
 <li>
-<p><a href="#classname"><code>className()</code></a></p>
+<p><a href="#matchjson"><code>matchJson()</code></a></p>
 </li>
 <li>
 <p><a href="#isarray"><code>isArray()</code></a></p>
@@ -1125,6 +1127,47 @@ refute.className.noClassNameMessage = &quot;Expected object to have className pr
 refute.className.message = &quot;Expected object's className not to include ${expected}&quot;;
 </code></pre>
 
+<h3 id="json"><code>json()</code></h3>
+<pre><code class="js">assert.json(actual, json[, message])
+</code></pre>
+
+<p>Fails if <code>actual</code> is not valid JSON or the parsed JSON is not equal to <code>json</code>. Uses the same comparison algorithm as <a href="#equals"><code>equals()</code></a>.</p>
+<pre><code class="js">var serialized = JSON.stringify({ is: 42 });
+
+assert.json(serialized, { is: 42 }); // Passes
+assert.json(serialized, { or: 42 }); // Fails
+assert.json(serialized, { is: 7 });  // Fails
+assert.json(&quot;no-json&quot;, {});          // Fails
+</code></pre>
+
+<h4 id="messages_53">Messages</h4>
+<pre><code class="js">assert.json.message = &quot;Expected ${actual} to equal ${expected}&quot;;
+assert.json.jsonParseExceptionMessage = &quot;Expected ${actual} to be valid JSON&quot;;
+refute.json.message = &quot;Expected ${actual} not to equal ${expected}&quot;;
+refute.json.jsonParseExceptionMessage = &quot;Expected ${actual} to be valid JSON&quot;;
+</code></pre>
+
+<h3 id="matchjson"><code>matchJson()</code></h3>
+<pre><code class="js">assert.matchJson(actual, json[, message])
+</code></pre>
+
+<p>Fails if <code>actual</code> is not valid JSON or the parsed JSON does not match <code>json</code>. Uses the same matcher algorithm as <a href="#match"><code>match()</code></a>.</p>
+<pre><code class="js">var serialized = JSON.stringify({ is: 42, and: 3 });
+
+assert.matchJson(serialized, { is: 42 }); // Passes
+assert.matchJson(serialized, { and: 3 }); // Passes
+assert.matchJson(serialized, { or: 42 }); // Fails
+assert.matchJson(serialized, { is: 7 });  // Fails
+assert.matchJson(&quot;no-json&quot;, {});          // Fails
+</code></pre>
+
+<h4 id="messages_54">Messages</h4>
+<pre><code class="js">assert.json.message = &quot;Expected ${actual} to match ${expected}&quot;;
+assert.json.jsonParseExceptionMessage = &quot;Expected ${actual} to be valid JSON&quot;;
+refute.json.message = &quot;Expected ${actual} not to match ${expected}&quot;;
+refute.json.jsonParseExceptionMessage = &quot;Expected ${actual} to be valid JSON&quot;;
+</code></pre>
+
 <h2 id="custom-assertions">Custom assertions</h2>
 <p>Custom, domain-specific assertions helps improve clarity and reveal intent in tests. They also facilitate much better feedback when they fail. You can add custom assertions that behave exactly like the built-in ones (i.e. with counting, message formatting, expectations and
 more) by using the <a href="#refereeadd"><code>referee.add</code></a> method.</p>
@@ -1299,6 +1342,16 @@ expect(42).not.toEqual(43); // Passes
 </code></pre>
 
 <p>See <a href="#classname"><code>className()</code></a></p>
+<h3 id="expecttoequaljson"><code>expect.toEqualJson()</code></h3>
+<pre><code class="js">expect(actual).toEqualJson(expected)
+</code></pre>
+
+<p>See <a href="#json"><code>json()</code></a></p>
+<h3 id="expecttomatchjson"><code>expect.toMatchJson()</code></h3>
+<pre><code class="js">expect(actual).toMatchJson(expected)
+</code></pre>
+
+<p>See <a href="#matchJson"><code>matchJson()</code></a></p>
 <h3 id="expecttohavebeencalled"><code>expect.toHaveBeenCalled()</code></h3>
 <pre><code class="js">expect(spy).toHaveBeenCalled()
 </code></pre>
@@ -1478,12 +1531,12 @@ All arguments are available for interpolation into the resulting error message. 
 
   Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-	  
+      
         </div>
       </div>
 
     </section>
-    
+
   </div>
 
   <div class="rst-versions" role="note" style="cursor: pointer">
@@ -1495,12 +1548,15 @@ All arguments are available for interpolation into the resulting error message. 
       
     </span>
 </div>
+    <script>var base_url = '.';</script>
     <script src="./js/theme.js"></script>
+      <script src="./search/require.js"></script>
+      <script src="./search/search.js"></script>
 
 </body>
 </html>
 
 <!--
-MkDocs version : 0.16.3
-Build Date UTC : 2018-05-24 10:06:22
+MkDocs version : 0.17.4
+Build Date UTC : 2018-06-30 12:20:33
 -->
