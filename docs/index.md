@@ -84,6 +84,7 @@ prepended to the failure message.
 * [`isArrayLike()`](#isarraylike)
 * [`isBoolean()`](#isboolean)
 * [`isDataView()`](#isdataview)
+* [`isDate()`](#isdate)
 * [`isError()`](#iserror)
 * [`isEvalError()`](#isevalerror)
 * [`isFalse()`](#isfalse)
@@ -646,6 +647,28 @@ assert.isDataView({});                               // Fails
 ```js
 assert.isDataView.message = "Expected ${actual} to be a DataView";
 refute.isDataView.message = "Expected ${actual} not to be a DataView";
+```
+
+
+### `isDate()`
+
+```js
+assert.isDate(actual[, message])
+```
+
+Fails if `actual` is not an instance of `Date`.
+
+```js
+assert.isDate(new Date());  // Passes
+assert.isDate(12345678);    // Fails
+assert.isDate("apple pie"); // Fails
+```
+
+#### Messages
+
+```js
+assert.isDate.message = "Expected ${actual} to be a Date";
+refute.isDate.message = "Expected ${actual} not to be a Date";
 ```
 
 
