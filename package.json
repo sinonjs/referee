@@ -23,7 +23,7 @@
     "*.js": "eslint"
   },
   "dependencies": {
-    "array.from": "^1.0.3",
+    "array-from": "2.1.1",
     "bane": "^1.x",
     "es6-promise": "^4.2.4",
     "lodash.includes": "^4.3.0",
