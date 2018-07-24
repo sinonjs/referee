@@ -1,4 +1,6 @@
-extends: 'eslint-config-sinon'
+extends:
+    - 'eslint-config-sinon'
+    - 'plugin:prettier/recommended'
 
 env:
   browser: true
