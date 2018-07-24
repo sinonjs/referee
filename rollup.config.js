@@ -6,7 +6,5 @@ module.exports = {
     entry: "lib/referee.js",
     format: "umd",
     moduleName: "referee",
-    plugins: [
-        commonjs({sourceMap: false})
-    ]
+    plugins: [commonjs({ sourceMap: false })]
 };

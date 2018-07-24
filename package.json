@@ -26,9 +26,12 @@
     "array-from": "2.1.1",
     "bane": "^1.x",
     "es6-promise": "^4.2.4",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.2",
     "lodash.includes": "^4.3.0",
     "lodash.isarguments": "^3.1.0",
     "object-assign": "^4.1.1",
+    "prettier": "^1.13.7",
     "samsam": "^1.x"
   },
   "nyc": {
