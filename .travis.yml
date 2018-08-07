@@ -1,9 +1,9 @@
 language: node_js
 node_js:
   # https://github.com/nodejs/LTS
-  - "4" # ends April 2018
   - "6" # ends April 2019
   - "8" # ends December 2019
+  - "10" # ends April 2021
 
 sudo: false
 
