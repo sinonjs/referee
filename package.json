@@ -23,6 +23,7 @@
     "*.js": "eslint"
   },
   "dependencies": {
+    "@sinonjs/formatio": "^2.0.0",
     "array-from": "2.1.1",
     "bane": "^1.x",
     "es6-promise": "^4.2.4",
