@@ -1,6 +1,6 @@
 # referee
 
-[![Build status](https://secure.travis-ci.org/sinonjs/referee.png?branch=master)](http://travis-ci.org/sinonjs/referee)
+[![Build Status](https://travis-ci.org/sinonjs/referee.svg?branch=master)](https://travis-ci.org/sinonjs/referee)
 [![Coverage Status](https://coveralls.io/repos/github/sinonjs/referee/badge.svg?branch=master)](https://coveralls.io/github/sinonjs/referee?branch=master)
 
 **referee** is in your unit tests, deciding who passes and who fails.
@@ -9,7 +9,7 @@ It is a test-framework agnostic assertion and expectation library.
 Some highlights:
 
 - Rich library of assertions
-- Symmetric assert/refute (refute is **referee**'s "assert.not*")
+- Symmetric assert/refute (refute is **referee**'s "assert.not\*")
 - Evented: Emits success and failure events
 - Failing assertions throw exceptions by default, but can be configured to not
 - API to add custom assertions that provides quite a bit of plumbing for free
