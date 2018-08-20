@@ -15,6 +15,9 @@ describe("diff", function() {
     });
 
     it("matchJson", function() {
-        assert.matchJson('{"foo":42,"bar":true}', { foo: 42, bar: false });
+        assert.matchJson('{"foo":42,"bar":true,"ignored":true}', {
+            foo: 42,
+            bar: false
+        });
     });
 });
