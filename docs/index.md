@@ -5,6 +5,18 @@ A collection of assertions to be used with a unit testing framework. **referee**
 
 **referee** contains lots of assertions. We strongly believe that high-level assertions are essential in the interest of producing clear and intent-revealing tests, and they also give you to-the-point failure messages.
 
+## Install
+
+```shell
+npm install @sinonjs/referee --save-dev
+```
+
+### [Sinon.JS](https://sinonjs.org) integration
+
+You can extend `referee` with assertions that integrates with [Sinon.JS](https://sinonjs.org)
+
+See [referee-sinon](https://github.com/sinonjs/referee-sinon)
+
 
 ## Assertions and refutations
 
@@ -1547,13 +1559,6 @@ Signature:
 ```
 
 Assertion failed. The callback is invoked with an [`AssertionError`](#class-assertionerror) object.
-
-
-## [Sinon.JS](https://sinonjs.org) integration
-
-You can extend `referee` with assertions that integrates with [Sinon.JS](https://sinonjs.org)
-
-See [referee-sinon](https://github.com/sinonjs/referee-sinon)
 
 
 ## Expectations
