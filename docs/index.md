@@ -13,7 +13,7 @@ npm install @sinonjs/referee --save-dev
 
 ### [Sinon.JS](https://sinonjs.org) integration
 
-You can extend `referee` with assertions that integrates with [Sinon.JS](https://sinonjs.org)
+You can extend **referee** with assertions that integrates with [Sinon.JS](https://sinonjs.org)
 
 See [referee-sinon](https://github.com/sinonjs/referee-sinon)
 
@@ -1281,7 +1281,7 @@ refute.keys.message = "Expected not to have exact keys ${keys}";
 assert.exception(callback[, matcher, message])
 ```
 
-Fails if `callback` does not throw an exception. If the optional `matcher` is provided, the assertion fails if the callback either does not throw an exception, or if the exception does not meet the criterias of the given `matcher.
+Fails if `callback` does not throw an exception. If the optional `matcher` is provided, the assertion fails if the callback either does not throw an exception, or if the exception does not meet the criterias of the given `matcher`.
 
 The `matcher` can be of type `object` or `function`. If the `matcher` is of type `object`, the captured error object and the `matcher` are passed to [`match()`](#match).
 
@@ -1532,7 +1532,7 @@ try {
 
 ## Events
 
-`referee` is an event-emitter. Listen to events with `on`:
+**referee** is an event-emitter. Listen to events with `on`:
 
 ```js
 referee.on("failure", function (err) {
@@ -1563,7 +1563,7 @@ Assertion failed. The callback is invoked with an [`AssertionError`](#class-asse
 
 ## Expectations
 
-All of referee's assertions and refutations are also exposed as "expectations". Expectations is just a slightly different front-end to the same functionality, often preferred by the BDD inclined.
+All of **referee**'s assertions and refutations are also exposed as "expectations". Expectations is just a slightly different front-end to the same functionality, often preferred by the BDD inclined.
 
 Expectations mirror assertions under different names. Refutations can be expressed using `expect(obj).not` and then calling either of the expectations on the resulting object.
 
@@ -1631,7 +1631,7 @@ expect(actual).toMatch(expected)
 
 See [`match()`](#match)
 
-### `expect.toBeObject()``
+### `expect.toBeObject()`
 
 ```js
 expect(actual).toBeObject(expected)
@@ -1841,7 +1841,7 @@ referee.fail(message)
 
 When an assertion fails, it calls `referee.fail()` with the failure message as the only argument. The built-in `fail` function both throws an [`AssertionError()`](#class-assertionerror) and emits it to the `failure` event. The error can be caught and handled by the test runner. If this behavior is not suitable for your testing framework of choice, you can override `referee.fail()` to make it do the right thing.
 
-Example: To use `referee with JsTestDriver, you can simply configure it as follows:
+Example: To use **referee** with JsTestDriver, you can simply configure it as follows:
 
 ```js
 referee.fail = function (message) {
@@ -1949,30 +1949,30 @@ referee.add("isString", {
 ##### Arguments
 
 <dl>
-    <dt>`name`:</dt>
+    <dt>name</dt>
     <dd>The name of the new assertion/refutation</dd>
     <dt>options</dt>
     <dd>
         <dl>
-            <dt>`assert`:</dt>
+            <dt><code>assert</code></dt>
             <dd>
-The verification function. Should return `true` when the assertion passes. The generated refutation will pass when the function returns `false`.
+The verification function. Should return <code>true</code> when the assertion passes. The generated refutation will pass when the function returns <code>false</code>.
 
-In some cases the refutation may not be the exact opposite of the assertion. If that is the case you should provide `options.refute` for the custom refutation.
+In some cases the refutation may not be the exact opposite of the assertion. If that is the case you should provide <code>options.refute</code> for the custom refutation.
 
-The number of formal parameters the function accepts determines the number of required arguments to the function. If the assertion is called with less arguments than expected, referee will fail it before your custom function is even called.
+The number of formal parameters the function accepts determines the number of required arguments to the function. If the assertion is called with less arguments than expected, <strong>referee</strong> will fail it before your custom function is even called.
 
-All arguments are available for interpolation into the resulting error message. The first argument will be available as `"${0}"`, the second as `"${1}"` and so on. If you want to embed other values than exact arguments into the string, you can set properties on this in the custom assertion, and refer to them as `"${name}"` in the message.
+All arguments are available for interpolation into the resulting error message. The first argument will be available as <code>"${0}"</code>, the second as <code>"${1}"</code> and so on. If you want to embed other values than exact arguments into the string, you can set properties on this in the custom assertion, and refer to them as <code>"${name}"</code> in the message.
             </dd>
-            <dt>`refute`:</dt>
-            <dd>Custom refutation function. Used over `!assert()` if provided.</dd>
-            <dt>`assertMessage`:</dt>
-            <dd>The error message to use when the assertion fails. The message may refer to arguments through switches like `"${0}"`` and so on (see above, under the assert argument). The message is exposed on the generated assertion as the property `assert.[name].message`.</dd>
-            <dt>`refuteMessage`:</dt>
-            <dd>Like `assertMessage`, but for refutations. Exposed as `refute.[name].message`.</dd>
-            <dt>`values:`</dt>
-            <dd>A function that maps values to be interpolated into the failure messages. This can be used when you need something more/else than the actual `arguments` in order.</dd>
-            <dt>expectation:</dt>
+            <dt><code>refute</code></dt>
+            <dd>Custom refutation function. Used over <code>!assert()</code> if provided.</dd>
+            <dt><code>assertMessage</code></dt>
+            <dd>The error message to use when the assertion fails. The message may refer to arguments through switches like <code>"${0}"</code> and so on (see above, under the assert argument). The message is exposed on the generated assertion as the property <code>assert.[name].message</code>.</dd>
+            <dt><code>refuteMessage</code></dt>
+            <dd>Like <code>assertMessage</code>, but for refutations. Exposed as <code>refute.[name].message</code>.</dd>
+            <dt><code>values</code></dt>
+            <dd>A function that maps values to be interpolated into the failure messages. This can be used when you need something more/else than the actual <code>arguments</code> in order.</dd>
+            <dt><code>expectation</code></dt>
             <dd>The name of the assertion as an expectation, e.g. “toBeSomething”. Optional.</dd>
         </dl>
     </dd>
@@ -1986,7 +1986,7 @@ All arguments are available for interpolation into the resulting error message. 
 
 `referee.count` is incremented anytime an assertion is called. The assertion counter can be reset to any number at your convenience.
 
-### `referee.throwOnFailure
+### `referee.throwOnFailure`
 
 `Boolean`.
 
