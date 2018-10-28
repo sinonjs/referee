@@ -1559,7 +1559,7 @@ more) by using the [`referee.add`](#refereeadd) method.
 
 Custom assertions can be loaded as modules using e.g. [mocha](https://mochajs.org/) to be used in tests.
 
-**Custom assertion:**
+#### Custom assertion
 
 `./test/assertions/is-prime.js`
 ```js
@@ -1592,7 +1592,7 @@ referee.add("isPrime", {
 });
 ```
 
-**Test:**
+#### Test
 
 `./test/some.test.js`
 ```js
@@ -1606,7 +1606,8 @@ describe("some", function() {
 });
 ```
 
-**Exectute:**
+#### Execute
+
 ```sh
 mocha -r ./test/assetions/*
 ```
