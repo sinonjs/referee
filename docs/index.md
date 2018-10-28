@@ -96,6 +96,7 @@ prepended to the failure message.
 #### Function
 
 * [`exception()`](#exception)
+* [`hasArity()`](#hasarity)
 
 #### Object
 * [`hasPrototype()`](#hasprototype)
@@ -1375,6 +1376,27 @@ assert.near(10.6, 10, 0.5); // Fails
 ```js
 assert.near.message = "Expected ${actual} to be equal to ${expected} +/- ${delta}";
 refute.near.message = "Expected ${actual} not to be equal to ${expected} +/- ${delta}";
+```
+
+### `hasArity()`
+
+```js
+assert.hasArity(actual, arity[, message])
+```
+
+Fails when `actual` does not have the desired arity.
+
+```js
+assert.hasArity(function(one) {return one}, 1);            // Passes
+assert.hasArity(function(one, two) {return one + two}, 2); // Passes
+assert.hasArity(function(one, two) {return one + two}, 1); // Fails
+```
+
+#### Messages
+
+```js
+assert.hasArity.message = "Expected ${name} to have arity of ${1} but was ${arity}";
+refute.hasArity.message = "Expected ${name} to not have arity of ${1}";
 ```
 
 ### `hasPrototype()`
