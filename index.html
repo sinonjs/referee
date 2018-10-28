@@ -168,28 +168,48 @@ are described for <code>assert</code>, but the corresponding failure messages fo
 opposed.</p>
 <p>All assertions support an optional <code>message</code> argument, which is
 prepended to the failure message.</p>
-<p><em>Overview:</em></p>
+<h3 id="overview">Overview</h3>
+<h4 id="any">Any</h4>
 <ul>
-<li><a href="#same"><code>same()</code></a></li>
+<li><a href="#defined"><code>defined()</code></a></li>
 <li><a href="#equals"><code>equals()</code></a></li>
+<li><a href="#match"><code>match()</code></a></li>
+<li><a href="#same"><code>same()</code></a></li>
+</ul>
+<h4 id="string">String</h4>
+<ul>
+<li><a href="#json"><code>json()</code></a></li>
+<li><a href="#matchjson"><code>matchJson()</code></a></li>
+</ul>
+<h4 id="number">Number</h4>
+<ul>
 <li><a href="#greater"><code>greater()</code></a></li>
 <li><a href="#less"><code>less()</code></a></li>
-<li><a href="#defined"><code>defined()</code></a></li>
-<li><a href="#isnull"><code>isNull()</code></a></li>
-<li><a href="#match"><code>match()</code></a></li>
-<li><a href="#exception"><code>exception()</code></a></li>
 <li><a href="#near"><code>near()</code></a></li>
+</ul>
+<h4 id="function">Function</h4>
+<ul>
+<li><a href="#exception"><code>exception()</code></a></li>
+<li><a href="#hasarity"><code>hasArity()</code></a></li>
+</ul>
+<h4 id="object">Object</h4>
+<ul>
 <li><a href="#hasprototype"><code>hasPrototype()</code></a></li>
+</ul>
+<h4 id="array-and-array-like">Array and array like</h4>
+<ul>
 <li><a href="#contains"><code>contains()</code></a></li>
+</ul>
+<h4 id="dom-element">DOM element</h4>
+<ul>
 <li><a href="#tagname"><code>tagName()</code></a></li>
 <li><a href="#classname"><code>className()</code></a></li>
-<li><a href="#json"><code>json()</code></a></li>
-<li>
-<p><a href="#matchjson"><code>matchJson()</code></a></p>
-</li>
-<li>
-<p><a href="#isarray"><code>isArray()</code></a></p>
-</li>
+</ul>
+<h4 id="types-and-values">Types and values</h4>
+<p>These assertions are for checking for built-in types and values.</p>
+<ul>
+<li><a href="#isnull"><code>isNull()</code></a></li>
+<li><a href="#isarray"><code>isArray()</code></a></li>
 <li><a href="#isarraybuffer"><code>isArrayBuffer()</code></a></li>
 <li><a href="#isarraylike"><code>isArrayLike()</code></a></li>
 <li><a href="#isboolean"><code>isBoolean()</code></a></li>
@@ -1081,6 +1101,21 @@ assert.near(10.6, 10, 0.5); // Fails
 refute.near.message = &quot;Expected ${actual} not to be equal to ${expected} +/- ${delta}&quot;;
 </code></pre>
 
+<h3 id="hasarity"><code>hasArity()</code></h3>
+<pre><code class="js">assert.hasArity(actual, arity[, message])
+</code></pre>
+
+<p>Fails when <code>actual</code> does not have the desired arity.</p>
+<pre><code class="js">assert.hasArity(function(one) {return one}, 1);            // Passes
+assert.hasArity(function(one, two) {return one + two}, 2); // Passes
+assert.hasArity(function(one, two) {return one + two}, 1); // Fails
+</code></pre>
+
+<h4 id="messages_50">Messages</h4>
+<pre><code class="js">assert.hasArity.message = &quot;Expected ${name} to have arity of ${1} but was ${arity}&quot;;
+refute.hasArity.message = &quot;Expected ${name} to not have arity of ${1}&quot;;
+</code></pre>
+
 <h3 id="hasprototype"><code>hasPrototype()</code></h3>
 <pre><code class="js">assert.hasPrototype(actual, prototype[, message])
 </code></pre>
@@ -1091,7 +1126,7 @@ assert.hasPrototype(function() {}, Object.prototype);   // Passes
 assert.hasPrototype({}, Function.prototype);            // Fails
 </code></pre>
 
-<h4 id="messages_50">Messages</h4>
+<h4 id="messages_51">Messages</h4>
 <pre><code class="js">assert.hasPrototype.message = &quot;Expected ${actual} to have ${expected} on its prototype chain&quot;;
 refute.hasPrototype.message = &quot;Expected ${actual} not to have ${expected} on its prototype chain&quot;;
 </code></pre>
@@ -1106,7 +1141,7 @@ assert.contains([1, 2, 3], 4);   // Fails
 assert.contains([1, 2, 3], &quot;2&quot;); // Fails
 </code></pre>
 
-<h4 id="messages_51">Messages</h4>
+<h4 id="messages_52">Messages</h4>
 <pre><code class="js">assert.contains.message = &quot;Expected [${actual}] to contain ${expected}&quot;;
 refute.contains.message = &quot;Expected [${actual}] not to contain ${expected}&quot;;
 </code></pre>
@@ -1121,7 +1156,7 @@ assert.tagName(document.createElement(&quot;h2&quot;), &quot;H2&quot;); // Passe
 assert.tagName(document.createElement(&quot;p&quot;), &quot;li&quot;);  // Fails
 </code></pre>
 
-<h4 id="messages_52">Messages</h4>
+<h4 id="messages_53">Messages</h4>
 <pre><code class="js">assert.tagName.noTagNameMessage = &quot;Expected ${actualElement} to have tagName property&quot;;
 assert.tagName.message = &quot;Expected tagName to be ${expected} but was ${actual}&quot;;
 refute.tagName.noTagNameMessage = &quot;Expected ${actualElement} to have tagName property&quot;;
@@ -1144,7 +1179,7 @@ assert.className(el, &quot;feed items&quot;);     // Fails, &quot;items&quot; is
 assert.className(el, [&quot;item&quot;, &quot;feed&quot;]); // Passes
 </code></pre>
 
-<h4 id="messages_53">Messages</h4>
+<h4 id="messages_54">Messages</h4>
 <pre><code class="js">assert.className.noClassNameMessage = &quot;Expected object to have className property&quot;;
 assert.className.message = &quot;Expected object's className to include ${expected} but was ${actual}&quot;;
 refute.className.noClassNameMessage = &quot;Expected object to have className property&quot;;
@@ -1164,7 +1199,7 @@ assert.json(serialized, { is: 7 });  // Fails
 assert.json(&quot;no-json&quot;, {});          // Fails
 </code></pre>
 
-<h4 id="messages_54">Messages</h4>
+<h4 id="messages_55">Messages</h4>
 <pre><code class="js">assert.json.message = &quot;Expected ${actual} to equal ${expected}&quot;;
 assert.json.jsonParseExceptionMessage = &quot;Expected ${actual} to be valid JSON&quot;;
 refute.json.message = &quot;Expected ${actual} not to equal ${expected}&quot;;
@@ -1185,7 +1220,7 @@ assert.matchJson(serialized, { is: 7 });  // Fails
 assert.matchJson(&quot;no-json&quot;, {});          // Fails
 </code></pre>
 
-<h4 id="messages_55">Messages</h4>
+<h4 id="messages_56">Messages</h4>
 <pre><code class="js">assert.json.message = &quot;Expected ${actual} to match ${expected}&quot;;
 assert.json.jsonParseExceptionMessage = &quot;Expected ${actual} to be valid JSON&quot;;
 refute.json.message = &quot;Expected ${actual} not to match ${expected}&quot;;
@@ -1578,5 +1613,5 @@ All arguments are available for interpolation into the resulting error message. 
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2018-10-28 06:19:05
+Build Date UTC : 2018-10-28 12:49:36
 -->
