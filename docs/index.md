@@ -73,24 +73,47 @@ opposed.
 All assertions support an optional `message` argument, which is
 prepended to the failure message.
 
-*Overview:*
+### Overview
 
-* [`same()`](#same)
-* [`equals()`](#equals)
-* [`greater()`](#greater)
-* [`less()`](#less)
+#### Any
+
 * [`defined()`](#defined)
-* [`isNull()`](#isnull)
+* [`equals()`](#equals)
 * [`match()`](#match)
-* [`exception()`](#exception)
-* [`near()`](#near)
-* [`hasPrototype()`](#hasprototype)
-* [`contains()`](#contains)
-* [`tagName()`](#tagname)
-* [`className()`](#classname)
+* [`same()`](#same)
+
+#### String
+
 * [`json()`](#json)
 * [`matchJson()`](#matchjson)
 
+#### Number
+
+* [`greater()`](#greater)
+* [`less()`](#less)
+* [`near()`](#near)
+
+#### Function
+
+* [`exception()`](#exception)
+
+#### Object
+* [`hasPrototype()`](#hasprototype)
+
+#### Array and array like
+
+* [`contains()`](#contains)
+
+#### DOM element
+
+* [`tagName()`](#tagname)
+* [`className()`](#classname)
+
+#### Types and values
+
+These assertions are for checking for built-in types and values.
+
+* [`isNull()`](#isnull)
 * [`isArray()`](#isarray)
 * [`isArrayBuffer()`](#isarraybuffer)
 * [`isArrayLike()`](#isarraylike)
