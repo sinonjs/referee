@@ -7,24 +7,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="None">
   
-  <link rel="shortcut icon" href="./img/favicon.ico">
+  <link rel="shortcut icon" href="img/favicon.ico">
   <title>referee - referee</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
-  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="./css/highlight.css">
+  <link rel="stylesheet" href="css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   
   <script>
     // Current page data
     var mkdocs_page_name = "referee";
     var mkdocs_page_input_path = "index.md";
-    var mkdocs_page_url = "/";
+    var mkdocs_page_url = null;
   </script>
   
-  <script src="./js/jquery-2.1.1.min.js"></script>
-  <script src="./js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="./js/highlight.pack.js"></script> 
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
 
@@ -38,7 +39,7 @@
         <a href="." class="icon icon-home"> referee</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -56,6 +57,8 @@
     
         <ul>
         
+            <li><a class="toctree-l3" href="#install">Install</a></li>
+        
             <li><a class="toctree-l3" href="#assertions-and-refutations">Assertions and refutations</a></li>
         
             <li><a class="toctree-l3" href="#predefined-assertions">Predefined Assertions</a></li>
@@ -65,8 +68,6 @@
             <li><a class="toctree-l3" href="#overriding-assertion-messages">Overriding assertion messages</a></li>
         
             <li><a class="toctree-l3" href="#events">Events</a></li>
-        
-            <li><a class="toctree-l3" href="#sinonjs-integration">Sinon.JS integration</a></li>
         
             <li><a class="toctree-l3" href="#expectations">Expectations</a></li>
         
@@ -121,6 +122,13 @@
 <p>A collection of assertions to be used with a unit testing framework. <strong>referee</strong> works well with any CommonJS compliant testing framework out of the box, and can easily be configured to work with most any testing framework. See also expectations if you like the alternative API
 (<code>expect(thing).toBe*</code>).</p>
 <p><strong>referee</strong> contains lots of assertions. We strongly believe that high-level assertions are essential in the interest of producing clear and intent-revealing tests, and they also give you to-the-point failure messages.</p>
+<h2 id="install">Install</h2>
+<pre><code class="shell">npm install @sinonjs/referee --save-dev
+</code></pre>
+
+<h3 id="sinonjs-integration"><a href="https://sinonjs.org">Sinon.JS</a> integration</h3>
+<p>You can extend <strong>referee</strong> with assertions that integrates with <a href="https://sinonjs.org">Sinon.JS</a></p>
+<p>See <a href="https://github.com/sinonjs/referee-sinon">referee-sinon</a></p>
 <h2 id="assertions-and-refutations">Assertions and refutations</h2>
 <p>Unlike most assertion libraries, <strong>referee</strong> does not have <code>assert.notXyz</code> assertions to refute some fact. Instead, it has <em>refutations</em>, heavily inspired by Ruby's <a href="http://bfts.rubyforge.org/minitest/">minitest</a>:</p>
 <pre><code class="js">var assert = referee.assert;
@@ -1013,7 +1021,7 @@ refute.keys.message = &quot;Expected not to have exact keys ${keys}&quot;;
 <pre><code class="js">assert.exception(callback[, matcher, message])
 </code></pre>
 
-<p>Fails if <code>callback</code> does not throw an exception. If the optional <code>matcher</code> is provided, the assertion fails if the callback either does not throw an exception, or if the exception does not meet the criterias of the given `matcher.</p>
+<p>Fails if <code>callback</code> does not throw an exception. If the optional <code>matcher</code> is provided, the assertion fails if the callback either does not throw an exception, or if the exception does not meet the criterias of the given <code>matcher</code>.</p>
 <p>The <code>matcher</code> can be of type <code>object</code> or <code>function</code>. If the <code>matcher</code> is of type <code>object</code>, the captured error object and the <code>matcher</code> are passed to <a href="#match"><code>match()</code></a>.</p>
 <p>If the <code>matcher</code> is of type <code>function</code>, the captured error object is passed as argument to the <code>matcher</code> function, which has to return <code>true</code> for a matching error object, otherwise <code>false</code>.</p>
 <pre><code class="js">// Passes
@@ -1205,7 +1213,7 @@ try {
 </code></pre>
 
 <h2 id="events">Events</h2>
-<p><code>referee</code> is an event-emitter. Listen to events with <code>on</code>:</p>
+<p><strong>referee</strong> is an event-emitter. Listen to events with <code>on</code>:</p>
 <pre><code class="js">referee.on(&quot;failure&quot;, function (err) {
     console.log(err.message);
 });
@@ -1225,11 +1233,8 @@ when refutations pass.</p>
 </code></pre>
 
 <p>Assertion failed. The callback is invoked with an <a href="#class-assertionerror"><code>AssertionError</code></a> object.</p>
-<h2 id="sinonjs-integration"><a href="https://sinonjs.org">Sinon.JS</a> integration</h2>
-<p>You can extend <code>referee</code> with assertions that integrates with <a href="https://sinonjs.org">Sinon.JS</a></p>
-<p>See <a href="https://github.com/sinonjs/referee-sinon">referee-sinon</a></p>
 <h2 id="expectations">Expectations</h2>
-<p>All of referee's assertions and refutations are also exposed as "expectations". Expectations is just a slightly different front-end to the same functionality, often preferred by the BDD inclined.</p>
+<p>All of <strong>referee</strong>'s assertions and refutations are also exposed as "expectations". Expectations is just a slightly different front-end to the same functionality, often preferred by the BDD inclined.</p>
 <p>Expectations mirror assertions under different names. Refutations can be expressed using <code>expect(obj).not</code> and then calling either of the expectations on the resulting object.</p>
 <pre><code class="js">var expect = require('referee').expect;
 
@@ -1273,7 +1278,7 @@ expect(42).not.toEqual(43); // Passes
 </code></pre>
 
 <p>See <a href="#match"><code>match()</code></a></p>
-<h3 id="expecttobeobject">`expect.toBeObject()``</h3>
+<h3 id="expecttobeobject"><code>expect.toBeObject()</code></h3>
 <pre><code class="js">expect(actual).toBeObject(expected)
 </code></pre>
 
@@ -1377,7 +1382,7 @@ expect(42).not.toEqual(43); // Passes
 <pre><code class="js">expect(spy).toHaveBeenCalledOnce(expected)
 </code></pre>
 
-<p>See <a href="./calledonce"><code>calledOnce()</code></a></p>
+<p>See <a href="calledonce"><code>calledOnce()</code></a></p>
 <h3 id="expecttohavebeencalledtwice"><code>expect.toHaveBeenCalledTwice()</code></h3>
 <pre><code>expect(spy).toHaveBeenCalledTwice(expected)
 </code></pre>
@@ -1404,7 +1409,7 @@ expect(42).not.toEqual(43); // Passes
 </code></pre>
 
 <p>When an assertion fails, it calls <code>referee.fail()</code> with the failure message as the only argument. The built-in <code>fail</code> function both throws an <a href="#class-assertionerror"><code>AssertionError()</code></a> and emits it to the <code>failure</code> event. The error can be caught and handled by the test runner. If this behavior is not suitable for your testing framework of choice, you can override <code>referee.fail()</code> to make it do the right thing.</p>
-<p>Example: To use `referee with JsTestDriver, you can simply configure it as follows:</p>
+<p>Example: To use <strong>referee</strong> with JsTestDriver, you can simply configure it as follows:</p>
 <pre><code class="js">referee.fail = function (message) {
     fail(message);
 };
@@ -1493,30 +1498,30 @@ assert.isFoo({ id: 42 }, &quot;Ouch&quot;);
 
 <h5 id="arguments">Arguments</h5>
 <dl>
-    <dt>`name`:</dt>
+    <dt>name</dt>
     <dd>The name of the new assertion/refutation</dd>
     <dt>options</dt>
     <dd>
         <dl>
-            <dt>`assert`:</dt>
+            <dt><code>assert</code></dt>
             <dd>
-The verification function. Should return `true` when the assertion passes. The generated refutation will pass when the function returns `false`.
+The verification function. Should return <code>true</code> when the assertion passes. The generated refutation will pass when the function returns <code>false</code>.
 
-In some cases the refutation may not be the exact opposite of the assertion. If that is the case you should provide `options.refute` for the custom refutation.
+In some cases the refutation may not be the exact opposite of the assertion. If that is the case you should provide <code>options.refute</code> for the custom refutation.
 
-The number of formal parameters the function accepts determines the number of required arguments to the function. If the assertion is called with less arguments than expected, referee will fail it before your custom function is even called.
+The number of formal parameters the function accepts determines the number of required arguments to the function. If the assertion is called with less arguments than expected, <strong>referee</strong> will fail it before your custom function is even called.
 
-All arguments are available for interpolation into the resulting error message. The first argument will be available as `"${0}"`, the second as `"${1}"` and so on. If you want to embed other values than exact arguments into the string, you can set properties on this in the custom assertion, and refer to them as `"${name}"` in the message.
+All arguments are available for interpolation into the resulting error message. The first argument will be available as <code>"${0}"</code>, the second as <code>"${1}"</code> and so on. If you want to embed other values than exact arguments into the string, you can set properties on this in the custom assertion, and refer to them as <code>"${name}"</code> in the message.
             </dd>
-            <dt>`refute`:</dt>
-            <dd>Custom refutation function. Used over `!assert()` if provided.</dd>
-            <dt>`assertMessage`:</dt>
-            <dd>The error message to use when the assertion fails. The message may refer to arguments through switches like `"${0}"`` and so on (see above, under the assert argument). The message is exposed on the generated assertion as the property `assert.[name].message`.</dd>
-            <dt>`refuteMessage`:</dt>
-            <dd>Like `assertMessage`, but for refutations. Exposed as `refute.[name].message`.</dd>
-            <dt>`values:`</dt>
-            <dd>A function that maps values to be interpolated into the failure messages. This can be used when you need something more/else than the actual `arguments` in order.</dd>
-            <dt>expectation:</dt>
+            <dt><code>refute</code></dt>
+            <dd>Custom refutation function. Used over <code>!assert()</code> if provided.</dd>
+            <dt><code>assertMessage</code></dt>
+            <dd>The error message to use when the assertion fails. The message may refer to arguments through switches like <code>"${0}"</code> and so on (see above, under the assert argument). The message is exposed on the generated assertion as the property <code>assert.[name].message</code>.</dd>
+            <dt><code>refuteMessage</code></dt>
+            <dd>Like <code>assertMessage</code>, but for refutations. Exposed as <code>refute.[name].message</code>.</dd>
+            <dt><code>values</code></dt>
+            <dd>A function that maps values to be interpolated into the failure messages. This can be used when you need something more/else than the actual <code>arguments</code> in order.</dd>
+            <dt><code>expectation</code></dt>
             <dd>The name of the assertion as an expectation, e.g. “toBeSomething”. Optional.</dd>
         </dl>
     </dd>
@@ -1526,7 +1531,7 @@ All arguments are available for interpolation into the resulting error message. 
 <h3 id="refereecount"><code>referee.count</code></h3>
 <p><code>Number</code> increasing from 0.</p>
 <p><code>referee.count</code> is incremented anytime an assertion is called. The assertion counter can be reset to any number at your convenience.</p>
-<h3 id="refereethrowonfailure">`referee.throwOnFailure</h3>
+<h3 id="refereethrowonfailure"><code>referee.throwOnFailure</code></h3>
 <p><code>Boolean</code>.</p>
 <p>When using the default <code>referee.fail()</code> implementation, this property can be set to <code>false</code> to make assertion failures not throw exceptions (i.e. only emit events). This may be suitable in asynchronous test runners, where you might not be able to catch exceptions.</p>
 <h2 id="supporting-objects">Supporting objects</h2>
@@ -1565,14 +1570,13 @@ All arguments are available for interpolation into the resulting error message. 
     </span>
 </div>
     <script>var base_url = '.';</script>
-    <script src="./js/theme.js"></script>
-      <script src="./search/require.js"></script>
-      <script src="./search/search.js"></script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
 
 </body>
 </html>
 
 <!--
-MkDocs version : 0.17.3
-Build Date UTC : 2018-09-14 08:46:55
+MkDocs version : 1.0.4
+Build Date UTC : 2018-10-28 06:19:05
 -->
