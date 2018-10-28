@@ -1552,8 +1552,67 @@ refute.json.jsonParseExceptionMessage = "Expected ${actual} to be valid JSON";
 
 ## Custom assertions
 
-Custom, domain-specific assertions helps improve clarity and reveal intent in tests. They also facilitate much better feedback when they fail. You can add custom assertions that behave exactly like the built-in ones (i.e. with counting, message formatting, expectations and
+Custom, domain-specific assertions help improve clarity and reveal intent in tests. They also facilitate much better feedback when they fail. You can add custom assertions that behave exactly like the built-in ones (i.e. with counting, message formatting, expectations and
 more) by using the [`referee.add`](#refereeadd) method.
+
+### Load custom assertions
+
+Custom assertions can be loaded as modules using e.g. [mocha](https://mochajs.org/) to be used in tests.
+
+#### Custom assertion
+
+`./test/assertions/is-prime.js`
+```js
+const referee = require("referee");
+
+// adapted from https://stackoverflow.com/a/40200710
+function isPrime(number){
+    for (var i = 2; i < number; i++){
+        if (number % i === 0){
+            return false;
+        }
+    }
+    return number !== 1 && number !== 0;
+}
+
+referee.add("isPrime", {
+    assert: function assert(actual) {
+        if (typeof actual !== "number" || actual < 0) {
+            throw new TypeError("'actual' argument should be a non-negative Number");
+        }
+
+        this.actual = actual;
+
+        return isPrime(actual);
+    },
+    assertMessage: "Expected ${actual} to be a prime number",
+    refuteMessage: "Expected ${actual} to not be a prime number",
+    expectation: "toHaveArity"
+
+});
+```
+
+#### Test
+
+`./test/some.test.js`
+```js
+const { assert, refute  } = require("referee");
+
+describe("some", function() {
+    it("should have isPrime installed", function() {
+        assert.isPrime(5);
+        refute.isPrime(6);
+    });
+});
+```
+
+#### Execute
+
+```sh
+mocha -r ./test/assetions/*
+```
+
+[This repository](https://github.com/sinonjs/referee-custom-assert-with-mocha) hosts the full runnable example from above.
 
 ## Overriding assertion messages
 
