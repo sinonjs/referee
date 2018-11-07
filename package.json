@@ -24,6 +24,7 @@
     "*.js": "eslint"
   },
   "dependencies": {
+    "@sinonjs/commons": "^1.3.0",
     "@sinonjs/formatio": "^3.0.0",
     "@sinonjs/samsam": "^2.1.0",
     "array-from": "2.1.1",
