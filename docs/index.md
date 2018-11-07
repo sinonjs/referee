@@ -1514,14 +1514,6 @@ assert.json(serialized, { is: 7 });  // Fails
 assert.json("no-json", {});          // Fails
 ```
 
-#### Messages
-
-```js
-assert.json.message = "Expected ${actual} to equal ${expected}";
-assert.json.jsonParseExceptionMessage = "Expected ${actual} to be valid JSON";
-refute.json.message = "Expected ${actual} not to equal ${expected}";
-refute.json.jsonParseExceptionMessage = "Expected ${actual} to be valid JSON";
-```
 
 ### `matchJson()`
 
@@ -1541,14 +1533,6 @@ assert.matchJson(serialized, { is: 7 });  // Fails
 assert.matchJson("no-json", {});          // Fails
 ```
 
-#### Messages
-
-```js
-assert.json.message = "Expected ${actual} to match ${expected}";
-assert.json.jsonParseExceptionMessage = "Expected ${actual} to be valid JSON";
-refute.json.message = "Expected ${actual} not to match ${expected}";
-refute.json.jsonParseExceptionMessage = "Expected ${actual} to be valid JSON";
-```
 
 ## Custom assertions
 
