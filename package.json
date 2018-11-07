@@ -37,14 +37,14 @@
     "exclude": [
       "coverage/**",
       "**/*.test.js",
-      "lib/test-helper.js"
+      "lib/test-helper/**"
     ]
   },
   "files": [
     "dist/",
     "docs/",
     "lib/",
-    "!lib/test-helper.js",
+    "!lib/test-helper/**",
     "!lib/**/*.test.js"
   ],
   "devDependencies": {

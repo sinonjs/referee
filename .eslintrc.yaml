@@ -37,7 +37,7 @@ rules:
   max-len: [error, {code: 120, ignoreStrings: true}]
 
 overrides:
-    files: ['*.test.*', 'test-helper.js']
+    files: ['*.test.*', 'lib/test-helper/*.js']
     plugins:
         - mocha
     env:
