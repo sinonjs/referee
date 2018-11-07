@@ -63,6 +63,6 @@
     "prettier": "^1.14.0",
     "rollup": "^0.56.5",
     "rollup-plugin-commonjs": "^8.4.1",
-    "sinon": "^4.5.0"
+    "sinon": "^7.1.0"
   }
 }
