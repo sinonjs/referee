@@ -1346,16 +1346,6 @@ assert.exception(function () {
 }, "Type of exception is wrong!");  // with message to print, if test fails
 ```
 
-#### Messages
-
-```js
-assert.exception.typeNoExceptionMessage = "Expected ${expected} but no exception was thrown";
-assert.exception.message = "Expected exception";
-assert.exception.typeFailMessage = "Expected ${expected} but threw ${actualExceptionType} (${actualExceptionMessage})\n${actualExceptionStack}";
-assert.exception.matchFailMessage = "Expected thrown ${actualExceptionType} (${actualExceptionMessage}) to pass matcher function";
-refute.exception.message = "Expected not to throw but threw ${actualExceptionType} (${actualExceptionMessage})";
-```
-
 
 ### `near()`
 
