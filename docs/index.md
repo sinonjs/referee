@@ -2010,13 +2010,50 @@ All arguments are available for interpolation into the resulting error message. 
     </dd>
 </dl>
 
+### `referee.resetCount()`
+
+Resets `referee.count` to 0.
+
+
+### `referee.verify([expected])`
+
+Verifies that assertions have been made by examining `referee.count`. When `expected` is passed, then this is compared with `referee.count`.
+
+`referee.verify()` always resets `referee.count` to zero, to reset the test environment between tests.
+
+```js
+it("should do something", function(){
+    var limit = 10;
+    for (var i = 0; i < 10; i++){
+        console.log(i);
+    }
+
+    // this test will fail as no assertions have been made
+    referee.verify();
+});
+
+
+it("should do something", function(){
+    var limit = 10;
+    for (var i = 0; i < 10; i++){
+        assert.isTrue(true);
+    }
+
+    // this will pass because exactly 10 (`limit`) assertions have been made
+    referee.verify(limit);
+
+    console.log(referee.count);
+    // 0
+});
+```
+
 ## Properties
 
 ### `referee.count`
 
 `Number` increasing from 0.
 
-`referee.count` is incremented anytime an assertion is called. The assertion counter can be reset to any number at your convenience.
+`referee.count` is incremented anytime an assertion is called. To reset the counter, use `referee.resetCount()`.
 
 ### `referee.throwOnFailure`
 
