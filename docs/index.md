@@ -1915,21 +1915,6 @@ Where the global `fail` function is the one provided by JsTestDriver.
 It is possible to make the default `assert.fail` method only emit an event and not throw an error. This may be suitable in asynchronous test runners, where you might not be able to catch exceptions. To silence exceptions, see the `throwOnFailure` property.
 
 
-### `referee.format()`
-
-```js
-referee.format(object)
-```
-
-Values inserted into assertion messages using the `${n}` switches are formatted using `referee.format()`. By default this method simply coerces the object to a string.
-
-A more expressive option is to use `buster-format`, which is a generic function for formatting objects nicely as ASCII. For nice ASCII formatting of objects (including DOM elements) do:
-
-```js
-referee.format = buster.format.ascii;
-```
-
-
 ### `referee.add()`
 
 ```js
@@ -1939,7 +1924,7 @@ referee.add(name, options)
 Add a custom assertion. Using this ‘macro’ to add project specific assertions has a few advantages:
 
 * Assertions will be counted
-* Failure messages will have interpolated arguments formatted by `referee.format()`
+* Failure messages will have interpolated arguments formatted
 * A single function generates both an assertion and a refutation
 * If using expectations, an expectation can easily be generated as well
 * When `failOnNoAssertions` is set to `true`, the assertion will behave correctly (may be important for asynchronous tests)
