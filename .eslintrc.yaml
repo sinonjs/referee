@@ -44,6 +44,7 @@ overrides:
         mocha: true
     rules:
         max-nested-callbacks: [error, 6]
+        no-empty-function: off
         strict: [error, 'global']
 
         mocha/handle-done-callback: error
