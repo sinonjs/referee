@@ -29,7 +29,6 @@
     "@sinonjs/samsam": "^2.1.0",
     "array-from": "2.1.1",
     "bane": "^1.x",
-    "es6-promise": "^4.2.4",
     "lodash.includes": "^4.3.0",
     "lodash.isarguments": "^3.1.0",
     "object-assign": "^4.1.1"
