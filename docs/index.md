@@ -407,20 +407,6 @@ assert.match(el, {
 });
 ```
 
-#### Messages
-
-```js
-assert.match.exceptionMessage = "${exceptionMessage}";
-refute.match.exceptionMessage = "${exceptionMessage}";
-```
-
-Used when the matcher function throws an exception. This happens if the matcher is not any of the accepted types, for instance, a boolean.
-
-```js
-assert.match.message = "${actual} expected to match ${expected}";
-refute.match.message = "${actual} expected not to match ${expected}";
-```
-
 
 ### `isObject()`
 
