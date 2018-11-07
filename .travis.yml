@@ -12,20 +12,20 @@ cache:
   - node_modules
 
 before_install:
-  - if [ "x$TRAVIS_NODE_VERSION" = "x8" ]; then npm install coveralls; fi
+  - if [ "x$TRAVIS_NODE_VERSION" = "x10" ]; then npm install coveralls; fi
 
 before_script:
   # Make npm run work for the script phase:
-  - if [ "x$TRAVIS_NODE_VERSION" != "x8" ]; then npm config set ignore-scripts false; fi
+  - if [ "x$TRAVIS_NODE_VERSION" != "x10" ]; then npm config set ignore-scripts false; fi
   # these build targets only need to run once per build, so let's conserve a few resources
   # ESLint only supports Node >=4
-  - if [ "x$TRAVIS_NODE_VERSION" = "x8" ]; then npm run lint; fi
+  - if [ "x$TRAVIS_NODE_VERSION" = "x10" ]; then npm run lint; fi
 
 script:
   - npm test
 
 after_success:
-  - if [ "x$TRAVIS_NODE_VERSION" = "x8" ]; then npm run test-coverage && cat ./coverage/lcov.info | coveralls lib; fi
+  - if [ "x$TRAVIS_NODE_VERSION" = "x10" ]; then npm run test-coverage && cat ./coverage/lcov.info | coveralls lib; fi
 
 git:
   depth: 10
