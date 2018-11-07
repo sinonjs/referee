@@ -1478,14 +1478,6 @@ assert.className(el, "feed items");     // Fails, "items" is not a match
 assert.className(el, ["item", "feed"]); // Passes
 ```
 
-#### Messages
-
-```js
-assert.className.noClassNameMessage = "Expected object to have className property";
-assert.className.message = "Expected object's className to include ${expected} but was ${actual}";
-refute.className.noClassNameMessage = "Expected object to have className property";
-refute.className.message = "Expected object's className not to include ${expected}";
-```
 
 ### `json()`
 
