@@ -1447,15 +1447,6 @@ assert.tagName(document.createElement("h2"), "H2"); // Passes
 assert.tagName(document.createElement("p"), "li");  // Fails
 ```
 
-#### Messages
-
-```js
-assert.tagName.noTagNameMessage = "Expected ${actualElement} to have tagName property";
-assert.tagName.message = "Expected tagName to be ${expected} but was ${actual}";
-refute.tagName.noTagNameMessage = "Expected ${actualElement} to have tagName property";
-refute.tagName.refuteMessage = "Expected tagName not to be ${actual}";
-```
-
 
 ### `className()`
 
