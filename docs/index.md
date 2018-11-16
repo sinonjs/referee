@@ -1463,22 +1463,23 @@ assert.className(el, ["item", "feed"]); // Passes
 ### `resolves()`
 
 ```js
-assert.resolves(Promise, value)
+assert.resolves(promise, value)
 ```
 
-**NOTE:** This assertion returns a `Promise`!
+**NOTE:** This assertion returns a
+[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)!
 
-The assertion **resolves**, if the value resolved from `Promise` is
+The assertion **resolves**, if the value resolved from `promise` is
 [`identical`](http://sinonjs.github.io/samsam/#identicalx-y) to the given `value`.
 
 Furthermore, the assertion **rejects** if,
 
-* the resolved value from the input `Promise` is not `identical` to the given `value`
-* the given `Promise` rejects instead of resolving
-* the given input is not a `Promise`
+* the resolved value from the input `promise` is not `identical` to the given `value`
+* the given `promise` rejects instead of resolving
+* the given input is not a Promise
 
 **NOTE:** In order to tell the test runner to wait until the assertion has completed, you
-either need to return the `Promise` from the assertion:
+either need to return the Promise from the assertion:
 
 ```js
 test("some asynchronous code", function() {
@@ -1497,22 +1498,23 @@ test("some asynchronous code", async function() {
 ### `rejects()`
 
 ```js
-assert.rejects(Promise, value)
+assert.rejects(promise, value)
 ```
 
-**NOTE:** This assertion returns a `Promise`!
+**NOTE:** This assertion returns a
+[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)!
 
-The assertion **resolves**, if the value rejected from `Promise` is
+The assertion **resolves**, if the value rejected from `promise` is
 [`identical`](http://sinonjs.github.io/samsam/#identicalx-y) to the given `value`.
 
 Furthermore, the assertion **rejects** if,
 
-* the rejected value from the input `Promise` is not `identical` to the given `value`
-* the given `Promise` resolves instead of rejecting
-* the given input is not a `Promise`
+* the rejected value from the input `promise` is not `identical` to the given `value`
+* the given `promise` resolves instead of rejecting
+* the given input is not a Promise
 
 **NOTE:** In order to tell the test runner to wait until the assertion has completed, you
-either need to return the `Promise` from the assertion:
+either need to return the Promise from the assertion:
 
 ```js
 test("some asynchronous code", function() {
