@@ -2084,50 +2084,46 @@ All arguments are available for interpolation into the resulting error message. 
     </dd>
 </dl>
 
-### `referee.resetCount()`
 
-Resets `referee.count` to 0.
+### `referee.verifier()`
 
+Creates a verifier function with the signature `verify([expected])`.
 
-### `referee.verify([expected])`
+It exposes `verify.count` which is incremented every time `referee` emits a `"pass"` or a `"failure"` event. When called, the function verifies that assertions have been made, throwing an exception if `verify.count` is zero. When `expected` is passed, then this is compared with `verify.count`.
 
-Verifies that assertions have been made by examining `referee.count`. When `expected` is passed, then this is compared with `referee.count`.
-
-`referee.verify()` always resets `referee.count` to zero, to reset the test environment between tests.
+`verify()` always unsubscribes the event listeners, so that `verify.count` does not change. This means you have to create a new verifier for each test run.
 
 ```js
 it("should do something", function(){
+    var verify = referee.verifier();
+
     var limit = 10;
     for (var i = 0; i < 10; i++){
         console.log(i);
     }
 
     // this test will fail as no assertions have been made
-    referee.verify();
+    verify();
 });
 
 
 it("should do something", function(){
+    var verify = referee.verifier();
+
     var limit = 10;
     for (var i = 0; i < 10; i++){
         assert.isTrue(true);
     }
 
     // this will pass because exactly 10 (`limit`) assertions have been made
-    referee.verify(limit);
+    verify(limit);
 
-    console.log(referee.count);
-    // 0
+    console.log(verify.count);
+    // 10
 });
 ```
 
 ## Properties
-
-### `referee.count`
-
-`Number` increasing from 0.
-
-`referee.count` is incremented anytime an assertion is called. To reset the counter, use `referee.resetCount()`.
 
 ### `referee.throwOnFailure`
 
