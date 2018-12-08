@@ -16,7 +16,7 @@
     "lint": "eslint .",
     "precommit": "lint-staged",
     "prepublishOnly": "npm run build && mkdocs gh-deploy -r upstream || mkdocs gh-deploy -r origin",
-    "test": "mocha 'lib/**/*.test.js'",
+    "test": "mocha --reporter dot 'lib/**/*.test.js'",
     "test-coverage": "nyc --reporter text --reporter html --reporter lcovonly npm run test",
     "demo": "mocha demo/*.test.js"
   },
