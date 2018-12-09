@@ -38,6 +38,8 @@
     "exclude": [
       "rollup.config.js",
       "coverage/**",
+      "site/**",
+      "dist/**",
       "**/*.test.js",
       "lib/test-helper/**"
     ]
