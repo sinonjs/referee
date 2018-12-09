@@ -195,10 +195,13 @@ Compares `actual` to `expected` property by property. If the property count does
 If `actual` is `null` or `undefined`, an exact match is required. Date objects are compared by their `getTime` method. Regular expressions are compared by their string representations. Primitives are compared using `==`, i.e., with coercion.
 
 `equals` passes when comparing an arguments object to an array if the both contain the same elements.
+Objects or arrays may contain the result of calling `match` to compare a property using a built-in or custom matcher.
 
 ```js
 assert.equals({ name: "Professor Chaos" }, { name: "Professor Chaos" }); // Passes
+assert.equals({ name: "Professor Chaos" }, { name: match.string }); // Passes
 assert.equals({ name: "Professor Chaos" }, { name: "Dr Evil" }); // Fails
+assert.equals({ name: "Professor Chaos" }, { name: match.number }); // Fails
 ```
 
 #### Messages
