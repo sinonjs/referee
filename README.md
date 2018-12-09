@@ -13,8 +13,9 @@ Some highlights:
 - Evented: Emits success and failure events
 - Failing assertions throw exceptions by default, but can be configured to not
 - API to add custom assertions that provides quite a bit of plumbing for free
+- 100% test coverage (enforced with `test-check-coverage` in `package.json`)
 
-**referee** works in browsers (including old and rowdy ones, like IE6) and Node.
+**referee** works in browsers (including old and rowdy ones, like IE11) and Node ([LTS versions](https://github.com/nodejs/Release#release-schedule)).
 It will define itself as an AMD module if you want it to (i.e. if there's a
 `define` function available).
 
