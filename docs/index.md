@@ -138,6 +138,7 @@ These assertions are for checking for built-in types and values.
 * [`isIntlNumberFormat()`](#isintlnumberformat)
 * [`isMap()`](#ismap)
 * [`isNaN()`](#isnan)
+* [`isNegativeInfinity()`](#isnegativeinfinity)
 * [`isNull()`](#isnull)
 * [`isNumber()`](#isnumber)
 * [`isObject()`](#isobject)
@@ -585,6 +586,20 @@ assert.isNaN({});            // Fails, would pass for standard javascript functi
 ```js
 assert.isNaN.message = "Expected ${actual} to be NaN";
 refute.isNaN.message = "Expected not to be NaN";
+```
+
+
+### `isNegativeInfinity()`
+
+```js
+assert.isNegativeInfinity(actual[, message])
+```
+
+Fails if `actual` is not `-Infinity`.
+
+```js
+assert.isNegativeInfinity(-Infinity); // Passes
+assert.isNegativeInfinity(42);       // Fails
 ```
 
 
