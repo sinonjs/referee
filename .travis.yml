@@ -22,10 +22,10 @@ before_script:
   - if [ "x$TRAVIS_NODE_VERSION" = "x10" ]; then npm run lint; fi
 
 script:
-  - npm test
+  - npm run test-check-coverage
 
 after_success:
-  - if [ "x$TRAVIS_NODE_VERSION" = "x10" ]; then npm run test-coverage && cat ./coverage/lcov.info | coveralls lib; fi
+  - if [ "x$TRAVIS_NODE_VERSION" = "x10" ]; then cat ./coverage/lcov.info | coveralls lib; fi
 
 git:
-  depth: 10
+  depth: 3
