@@ -17,6 +17,7 @@
     "precommit": "lint-staged",
     "prepublishOnly": "npm run build && mkdocs gh-deploy -r upstream || mkdocs gh-deploy -r origin",
     "test": "TZ=UTC mocha --reporter dot 'lib/**/*.test.js'",
+    "test-check-coverage": "npm run test-coverage && nyc check-coverage --branches 100 --functions 100 --lines 100",
     "test-coverage": "nyc --reporter text --reporter html --reporter lcovonly npm run test",
     "demo": "mocha demo/*.test.js"
   },
