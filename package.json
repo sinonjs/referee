@@ -14,7 +14,7 @@
     "build:bundle": "rollup -c > dist/referee.js",
     "build:dist-folder": "mkdirp dist",
     "lint": "eslint .",
-    "precommit": "lint-staged",
+    "precommit": "lint-staged && npm run test-check-coverage",
     "prepublishOnly": "npm run build && mkdocs gh-deploy -r upstream || mkdocs gh-deploy -r origin",
     "test": "TZ=UTC mocha --reporter dot 'lib/**/*.test.js'",
     "test-check-coverage": "npm run test-coverage && nyc check-coverage --branches 100 --functions 100 --lines 100",
