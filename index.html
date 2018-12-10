@@ -205,6 +205,11 @@ prepended to the failure message.</p>
 <li><a href="#tagname"><code>tagName()</code></a></li>
 <li><a href="#classname"><code>className()</code></a></li>
 </ul>
+<h4 id="promise">Promise</h4>
+<ul>
+<li><a href="#resolves"><code>resolves</code></a></li>
+<li><a href="#rejects"><code>rejects</code></a></li>
+</ul>
 <h4 id="types-and-values">Types and values</h4>
 <p>These assertions are for checking for built-in types and values.</p>
 <ul>
@@ -227,6 +232,7 @@ prepended to the failure message.</p>
 <li><a href="#isintlnumberformat"><code>isIntlNumberFormat()</code></a></li>
 <li><a href="#ismap"><code>isMap()</code></a></li>
 <li><a href="#isnan"><code>isNaN()</code></a></li>
+<li><a href="#isnegativeinfinity"><code>isNegativeInfinity()</code></a></li>
 <li><a href="#isnull"><code>isNull()</code></a></li>
 <li><a href="#isnumber"><code>isNumber()</code></a></li>
 <li><a href="#isobject"><code>isObject()</code></a></li>
@@ -270,9 +276,12 @@ refute.same.message = &quot;${actual} expected not to be the same object as ${ex
 
 <p>Compares <code>actual</code> to <code>expected</code> property by property. If the property count does not match, or if any of <code>actual</code>‘s properties do not match the corresponding property in <code>expected</code>, the assertion fails. Object properties are verified recursively.</p>
 <p>If <code>actual</code> is <code>null</code> or <code>undefined</code>, an exact match is required. Date objects are compared by their <code>getTime</code> method. Regular expressions are compared by their string representations. Primitives are compared using <code>==</code>, i.e., with coercion.</p>
-<p><code>equals</code> passes when comparing an arguments object to an array if the both contain the same elements.</p>
+<p><code>equals</code> passes when comparing an arguments object to an array if the both contain the same elements.
+Objects or arrays may contain the result of calling <code>match</code> to compare a property using a built-in or custom matcher.</p>
 <pre><code class="js">assert.equals({ name: &quot;Professor Chaos&quot; }, { name: &quot;Professor Chaos&quot; }); // Passes
+assert.equals({ name: &quot;Professor Chaos&quot; }, { name: match.string }); // Passes
 assert.equals({ name: &quot;Professor Chaos&quot; }, { name: &quot;Dr Evil&quot; }); // Fails
+assert.equals({ name: &quot;Professor Chaos&quot; }, { name: match.number }); // Fails
 </code></pre>
 
 <h4 id="messages_1">Messages</h4>
@@ -432,16 +441,6 @@ assert.match(el, {
 });
 </code></pre>
 
-<h4 id="messages_6">Messages</h4>
-<pre><code class="js">assert.match.exceptionMessage = &quot;${exceptionMessage}&quot;;
-refute.match.exceptionMessage = &quot;${exceptionMessage}&quot;;
-</code></pre>
-
-<p>Used when the matcher function throws an exception. This happens if the matcher is not any of the accepted types, for instance, a boolean.</p>
-<pre><code class="js">assert.match.message = &quot;${actual} expected to match ${expected}&quot;;
-refute.match.message = &quot;${actual} expected not to match ${expected}&quot;;
-</code></pre>
-
 <h3 id="isobject"><code>isObject()</code></h3>
 <pre><code class="js">assert.isObject(object[, message])
 </code></pre>
@@ -453,7 +452,7 @@ assert.isObject([1, 2, 3]);      // Passes
 assert.isObject(function () {}); // Fails
 </code></pre>
 
-<h4 id="messages_7">Messages</h4>
+<h4 id="messages_6">Messages</h4>
 <pre><code class="js">assert.isObject.message = &quot;${actual} (${actualType}) expected to be object and not null&quot;;
 refute.isObject.message = &quot;${actual} expected to be null or not an object&quot;;
 </code></pre>
@@ -468,7 +467,7 @@ assert.isFunction(42);             // Fails
 assert.isFunction(function () {}); // Passes
 </code></pre>
 
-<h4 id="messages_8">Messages</h4>
+<h4 id="messages_7">Messages</h4>
 <pre><code class="js">assert.isFunction.message = &quot;${actual} (${actualType}) expected to be function&quot;;
 refute.isFunction.message = &quot;${actual} expected not to be function&quot;;
 </code></pre>
@@ -482,7 +481,7 @@ refute.isFunction.message = &quot;${actual} expected not to be function&quot;;
 assert.isTrue(&quot;2&quot; === 2); // Fails
 </code></pre>
 
-<h4 id="messages_9">Messages</h4>
+<h4 id="messages_8">Messages</h4>
 <pre><code class="js">assert.isTrue.message = &quot;Expected ${actual} to be true&quot;;
 refute.isTrue.message = &quot;Expected ${actual} to not be true&quot;;
 </code></pre>
@@ -496,7 +495,7 @@ refute.isTrue.message = &quot;Expected ${actual} to not be true&quot;;
 assert.isFalse(&quot;2&quot; == 2);  // Fails
 </code></pre>
 
-<h4 id="messages_10">Messages</h4>
+<h4 id="messages_9">Messages</h4>
 <pre><code class="js">assert.isFalse.message = &quot;Expected ${actual} to be false&quot;;
 refute.isFalse.message = &quot;Expected ${actual} to not be false&quot;;
 </code></pre>
@@ -510,7 +509,7 @@ refute.isFalse.message = &quot;Expected ${actual} to not be false&quot;;
 assert.isString(2);   // Fails
 </code></pre>
 
-<h4 id="messages_11">Messages</h4>
+<h4 id="messages_10">Messages</h4>
 <pre><code class="js">assert.isString.message = &quot;Expected ${actual} (${actualType}) to be string&quot;;
 refute.isString.message = &quot;Expected ${actual} not to be string&quot;;
 </code></pre>
@@ -525,7 +524,7 @@ assert.isBoolean(2 &lt; 2);  // Passes
 assert.isBoolean(&quot;true&quot;); // Fails
 </code></pre>
 
-<h4 id="messages_12">Messages</h4>
+<h4 id="messages_11">Messages</h4>
 <pre><code class="js">assert.isBoolean.message = &quot;Expected ${actual} (${actualType}) to be boolean&quot;;
 refute.isBoolean.message = &quot;Expected ${actual} not to be boolean&quot;;
 </code></pre>
@@ -540,7 +539,7 @@ assert.isNumber(&quot;12&quot;); // Fails
 assert.isNumber(NaN);  // Fails
 </code></pre>
 
-<h4 id="messages_13">Messages</h4>
+<h4 id="messages_12">Messages</h4>
 <pre><code class="js">assert.isNumber.message = &quot;Expected ${actual} (${actualType}) to be a non-NaN number&quot;;
 refute.isNumber.message = &quot;Expected ${actual} to be NaN or a non-number value&quot;;
 </code></pre>
@@ -556,9 +555,18 @@ assert.isNaN(12);            // Fails
 assert.isNaN({});            // Fails, would pass for standard javascript function isNaN
 </code></pre>
 
-<h4 id="messages_14">Messages</h4>
+<h4 id="messages_13">Messages</h4>
 <pre><code class="js">assert.isNaN.message = &quot;Expected ${actual} to be NaN&quot;;
 refute.isNaN.message = &quot;Expected not to be NaN&quot;;
+</code></pre>
+
+<h3 id="isnegativeinfinity"><code>isNegativeInfinity()</code></h3>
+<pre><code class="js">assert.isNegativeInfinity(actual[, message])
+</code></pre>
+
+<p>Fails if <code>actual</code> is not <code>-Infinity</code>.</p>
+<pre><code class="js">assert.isNegativeInfinity(-Infinity); // Passes
+assert.isNegativeInfinity(42);       // Fails
 </code></pre>
 
 <h3 id="isarray"><code>isArray()</code></h3>
@@ -570,7 +578,7 @@ refute.isNaN.message = &quot;Expected not to be NaN&quot;;
 assert.isArray({});        // Fails
 </code></pre>
 
-<h4 id="messages_15">Messages</h4>
+<h4 id="messages_14">Messages</h4>
 <pre><code class="js">assert.isArray.message = &quot;Expected ${actual} to be array&quot;;
 refute.isArray.message = &quot;Expected ${actual} not to be array&quot;;
 </code></pre>
@@ -584,7 +592,7 @@ refute.isArray.message = &quot;Expected ${actual} not to be array&quot;;
 assert.isArrayBuffer({});                 // Fails
 </code></pre>
 
-<h4 id="messages_16">Messages</h4>
+<h4 id="messages_15">Messages</h4>
 <pre><code class="js">assert.isArrayBuffer.message = &quot;Expected ${actual} to be an ArrayBuffer&quot;;
 refute.isArrayBuffer.message = &quot;Expected ${actual} not to be an ArrayBuffer&quot;;
 </code></pre>
@@ -605,7 +613,7 @@ assert.isArrayLike({ length: 0, splice: function() {} }); // Passes
 assert.isArrayLike({});                                   // Fails
 </code></pre>
 
-<h4 id="messages_17">Messages</h4>
+<h4 id="messages_16">Messages</h4>
 <pre><code class="js">assert.isArrayLike.message = &quot;Expected ${actual} to be array like&quot;;
 refute.isArrayLike.message = &quot;Expected ${actual} not to be array like&quot;;
 </code></pre>
@@ -619,7 +627,7 @@ refute.isArrayLike.message = &quot;Expected ${actual} not to be array like&quot;
 assert.isDataView({});                               // Fails
 </code></pre>
 
-<h4 id="messages_18">Messages</h4>
+<h4 id="messages_17">Messages</h4>
 <pre><code class="js">assert.isDataView.message = &quot;Expected ${actual} to be a DataView&quot;;
 refute.isDataView.message = &quot;Expected ${actual} not to be a DataView&quot;;
 </code></pre>
@@ -634,7 +642,7 @@ assert.isDate(12345678);    // Fails
 assert.isDate(&quot;apple pie&quot;); // Fails
 </code></pre>
 
-<h4 id="messages_19">Messages</h4>
+<h4 id="messages_18">Messages</h4>
 <pre><code class="js">assert.isDate.message = &quot;Expected ${actual} to be a Date&quot;;
 refute.isDate.message = &quot;Expected ${actual} not to be a Date&quot;;
 </code></pre>
@@ -649,7 +657,7 @@ Passes for all <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/
 assert.isError(&quot;this is not an error&quot;);       // Fails
 </code></pre>
 
-<h4 id="messages_20">Messages</h4>
+<h4 id="messages_19">Messages</h4>
 <pre><code class="js">assert.isError.message = &quot;Expected ${actual} to be an Error&quot;;
 refute.isError.message = &quot;Expected ${actual} not to be an Error&quot;;
 </code></pre>
@@ -663,7 +671,7 @@ refute.isError.message = &quot;Expected ${actual} not to be an Error&quot;;
 assert.isEvalError(new Error(&quot;this is not an eval error&quot;)); // Fails
 </code></pre>
 
-<h4 id="messages_21">Messages</h4>
+<h4 id="messages_20">Messages</h4>
 <pre><code class="js">assert.isEvalError.message = &quot;Expected ${actual} to be an EvalError&quot;;
 refute.isEvalError.message = &quot;Expected ${actual} not to be an EvalError&quot;;
 </code></pre>
@@ -677,7 +685,7 @@ refute.isEvalError.message = &quot;Expected ${actual} not to be an EvalError&quo
 assert.isFloat32Array(new Float64Array(2)); // Fails
 </code></pre>
 
-<h4 id="messages_22">Messages</h4>
+<h4 id="messages_21">Messages</h4>
 <pre><code class="js">assert.isFloat32Array.message = &quot;Expected ${actual} to be a Float32Array&quot;;
 refute.isFloat32Array.message = &quot;Expected ${actual} not to be n Float32Array&quot;;
 </code></pre>
@@ -691,7 +699,7 @@ refute.isFloat32Array.message = &quot;Expected ${actual} not to be n Float32Arra
 assert.isFloat64Array(new Float32Array(2)); // Fails
 </code></pre>
 
-<h4 id="messages_23">Messages</h4>
+<h4 id="messages_22">Messages</h4>
 <pre><code class="js">assert.isFloat64Array.message = &quot;Expected ${actual} to be a Float64Array&quot;;
 refute.isFloat64Array.message = &quot;Expected ${actual} not to be a Float64Array&quot;;
 </code></pre>
@@ -705,7 +713,7 @@ refute.isFloat64Array.message = &quot;Expected ${actual} not to be a Float64Arra
 assert.isInfinity(42);       // Fails
 </code></pre>
 
-<h4 id="messages_24">Messages</h4>
+<h4 id="messages_23">Messages</h4>
 <pre><code class="js">assert.isInfinity.message = &quot;Expected ${actual} to be Infinity&quot;;
 refute.isInfinity.message = &quot;Expected ${actual} not to be Infinity&quot;;
 </code></pre>
@@ -719,7 +727,7 @@ refute.isInfinity.message = &quot;Expected ${actual} not to be Infinity&quot;;
 assert.isInt8Array(new Int16Array(2)); // Fails
 </code></pre>
 
-<h4 id="messages_25">Messages</h4>
+<h4 id="messages_24">Messages</h4>
 <pre><code class="js">assert.isInt8Array.message = &quot;Expected ${actual} to be an Int8Array&quot;;
 refute.isInt8Array.message = &quot;Expected ${actual} not to be an Int8Array&quot;;
 </code></pre>
@@ -733,7 +741,7 @@ refute.isInt8Array.message = &quot;Expected ${actual} not to be an Int8Array&quo
 assert.isInt16Array(new Int32Array(2)); // Fails
 </code></pre>
 
-<h4 id="messages_26">Messages</h4>
+<h4 id="messages_25">Messages</h4>
 <pre><code class="js">assert.isInt16Array.message = &quot;Expected ${actual} to be an Int16Array&quot;;
 refute.isInt16Array.message = &quot;Expected ${actual} not to be an Int16Array&quot;;
 </code></pre>
@@ -747,7 +755,7 @@ refute.isInt16Array.message = &quot;Expected ${actual} not to be an Int16Array&q
 assert.isInt32Array(new Int16Array(2)); // Fails
 </code></pre>
 
-<h4 id="messages_27">Messages</h4>
+<h4 id="messages_26">Messages</h4>
 <pre><code class="js">assert.isInt32Array.message = &quot;Expected ${actual} to be an Int32Array&quot;;
 refute.isInt32Array.message = &quot;Expected ${actual} not to be an Int32Array&quot;;
 </code></pre>
@@ -761,7 +769,7 @@ refute.isInt32Array.message = &quot;Expected ${actual} not to be an Int32Array&q
 assert.isIntlCollator({});                   // Fails
 </code></pre>
 
-<h4 id="messages_28">Messages</h4>
+<h4 id="messages_27">Messages</h4>
 <pre><code class="js">assert.isIntlCollator.message = &quot;Expected ${actual} to be an Intl.Collator&quot;;
 refute.isIntlCollator.message = &quot;Expected ${actual} not to be an Intl.Collator&quot;;
 </code></pre>
@@ -775,7 +783,7 @@ refute.isIntlCollator.message = &quot;Expected ${actual} not to be an Intl.Colla
 assert.isIntlDateTimeFormat({});                        // Fails
 </code></pre>
 
-<h4 id="messages_29">Messages</h4>
+<h4 id="messages_28">Messages</h4>
 <pre><code class="js">assert.isIntlDateTimeFormat.message = &quot;Expected ${actual} to be an Intl.DateTimeFormat&quot;;
 refute.isIntlDateTimeFormat.message = &quot;Expected ${actual} not to be an Intl.DateTimeFormat&quot;;
 </code></pre>
@@ -789,7 +797,7 @@ refute.isIntlDateTimeFormat.message = &quot;Expected ${actual} not to be an Intl
 assert.isIntlNumberFormat({});                      // Fails
 </code></pre>
 
-<h4 id="messages_30">Messages</h4>
+<h4 id="messages_29">Messages</h4>
 <pre><code class="js">assert.isIntlNumberFormat.message = &quot;Expected ${actual} to be an Intl.NumberFormat&quot;;
 refute.isIntlNumberFormat.message = &quot;Expected ${actual} not to be an Intl.NumberFormat&quot;;
 </code></pre>
@@ -803,7 +811,7 @@ refute.isIntlNumberFormat.message = &quot;Expected ${actual} not to be an Intl.N
 assert.isMap({});        // Fails
 </code></pre>
 
-<h4 id="messages_31">Messages</h4>
+<h4 id="messages_30">Messages</h4>
 <pre><code class="js">assert.isMap.message = &quot;Expected ${actual} to be a Map&quot;;
 refute.isMap.message = &quot;Expected ${actual} not to be a Map&quot;;
 </code></pre>
@@ -817,7 +825,7 @@ refute.isMap.message = &quot;Expected ${actual} not to be a Map&quot;;
 assert.isPromise({});            // Fails
 </code></pre>
 
-<h4 id="messages_32">Messages</h4>
+<h4 id="messages_31">Messages</h4>
 <pre><code class="js">assert.isPromise.message = &quot;Expected ${actual} to be a Promise&quot;;
 refute.isPromise.message = &quot;Expected ${actual} not to be a Promise&quot;;
 </code></pre>
@@ -831,7 +839,7 @@ refute.isPromise.message = &quot;Expected ${actual} not to be a Promise&quot;;
 assert.isRangeError(new Error(&quot;this is not a range error&quot;));   // Fails
 </code></pre>
 
-<h4 id="messages_33">Messages</h4>
+<h4 id="messages_32">Messages</h4>
 <pre><code class="js">assert.isRangeError.message = &quot;Expected ${actual} to be an RangeError&quot;;
 refute.isRangeError.message = &quot;Expected ${actual} not to be an RangeError&quot;;
 </code></pre>
@@ -845,7 +853,7 @@ refute.isRangeError.message = &quot;Expected ${actual} not to be an RangeError&q
 assert.isReferenceError(new Error(&quot;this is not a range error&quot;));   // Fails
 </code></pre>
 
-<h4 id="messages_34">Messages</h4>
+<h4 id="messages_33">Messages</h4>
 <pre><code class="js">assert.isReferenceError.message = &quot;Expected ${actual} to be a ReferenceError&quot;;
 refute.isReferenceError.message = &quot;Expected ${actual} not to be a ReferenceError&quot;;
 </code></pre>
@@ -860,7 +868,7 @@ assert.isRegExp(/apple pie/);              // Passes
 assert.isRegExp(&quot;apple pie&quot;);              // Fails
 </code></pre>
 
-<h4 id="messages_35">Messages</h4>
+<h4 id="messages_34">Messages</h4>
 <pre><code class="js">assert.isRegExp.message = &quot;Expected ${actual} to be an RegExp&quot;;
 refute.isRegExp.message = &quot;Expected ${actual} not to be an RegExp&quot;;
 </code></pre>
@@ -874,7 +882,7 @@ refute.isRegExp.message = &quot;Expected ${actual} not to be an RegExp&quot;;
 assert.isSet([]);         // Fails
 </code></pre>
 
-<h4 id="messages_36">Messages</h4>
+<h4 id="messages_35">Messages</h4>
 <pre><code class="js">assert.isSet.message = &quot;Expected ${actual} to be a Set&quot;;
 refute.isSet.message = &quot;Expected ${actual} not to be a Set&quot;;
 </code></pre>
@@ -888,7 +896,7 @@ refute.isSet.message = &quot;Expected ${actual} not to be a Set&quot;;
 assert.isSymbol(&quot;apple pie&quot;);          // Fails
 </code></pre>
 
-<h4 id="messages_37">Messages</h4>
+<h4 id="messages_36">Messages</h4>
 <pre><code class="js">assert.isSymbol.message = &quot;Expected ${actual} to be a Symbol&quot;;
 refute.isSymbol.message = &quot;Expected ${actual} not to be a Symbol&quot;;
 </code></pre>
@@ -902,7 +910,7 @@ refute.isSymbol.message = &quot;Expected ${actual} not to be a Symbol&quot;;
 assert.isSyntaxError(new Error(&quot;this is not a syntax error&quot;));    // Fails
 </code></pre>
 
-<h4 id="messages_38">Messages</h4>
+<h4 id="messages_37">Messages</h4>
 <pre><code class="js">assert.isSyntaxError.message = &quot;Expected ${actual} to be a SyntaxError&quot;;
 refute.isSyntaxError.message = &quot;Expected ${actual} not to be a SyntaxError&quot;;
 </code></pre>
@@ -916,7 +924,7 @@ refute.isSyntaxError.message = &quot;Expected ${actual} not to be a SyntaxError&
 assert.isTypeError(new Error(&quot;this is not a type error&quot;));  // Fails
 </code></pre>
 
-<h4 id="messages_39">Messages</h4>
+<h4 id="messages_38">Messages</h4>
 <pre><code class="js">assert.isTypeError.message = &quot;Expected ${actual} to be a TypeError&quot;;
 refute.isTypeError.message = &quot;Expected ${actual} not to be a TypeError&quot;;
 </code></pre>
@@ -930,7 +938,7 @@ refute.isTypeError.message = &quot;Expected ${actual} not to be a TypeError&quot
 assert.isURIError(new Error(&quot;this is not a uri error&quot;)); // Fails
 </code></pre>
 
-<h4 id="messages_40">Messages</h4>
+<h4 id="messages_39">Messages</h4>
 <pre><code class="js">assert.isURIError.message = &quot;Expected ${actual} to be a URIError&quot;;
 refute.isURIError.message = &quot;Expected ${actual} not to be a URIError&quot;;
 </code></pre>
@@ -945,7 +953,7 @@ assert.isUint16Array(new Uint32Array());  // Fails
 assert.isUint16Array(new Uint8Array());   // Fails
 </code></pre>
 
-<h4 id="messages_41">Messages</h4>
+<h4 id="messages_40">Messages</h4>
 <pre><code class="js">assert.isUint16Array.message = &quot;Expected ${actual} to be a Uint16Array&quot;;
 refute.isUint16Array.message = &quot;Expected ${actual} not to be a Uint16Array&quot;;
 </code></pre>
@@ -960,7 +968,7 @@ assert.isUint32Array(new Uint32Array());  // Passes
 assert.isUint32Array(new Uint8Array());   // Fails
 </code></pre>
 
-<h4 id="messages_42">Messages</h4>
+<h4 id="messages_41">Messages</h4>
 <pre><code class="js">assert.isUint32Array.message = &quot;Expected ${actual} to be a Uint32Array&quot;;
 refute.isUint32Array.message = &quot;Expected ${actual} not to be a Uint32Array&quot;;
 </code></pre>
@@ -975,7 +983,7 @@ assert.isUint8Array(new Uint32Array());  // Fails
 assert.isUint8Array(new Uint8Array());   // Passes
 </code></pre>
 
-<h4 id="messages_43">Messages</h4>
+<h4 id="messages_42">Messages</h4>
 <pre><code class="js">assert.isUint8Array.message = &quot;Expected ${actual} to be a Uint8Array&quot;;
 refute.isUint8Array.message = &quot;Expected ${actual} not to be a Uint8Array&quot;;
 </code></pre>
@@ -989,7 +997,7 @@ refute.isUint8Array.message = &quot;Expected ${actual} not to be a Uint8Array&qu
 assert.isUint8ClampedArray(new Uint8Array());          // Fails
 </code></pre>
 
-<h4 id="messages_44">Messages</h4>
+<h4 id="messages_43">Messages</h4>
 <pre><code class="js">assert.isUint8ClampedArray.message = &quot;Expected ${actual} to be a Uint8ClampedArray&quot;;
 refute.isUint8ClampedArray.message = &quot;Expected ${actual} not to be a Uint8ClampedArray&quot;;
 </code></pre>
@@ -1003,7 +1011,7 @@ refute.isUint8ClampedArray.message = &quot;Expected ${actual} not to be a Uint8C
 assert.isWeakMap(new Map());       // Fails
 </code></pre>
 
-<h4 id="messages_45">Messages</h4>
+<h4 id="messages_44">Messages</h4>
 <pre><code class="js">assert.isWeakMap.message = &quot;Expected ${actual} to be a WeakMap&quot;;
 refute.isWeakMap.message = &quot;Expected ${actual} not to be a WeakMap&quot;;
 </code></pre>
@@ -1017,7 +1025,7 @@ refute.isWeakMap.message = &quot;Expected ${actual} not to be a WeakMap&quot;;
 assert.isWeakSet(new Set());       // Fails
 </code></pre>
 
-<h4 id="messages_46">Messages</h4>
+<h4 id="messages_45">Messages</h4>
 <pre><code class="js">assert.isWeakSet.message = &quot;Expected ${actual} to be a WeakSet&quot;;
 refute.isWeakSet.message = &quot;Expected ${actual} not to be a WeakSet&quot;;
 </code></pre>
@@ -1032,7 +1040,7 @@ assert.keys({ test1: 't1', test2: 't2' }, ['test1','test2','test3']); // Fails -
 assert.keys({ test1: 't1', test2: 't2' }, ['test1','test2']);         // Passes
 </code></pre>
 
-<h4 id="messages_47">Messages</h4>
+<h4 id="messages_46">Messages</h4>
 <pre><code class="js">assert.keys.message = &quot;Expected ${actualObject} to have exact keys ${keys}&quot;;
 refute.keys.message = &quot;Expected not to have exact keys ${keys}&quot;;
 </code></pre>
@@ -1078,14 +1086,6 @@ assert.exception(function () {
 }, &quot;Type of exception is wrong!&quot;);  // with message to print, if test fails
 </code></pre>
 
-<h4 id="messages_48">Messages</h4>
-<pre><code class="js">assert.exception.typeNoExceptionMessage = &quot;Expected ${expected} but no exception was thrown&quot;;
-assert.exception.message = &quot;Expected exception&quot;;
-assert.exception.typeFailMessage = &quot;Expected ${expected} but threw ${actualExceptionType} (${actualExceptionMessage})\n${actualExceptionStack}&quot;;
-assert.exception.matchFailMessage = &quot;Expected thrown ${actualExceptionType} (${actualExceptionMessage}) to pass matcher function&quot;;
-refute.exception.message = &quot;Expected not to throw but threw ${actualExceptionType} (${actualExceptionMessage})&quot;;
-</code></pre>
-
 <h3 id="near"><code>near()</code></h3>
 <pre><code class="js">assert.near(actual, expected, delta[, message])
 </code></pre>
@@ -1096,7 +1096,7 @@ assert.near(10.5, 10, 0.5); // Passes
 assert.near(10.6, 10, 0.5); // Fails
 </code></pre>
 
-<h4 id="messages_49">Messages</h4>
+<h4 id="messages_47">Messages</h4>
 <pre><code class="js">assert.near.message = &quot;Expected ${actual} to be equal to ${expected} +/- ${delta}&quot;;
 refute.near.message = &quot;Expected ${actual} not to be equal to ${expected} +/- ${delta}&quot;;
 </code></pre>
@@ -1111,7 +1111,7 @@ assert.hasArity(function(one, two) {return one + two}, 2); // Passes
 assert.hasArity(function(one, two) {return one + two}, 1); // Fails
 </code></pre>
 
-<h4 id="messages_50">Messages</h4>
+<h4 id="messages_48">Messages</h4>
 <pre><code class="js">assert.hasArity.message = &quot;Expected ${name} to have arity of ${1} but was ${arity}&quot;;
 refute.hasArity.message = &quot;Expected ${name} to not have arity of ${1}&quot;;
 </code></pre>
@@ -1126,7 +1126,7 @@ assert.hasPrototype(function() {}, Object.prototype);   // Passes
 assert.hasPrototype({}, Function.prototype);            // Fails
 </code></pre>
 
-<h4 id="messages_51">Messages</h4>
+<h4 id="messages_49">Messages</h4>
 <pre><code class="js">assert.hasPrototype.message = &quot;Expected ${actual} to have ${expected} on its prototype chain&quot;;
 refute.hasPrototype.message = &quot;Expected ${actual} not to have ${expected} on its prototype chain&quot;;
 </code></pre>
@@ -1141,7 +1141,7 @@ assert.contains([1, 2, 3], 4);   // Fails
 assert.contains([1, 2, 3], &quot;2&quot;); // Fails
 </code></pre>
 
-<h4 id="messages_52">Messages</h4>
+<h4 id="messages_50">Messages</h4>
 <pre><code class="js">assert.contains.message = &quot;Expected [${actual}] to contain ${expected}&quot;;
 refute.contains.message = &quot;Expected [${actual}] not to contain ${expected}&quot;;
 </code></pre>
@@ -1154,13 +1154,6 @@ refute.contains.message = &quot;Expected [${actual}] not to contain ${expected}&
 <pre><code class="js">assert.tagName(document.createElement(&quot;p&quot;), &quot;p&quot;); // Passes
 assert.tagName(document.createElement(&quot;h2&quot;), &quot;H2&quot;); // Passes
 assert.tagName(document.createElement(&quot;p&quot;), &quot;li&quot;);  // Fails
-</code></pre>
-
-<h4 id="messages_53">Messages</h4>
-<pre><code class="js">assert.tagName.noTagNameMessage = &quot;Expected ${actualElement} to have tagName property&quot;;
-assert.tagName.message = &quot;Expected tagName to be ${expected} but was ${actual}&quot;;
-refute.tagName.noTagNameMessage = &quot;Expected ${actualElement} to have tagName property&quot;;
-refute.tagName.refuteMessage = &quot;Expected tagName not to be ${actual}&quot;;
 </code></pre>
 
 <h3 id="classname"><code>className()</code></h3>
@@ -1179,11 +1172,58 @@ assert.className(el, &quot;feed items&quot;);     // Fails, &quot;items&quot; is
 assert.className(el, [&quot;item&quot;, &quot;feed&quot;]); // Passes
 </code></pre>
 
-<h4 id="messages_54">Messages</h4>
-<pre><code class="js">assert.className.noClassNameMessage = &quot;Expected object to have className property&quot;;
-assert.className.message = &quot;Expected object's className to include ${expected} but was ${actual}&quot;;
-refute.className.noClassNameMessage = &quot;Expected object to have className property&quot;;
-refute.className.message = &quot;Expected object's className not to include ${expected}&quot;;
+<h3 id="resolves"><code>resolves()</code></h3>
+<pre><code class="js">assert.resolves(promise, value)
+</code></pre>
+
+<p><strong>NOTE:</strong> This assertion returns a
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>!</p>
+<p>The assertion <strong>resolves</strong>, if the value resolved from <code>promise</code> is
+<a href="http://sinonjs.github.io/samsam/#identicalx-y"><code>identical</code></a> to the given <code>value</code>.</p>
+<p>Furthermore, the assertion <strong>rejects</strong> if,</p>
+<ul>
+<li>the resolved value from the input <code>promise</code> is not <code>identical</code> to the given <code>value</code></li>
+<li>the given <code>promise</code> rejects instead of resolving</li>
+<li>the given input is not a Promise</li>
+</ul>
+<p><strong>NOTE:</strong> In order to tell the test runner to wait until the assertion has completed, you
+either need to return the Promise from the assertion:</p>
+<pre><code class="js">test(&quot;some asynchronous code&quot;, function() {
+    return assert.resolves(myAsyncFunc(), {...});
+});
+</code></pre>
+
+<p>or use <code>async</code>/<code>await</code>:</p>
+<pre><code class="js">test(&quot;some asynchronous code&quot;, async function() {
+    await assert.resolves(myAsyncFunc(), {...});
+});
+</code></pre>
+
+<h3 id="rejects"><code>rejects()</code></h3>
+<pre><code class="js">assert.rejects(promise, value)
+</code></pre>
+
+<p><strong>NOTE:</strong> This assertion returns a
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>!</p>
+<p>The assertion <strong>resolves</strong>, if the value rejected from <code>promise</code> is
+<a href="http://sinonjs.github.io/samsam/#identicalx-y"><code>identical</code></a> to the given <code>value</code>.</p>
+<p>Furthermore, the assertion <strong>rejects</strong> if,</p>
+<ul>
+<li>the rejected value from the input <code>promise</code> is not <code>identical</code> to the given <code>value</code></li>
+<li>the given <code>promise</code> resolves instead of rejecting</li>
+<li>the given input is not a Promise</li>
+</ul>
+<p><strong>NOTE:</strong> In order to tell the test runner to wait until the assertion has completed, you
+either need to return the Promise from the assertion:</p>
+<pre><code class="js">test(&quot;some asynchronous code&quot;, function() {
+    return assert.rejects(myAsyncFunc(), {...});
+});
+</code></pre>
+
+<p>or use <code>async</code>/<code>await</code>:</p>
+<pre><code class="js">test(&quot;some asynchronous code&quot;, async function() {
+    await assert.rejects(myAsyncFunc(), {...});
+});
 </code></pre>
 
 <h3 id="json"><code>json()</code></h3>
@@ -1197,13 +1237,6 @@ assert.json(serialized, { is: 42 }); // Passes
 assert.json(serialized, { or: 42 }); // Fails
 assert.json(serialized, { is: 7 });  // Fails
 assert.json(&quot;no-json&quot;, {});          // Fails
-</code></pre>
-
-<h4 id="messages_55">Messages</h4>
-<pre><code class="js">assert.json.message = &quot;Expected ${actual} to equal ${expected}&quot;;
-assert.json.jsonParseExceptionMessage = &quot;Expected ${actual} to be valid JSON&quot;;
-refute.json.message = &quot;Expected ${actual} not to equal ${expected}&quot;;
-refute.json.jsonParseExceptionMessage = &quot;Expected ${actual} to be valid JSON&quot;;
 </code></pre>
 
 <h3 id="matchjson"><code>matchJson()</code></h3>
@@ -1220,16 +1253,59 @@ assert.matchJson(serialized, { is: 7 });  // Fails
 assert.matchJson(&quot;no-json&quot;, {});          // Fails
 </code></pre>
 
-<h4 id="messages_56">Messages</h4>
-<pre><code class="js">assert.json.message = &quot;Expected ${actual} to match ${expected}&quot;;
-assert.json.jsonParseExceptionMessage = &quot;Expected ${actual} to be valid JSON&quot;;
-refute.json.message = &quot;Expected ${actual} not to match ${expected}&quot;;
-refute.json.jsonParseExceptionMessage = &quot;Expected ${actual} to be valid JSON&quot;;
+<h2 id="custom-assertions">Custom assertions</h2>
+<p>Custom, domain-specific assertions help improve clarity and reveal intent in tests. They also facilitate much better feedback when they fail. You can add custom assertions that behave exactly like the built-in ones (i.e. with counting, message formatting, expectations and
+more) by using the <a href="#refereeadd"><code>referee.add</code></a> method.</p>
+<h3 id="load-custom-assertions">Load custom assertions</h3>
+<p>Custom assertions can be loaded as modules using e.g. <a href="https://mochajs.org/">mocha</a> to be used in tests.</p>
+<h4 id="custom-assertion">Custom assertion</h4>
+<p><code>./test/assertions/is-prime.js</code></p>
+<pre><code class="js">const referee = require(&quot;referee&quot;);
+
+// adapted from https://stackoverflow.com/a/40200710
+function isPrime(number){
+    for (var i = 2; i &lt; number; i++){
+        if (number % i === 0){
+            return false;
+        }
+    }
+    return number !== 1 &amp;&amp; number !== 0;
+}
+
+referee.add(&quot;isPrime&quot;, {
+    assert: function assert(actual) {
+        if (typeof actual !== &quot;number&quot; || actual &lt; 0) {
+            throw new TypeError(&quot;'actual' argument should be a non-negative Number&quot;);
+        }
+
+        this.actual = actual;
+
+        return isPrime(actual);
+    },
+    assertMessage: &quot;Expected ${actual} to be a prime number&quot;,
+    refuteMessage: &quot;Expected ${actual} to not be a prime number&quot;,
+    expectation: &quot;toHaveArity&quot;
+
+});
 </code></pre>
 
-<h2 id="custom-assertions">Custom assertions</h2>
-<p>Custom, domain-specific assertions helps improve clarity and reveal intent in tests. They also facilitate much better feedback when they fail. You can add custom assertions that behave exactly like the built-in ones (i.e. with counting, message formatting, expectations and
-more) by using the <a href="#refereeadd"><code>referee.add</code></a> method.</p>
+<h4 id="test">Test</h4>
+<p><code>./test/some.test.js</code></p>
+<pre><code class="js">const { assert, refute  } = require(&quot;referee&quot;);
+
+describe(&quot;some&quot;, function() {
+    it(&quot;should have isPrime installed&quot;, function() {
+        assert.isPrime(5);
+        refute.isPrime(6);
+    });
+});
+</code></pre>
+
+<h4 id="execute">Execute</h4>
+<pre><code class="sh">mocha -r ./test/assetions/*
+</code></pre>
+
+<p><a href="https://github.com/sinonjs/referee-custom-assert-with-mocha">This repository</a> hosts the full runnable example from above.</p>
 <h2 id="overriding-assertion-messages">Overriding assertion messages</h2>
 <p>The default assertion messages can be overridden. The messages to
 overwrite are listed with each assertion. You can use the same keys for
@@ -1452,15 +1528,6 @@ expect(42).not.toEqual(43); // Passes
 
 <p>Where the global <code>fail</code> function is the one provided by JsTestDriver.</p>
 <p>It is possible to make the default <code>assert.fail</code> method only emit an event and not throw an error. This may be suitable in asynchronous test runners, where you might not be able to catch exceptions. To silence exceptions, see the <code>throwOnFailure</code> property.</p>
-<h3 id="refereeformat"><code>referee.format()</code></h3>
-<pre><code class="js">referee.format(object)
-</code></pre>
-
-<p>Values inserted into assertion messages using the <code>${n}</code> switches are formatted using <code>referee.format()</code>. By default this method simply coerces the object to a string.</p>
-<p>A more expressive option is to use <code>buster-format</code>, which is a generic function for formatting objects nicely as ASCII. For nice ASCII formatting of objects (including DOM elements) do:</p>
-<pre><code class="js">referee.format = buster.format.ascii;
-</code></pre>
-
 <h3 id="refereeadd"><code>referee.add()</code></h3>
 <pre><code class="js">referee.add(name, options)
 </code></pre>
@@ -1468,7 +1535,7 @@ expect(42).not.toEqual(43); // Passes
 <p>Add a custom assertion. Using this ‘macro’ to add project specific assertions has a few advantages:</p>
 <ul>
 <li>Assertions will be counted</li>
-<li>Failure messages will have interpolated arguments formatted by <code>referee.format()</code></li>
+<li>Failure messages will have interpolated arguments formatted</li>
 <li>A single function generates both an assertion and a refutation</li>
 <li>If using expectations, an expectation can easily be generated as well</li>
 <li>When <code>failOnNoAssertions</code> is set to <code>true</code>, the assertion will behave correctly (may be important for asynchronous tests)</li>
@@ -1562,10 +1629,40 @@ All arguments are available for interpolation into the resulting error message. 
     </dd>
 </dl>
 
+<h3 id="refereeverifier"><code>referee.verifier()</code></h3>
+<p>Creates a verifier function with the signature <code>verify([expected])</code>.</p>
+<p>It exposes <code>verify.count</code> which is incremented every time <code>referee</code> emits a <code>"pass"</code> or a <code>"failure"</code> event. When called, the function verifies that assertions have been made, throwing an exception if <code>verify.count</code> is zero. When <code>expected</code> is passed, then this is compared with <code>verify.count</code>.</p>
+<p><code>verify()</code> always unsubscribes the event listeners, so that <code>verify.count</code> does not change. This means you have to create a new verifier for each test run.</p>
+<pre><code class="js">it(&quot;should do something&quot;, function(){
+    var verify = referee.verifier();
+
+    var limit = 10;
+    for (var i = 0; i &lt; 10; i++){
+        console.log(i);
+    }
+
+    // this test will fail as no assertions have been made
+    verify();
+});
+
+
+it(&quot;should do something&quot;, function(){
+    var verify = referee.verifier();
+
+    var limit = 10;
+    for (var i = 0; i &lt; 10; i++){
+        assert.isTrue(true);
+    }
+
+    // this will pass because exactly 10 (`limit`) assertions have been made
+    verify(limit);
+
+    console.log(verify.count);
+    // 10
+});
+</code></pre>
+
 <h2 id="properties">Properties</h2>
-<h3 id="refereecount"><code>referee.count</code></h3>
-<p><code>Number</code> increasing from 0.</p>
-<p><code>referee.count</code> is incremented anytime an assertion is called. The assertion counter can be reset to any number at your convenience.</p>
 <h3 id="refereethrowonfailure"><code>referee.throwOnFailure</code></h3>
 <p><code>Boolean</code>.</p>
 <p>When using the default <code>referee.fail()</code> implementation, this property can be set to <code>false</code> to make assertion failures not throw exceptions (i.e. only emit events). This may be suitable in asynchronous test runners, where you might not be able to catch exceptions.</p>
@@ -1612,6 +1709,6 @@ All arguments are available for interpolation into the resulting error message. 
 </html>
 
 <!--
-MkDocs version : 1.0.4
-Build Date UTC : 2018-10-28 12:49:36
+MkDocs version : 1.0.2
+Build Date UTC : 2018-12-10 08:20:20
 -->
