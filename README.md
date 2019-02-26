@@ -5,10 +5,11 @@
 
 **referee** is in your unit tests, deciding who passes and who fails.
 
-It is a test-framework agnostic assertion and expectation library.
+It is a test-framework agnostic assertion and expectation library, designed to work with your choice of test runner.
 Some highlights:
 
 - Rich library of assertions
+- Supports custom assertions
 - Symmetric assert/refute (refute is **referee**'s "assert.not\*")
 - Evented: Emits success and failure events
 - Failing assertions throw exceptions by default, but can be configured to not
