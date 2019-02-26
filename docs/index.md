@@ -1647,7 +1647,7 @@ describe("some", function() {
 mocha -r ./test/assetions/*
 ```
 
-[This repository](https://github.com/sinonjs/referee-custom-assert-with-mocha) hosts the full runnable example from above.
+[This repository](https://github.com/sinonjs/referee-custom-assertions) hosts the full runnable example from above, as well as demos using other popular test runners.
 
 ## Overriding assertion messages
 
