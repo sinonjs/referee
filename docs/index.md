@@ -77,7 +77,6 @@ prepended to the failure message.
 
 #### Any
 
-* [`defined()`](#defined)
 * [`equals()`](#equals)
 * [`match()`](#match)
 * [`same()`](#same)
@@ -119,6 +118,7 @@ prepended to the failure message.
 
 These assertions are for checking for built-in types and values.
 
+* [`isUndefined()`](#isundefined)
 * [`isNull()`](#isnull)
 * [`isArray()`](#isarray)
 * [`isArrayBuffer()`](#isarraybuffer)
@@ -256,25 +256,26 @@ refute.less.message = "Expected ${actual} to be greater than or equal to ${expec
 ```
 
 
-### `defined()`
+### `isUndefined()`
 
 ```js
-assert.defined(object[, message])
+assert.isUndefined(object[, message])
 ```
 
-Fails if `object` is undefined.
+Fails if `object` is not `null`.
 
 ```js
-var a;
-assert.defined({});  // Passes
-assert.defined(a); // Fails
+assert.isUndefined(undefined); // Passes
+assert.isUndefined({});        // Fails
+refute.isUndefined({});        // Passes
+refute.isUndefined(undefined); // Fails
 ```
 
 #### Messages
 
 ```js
-assert.defined.message = "Expected to be defined";
-refute.defined.message = "Expected ${actual} (${actualType}) not to be defined";
+assert.isUndefined.message = "Expected ${actual} to be undefined";
+refute.isUndefined.message = "Expected not to be undefined";
 ```
 
 
