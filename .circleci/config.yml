@@ -1,0 +1,59 @@
+version: 2.1
+jobs:
+  build-common: &common-build
+    docker:
+      - image: node
+    environment:
+      NPM_VERSION: "5.7.0"
+    working_directory: ~/source
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-npm-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install dependencies
+            # Ensure `ci` command is present
+            # Once we drop node 6, we no longer need to force install npm@6
+          command: |
+            if [ ! -d node_modules ]; then
+                sudo npm install -g npm@$NPM_VERSION
+                npm ci
+            fi
+      - save_cache:
+          key: v1-npm-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: Lint
+          # ESLint only supports Node >=4
+          command: |
+            if node --version | grep -q '^v10'; then
+                npm run lint
+            fi
+      - run:
+          name: Test
+          command: npm run test-check-coverage
+
+  node-6:
+    <<: *common-build
+    docker:
+      - image: circleci/node:6
+
+  node-8:
+    <<: *common-build
+    docker:
+      - image: circleci/node:8
+
+  node-10:
+    <<: *common-build
+    docker:
+      - image: circleci/node:10
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - node-6
+      - node-8
+      - node-10
