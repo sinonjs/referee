@@ -139,7 +139,6 @@ These assertions are for checking for built-in types and values.
 * [`isMap()`](#ismap)
 * [`isNaN()`](#isnan)
 * [`isNegativeInfinity()`](#isnegativeinfinity)
-* [`isNull()`](#isnull)
 * [`isNumber()`](#isnumber)
 * [`isObject()`](#isobject)
 * [`isPromise()`](#ispromise)
@@ -288,10 +287,10 @@ assert.isNull(object[, message])
 Fails if `object` is not `null`.
 
 ```js
-assert.isNull(null, "This will pass");
-assert.isNull({}, "This will fail");
 assert.isNull(null); // Passes
 assert.isNull({});   // Fails
+refute.isNull({});   // Passes
+refute.isNull(null); // Fails
 ```
 
 #### Messages
