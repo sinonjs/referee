@@ -34,6 +34,12 @@ jobs:
       - run:
           name: Test
           command: npm run test-check-coverage
+      - run:
+          name: Upload coverage report
+          command: |
+            if node --version | grep -q '^v10'; then
+                bash <(curl -s https://codecov.io/bash) -F unit -s coverage/lcov.info
+            fi
 
   node-6:
     <<: *common-build

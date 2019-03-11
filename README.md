@@ -1,7 +1,7 @@
 # referee
 
 [![Build Status](https://travis-ci.org/sinonjs/referee.svg?branch=master)](https://travis-ci.org/sinonjs/referee)
-[![Coverage Status](https://coveralls.io/repos/github/sinonjs/referee/badge.svg?branch=master)](https://coveralls.io/github/sinonjs/referee?branch=master)
+[![codecov](https://codecov.io/gh/sinonjs/referee/branch/master/graph/badge.svg)](https://codecov.io/gh/sinonjs/referee)
 
 **referee** is in your unit tests, deciding who passes and who fails.
 
