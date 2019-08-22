@@ -1,9 +1,24 @@
 version: 2.1
+
+references:
+  x-workdir: &work-dir
+    working_directory: ~/source
+
+  x-save-workspace: &persist-step
+    persist_to_workspace:
+      root: ~/source
+      paths:
+        - .
+
+  x-attach: &attach-step
+    attach_workspace:
+      at: .
+
 jobs:
-  build-common: &common-build
+  install-dependencies:
+    <<: *work-dir
     docker:
       - image: node
-    working_directory: ~/source
     steps:
       - checkout
       - restore_cache:
@@ -19,44 +34,62 @@ jobs:
           key: v1-npm-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
+      - *persist-step
+
+  lint:
+    <<: *work-dir
+    docker:
+      - image: node
+    steps:
+      - *attach-step
       - run:
-          name: Lint
-          # ESLint only supports Node >=4
-          command: |
-            if node --version | grep -q '^v12'; then
-                npm run lint
-            fi
+          name: lint
+          command: npm run lint
+
+  node-8:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - *attach-step
       - run:
           name: Test
+          command: npm test
+
+  node-10:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - *attach-step
+      - run:
+          name: Test
+          command: npm test
+
+  node-12:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - *attach-step
+      - run:
+          name: Test with coverage
           command: npm run test-check-coverage
       - run:
           name: Upload coverage report
-          command: |
-            if node --version | grep -q '^v12'; then
-                bash <(curl -s https://codecov.io/bash) -F unit -s coverage/lcov.info
-            fi
-
-  node-8:
-    <<: *common-build
-    docker:
-      - image: circleci/node:8
-
-  node-10:
-    <<: *common-build
-    docker:
-      - image: circleci/node:10
-
-  node-12:
-    <<: *common-build
-    docker:
-      - image: circleci/node:12
-
-
+          command: bash <(curl -s https://codecov.io/bash) -F unit -s coverage/lcov.info
 
 workflows:
   version: 2
-  build:
+  referee:
     jobs:
-      - node-8
-      - node-10
-      - node-12
+      - install-dependencies
+      - lint:
+          requires:
+            - install-dependencies
+      - node-8:
+          requires:
+            - install-dependencies
+      - node-10:
+          requires:
+            - install-dependencies
+      - node-12:
+          requires:
+            - install-dependencies
