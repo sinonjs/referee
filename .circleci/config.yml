@@ -19,8 +19,6 @@ jobs:
     <<: *work-dir
     docker:
       - image: node
-    environment:
-      HUSKY_SKIP_INSTALL: 1
     steps:
       - checkout
       - restore_cache:
