@@ -53,7 +53,7 @@
   ],
   "devDependencies": {
     "eslint": "^5.14.0",
-    "eslint-config-prettier": "^3.1.0",
+    "eslint-config-prettier": "^6.3.0",
     "eslint-config-sinon": "^2.0.0",
     "eslint-plugin-ie11": "^1.0.0",
     "eslint-plugin-mocha": "^5.2.0",
