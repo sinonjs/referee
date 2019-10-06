@@ -37,25 +37,25 @@ rules:
   max-len: [error, {code: 120, ignoreStrings: true}]
 
 overrides:
-    files: ['*.test.*', 'lib/test-helper/*.js']
-    plugins:
-        - mocha
-    env:
-        mocha: true
-    rules:
-        max-nested-callbacks: [error, 6]
-        no-empty-function: off
-        strict: [error, 'global']
+    - files: ['*.test.*', 'lib/test-helper/*.js']
+      plugins:
+          - mocha
+      env:
+          mocha: true
+      rules:
+          max-nested-callbacks: [error, 6]
+          no-empty-function: off
+          strict: [error, 'global']
 
-        mocha/handle-done-callback: error
-        mocha/no-exclusive-tests: error
-        mocha/no-global-tests: error
-        mocha/no-hooks-for-single-case: off
-        mocha/no-identical-title: error
-        mocha/no-mocha-arrows: error
-        mocha/no-nested-tests: error
-        mocha/no-return-and-callback: error
-        mocha/no-sibling-hooks: error
-        mocha/no-skipped-tests: error
-        mocha/no-top-level-hooks: error
+          mocha/handle-done-callback: error
+          mocha/no-exclusive-tests: error
+          mocha/no-global-tests: error
+          mocha/no-hooks-for-single-case: off
+          mocha/no-identical-title: error
+          mocha/no-mocha-arrows: error
+          mocha/no-nested-tests: error
+          mocha/no-return-and-callback: error
+          mocha/no-sibling-hooks: error
+          mocha/no-skipped-tests: error
+          mocha/no-top-level-hooks: error
 
