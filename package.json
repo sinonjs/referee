@@ -19,7 +19,10 @@
     "test": "TZ=UTC mocha --reporter dot 'lib/**/*.test.js'",
     "test-check-coverage": "npm run test-coverage && nyc check-coverage --branches 100 --functions 100 --lines 100",
     "test-coverage": "nyc --all --reporter text --reporter html --reporter lcovonly npm run test",
-    "demo": "mocha demo/*.test.js"
+    "demo": "mocha demo/*.test.js",
+    "preversion": "npm test-check-coverage",
+    "version": "changes --commits --footer",
+    "postversion": "git push --follow-tags && npm publish"
   },
   "lint-staged": {
     "*.js": "eslint"
@@ -52,6 +55,7 @@
     "!lib/**/*.test.js"
   ],
   "devDependencies": {
+    "@studio/changes": "^1.7.0",
     "eslint": "^6.5.1",
     "eslint-config-prettier": "^6.4.0",
     "eslint-config-sinon": "^3.0.1",
