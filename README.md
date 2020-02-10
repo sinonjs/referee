@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/sinonjs/referee.svg?branch=master)](https://travis-ci.org/sinonjs/referee)
 [![codecov](https://codecov.io/gh/sinonjs/referee/branch/master/graph/badge.svg)](https://codecov.io/gh/sinonjs/referee)
+[!<a href="CODE_OF_CONDUCT.md"><img src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg" alt="Contributor Covenant" /></a>
 
 **referee** is in your unit tests, deciding who passes and who fails.
 
