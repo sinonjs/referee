@@ -29,8 +29,8 @@
   },
   "dependencies": {
     "@sinonjs/commons": "^1.4.0",
-    "@sinonjs/formatio": "^4.0.1",
-    "@sinonjs/samsam": "^4.2.0",
+    "@sinonjs/formatio": "^5.0.1",
+    "@sinonjs/samsam": "^5.0.2",
     "array-from": "2.1.1",
     "bane": "^1.x",
     "lodash.includes": "^4.3.0",
@@ -71,6 +71,6 @@
     "prettier": "^1.18.2",
     "rollup": "^1.23.0",
     "rollup-plugin-commonjs": "^10.1.0",
-    "sinon": "^8.0.2"
+    "sinon": "^9.0.0"
   }
 }
