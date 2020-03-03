@@ -1,5 +1,16 @@
 # Changes
 
+## 5.0.1
+
+- [`a02521c`](https://github.com/sinonjs/referee/commit/a02521c1d35627ec454f2ac3848fdae3882cea95)
+  Fix assert.equals referencing deprecated assert.defined (Ola Christian Gundelsby)
+- [`c8c9ba0`](https://github.com/sinonjs/referee/commit/c8c9ba0787e81f04e828b9097e2f275c331c0c06)
+  Bump @sinonjs/samsam from 5.0.2 to 5.0.3 (dependabot-preview[bot])
+- [`b44daaa`](https://github.com/sinonjs/referee/commit/b44daaa645837d57197601391e8ff2e03ee305a6)
+  Bump @sinonjs/commons from 1.7.0 to 1.7.1 (dependabot-preview[bot])
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2020-03-03._
+
 ## 5.0.0
 
 - [`af554b1`](https://github.com/sinonjs/referee/commit/af554b176f80be380f983b41024c6d9a0832c0ff)
