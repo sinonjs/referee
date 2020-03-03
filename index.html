@@ -171,7 +171,6 @@ prepended to the failure message.</p>
 <h3 id="overview">Overview</h3>
 <h4 id="any">Any</h4>
 <ul>
-<li><a href="#defined"><code>defined()</code></a></li>
 <li><a href="#equals"><code>equals()</code></a></li>
 <li><a href="#match"><code>match()</code></a></li>
 <li><a href="#same"><code>same()</code></a></li>
@@ -213,6 +212,7 @@ prepended to the failure message.</p>
 <h4 id="types-and-values">Types and values</h4>
 <p>These assertions are for checking for built-in types and values.</p>
 <ul>
+<li><a href="#isundefined"><code>isUndefined()</code></a></li>
 <li><a href="#isnull"><code>isNull()</code></a></li>
 <li><a href="#isarray"><code>isArray()</code></a></li>
 <li><a href="#isarraybuffer"><code>isArrayBuffer()</code></a></li>
@@ -233,7 +233,6 @@ prepended to the failure message.</p>
 <li><a href="#ismap"><code>isMap()</code></a></li>
 <li><a href="#isnan"><code>isNaN()</code></a></li>
 <li><a href="#isnegativeinfinity"><code>isNegativeInfinity()</code></a></li>
-<li><a href="#isnull"><code>isNull()</code></a></li>
 <li><a href="#isnumber"><code>isNumber()</code></a></li>
 <li><a href="#isobject"><code>isObject()</code></a></li>
 <li><a href="#ispromise"><code>isPromise()</code></a></li>
@@ -319,19 +318,20 @@ assert.less(2, 1); // Fails
 refute.less.message = &quot;Expected ${actual} to be greater than or equal to ${expected}&quot;;
 </code></pre>
 
-<h3 id="defined"><code>defined()</code></h3>
-<pre><code class="js">assert.defined(object[, message])
+<h3 id="isundefined"><code>isUndefined()</code></h3>
+<pre><code class="js">assert.isUndefined(object[, message])
 </code></pre>
 
-<p>Fails if <code>object</code> is undefined.</p>
-<pre><code class="js">var a;
-assert.defined({});  // Passes
-assert.defined(a); // Fails
+<p>Fails if <code>object</code> is not <code>null</code>.</p>
+<pre><code class="js">assert.isUndefined(undefined); // Passes
+assert.isUndefined({});        // Fails
+refute.isUndefined({});        // Passes
+refute.isUndefined(undefined); // Fails
 </code></pre>
 
 <h4 id="messages_4">Messages</h4>
-<pre><code class="js">assert.defined.message = &quot;Expected to be defined&quot;;
-refute.defined.message = &quot;Expected ${actual} (${actualType}) not to be defined&quot;;
+<pre><code class="js">assert.isUndefined.message = &quot;Expected ${actual} to be undefined&quot;;
+refute.isUndefined.message = &quot;Expected not to be undefined&quot;;
 </code></pre>
 
 <h3 id="isnull"><code>isNull()</code></h3>
@@ -339,10 +339,10 @@ refute.defined.message = &quot;Expected ${actual} (${actualType}) not to be defi
 </code></pre>
 
 <p>Fails if <code>object</code> is not <code>null</code>.</p>
-<pre><code class="js">assert.isNull(null, &quot;This will pass&quot;);
-assert.isNull({}, &quot;This will fail&quot;);
-assert.isNull(null); // Passes
+<pre><code class="js">assert.isNull(null); // Passes
 assert.isNull({});   // Fails
+refute.isNull({});   // Passes
+refute.isNull(null); // Fails
 </code></pre>
 
 <h4 id="messages_5">Messages</h4>
@@ -1710,5 +1710,5 @@ it(&quot;should do something&quot;, function(){
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2019-03-07 08:36:40
+Build Date UTC : 2020-03-03 08:29:51
 -->
