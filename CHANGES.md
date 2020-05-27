@@ -1,5 +1,15 @@
 # Changes
 
+## 5.1.0
+
+- [`f7cb8a9`](https://github.com/sinonjs/referee/commit/f7cb8a9953c5b613684facd433c7c34d41038098)
+  Expose .equals (Morgan Roderick)
+    >
+    > This will make it easier for authors to write custom assertions
+    >
+
+_Released on 2020-05-27._
+
 ## 5.0.1
 
 - [`a02521c`](https://github.com/sinonjs/referee/commit/a02521c1d35627ec454f2ac3848fdae3882cea95)
