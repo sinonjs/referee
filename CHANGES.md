@@ -1,5 +1,18 @@
 # Changes
 
+## 6.0.0
+
+- [`b83a12e`](https://github.com/sinonjs/referee/commit/b83a12ed3a32b6f51ca1d4c0500dee76de7b5d46)
+  npm audit (Maximilian Antoni)
+- [`9c29ff1`](https://github.com/sinonjs/referee/commit/9c29ff1a783802a9d13f586039db5db5c6d375ff)
+  test: exclude functions with underscore from public API assertions (Dominykas Blyžė)
+- [`3010499`](https://github.com/sinonjs/referee/commit/30104997b85e11cc99c7a9e852e91953701ce67a)
+  chore: remove dependency on bane (Dominykas Blyžė)
+- [`af98b83`](https://github.com/sinonjs/referee/commit/af98b835616a8257c77144e986fdf16d0209843b)
+  Fix using a regexp matcher to assert exceptions (Maximilian Antoni)
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2020-06-16._
+
 ## 5.1.0
 
 - [`f7cb8a9`](https://github.com/sinonjs/referee/commit/f7cb8a9953c5b613684facd433c7c34d41038098)
