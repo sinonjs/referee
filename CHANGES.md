@@ -1,5 +1,12 @@
 # Changes
 
+## 6.0.1
+
+- [`ed9ca59`](https://github.com/sinonjs/referee/commit/ed9ca5912fa69f1852e5f2ebd761d5c27f494263)
+  Properly stringify objects without prototype (Rens Groothuijsen)
+
+_Released on 2020-06-29._
+
 ## 6.0.0
 
 - [`b83a12e`](https://github.com/sinonjs/referee/commit/b83a12ed3a32b6f51ca1d4c0500dee76de7b5d46)
