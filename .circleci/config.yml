@@ -46,18 +46,18 @@ jobs:
           name: lint
           command: npm run lint
 
-  node-10:
+  node-12:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:12
     steps:
       - *attach-step
       - run:
           name: Test
           command: npm test
 
-  node-12:
+  node-14:
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:14
     steps:
       - *attach-step
       - run:
@@ -67,15 +67,6 @@ jobs:
           name: Upload coverage report
           command: bash <(curl -s https://codecov.io/bash) -F unit -s coverage/lcov.info
 
-  node-13:
-    docker:
-      - image: circleci/node:13
-    steps:
-      - *attach-step
-      - run:
-          name: Test
-          command: npm test
-
 workflows:
   version: 2
   referee:
@@ -84,12 +75,9 @@ workflows:
       - lint:
           requires:
             - install-dependencies
-      - node-10:
-          requires:
-            - install-dependencies
       - node-12:
           requires:
             - install-dependencies
-      - node-13:
+      - node-14:
           requires:
             - install-dependencies
