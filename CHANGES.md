@@ -1,63 +1,71 @@
 # Changes
 
+## 6.1.0
+
+- [`9ea1198`](https://github.com/sinonjs/referee/commit/9ea1198cdf0a796a1c346d40be44e259af967725)
+  Allow to skip formatting values in placeholders (Maximilian Antoni)
+- [`5bb9567`](https://github.com/sinonjs/referee/commit/5bb95675a854fbc30a69fee145ecfd9d3ef8a0f8)
+  Drop manual newline escapes in favor of inspect in equals (Maximilian Antoni)
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2020-10-03._
+
 ## 6.0.2
 
 - [#183](https://github.com/sinonjs/referee/pull/183)
   Replace `@sinonjs/formatio` with `util.inspect` from NodeJS
-- [`cc7ef75`](https://github.com/sinonjs/referee/commit/cc7ef757a79bf4892d70f317ed7a71549726b5c0)
+- [`86fe254`](https://github.com/sinonjs/referee/commit/86fe254c2dd7538621d1c73e4952d381f035c1c1)
   Add missing test case for actualForMatch (Maximilian Antoni)
-- [`090ac9f`](https://github.com/sinonjs/referee/commit/090ac9fe9db725d65645e0fa2663b021162cf7c4)
+- [`a02ff67`](https://github.com/sinonjs/referee/commit/a02ff67110e20cacb282f6f7231fb5bde573432a)
   Fix coverage for define-assertion promise handling (Maximilian Antoni)
-- [`cd86dde`](https://github.com/sinonjs/referee/commit/cd86dde5458f6af987abfbd07c1114444a24b54e)
+- [`a0c54a3`](https://github.com/sinonjs/referee/commit/a0c54a375de3f4e26f355df6d331f59112e235a1)
   Fix coverage for tagName (Maximilian Antoni)
-- [`5c49f5a`](https://github.com/sinonjs/referee/commit/5c49f5a2eb07a89e5f6e1792abef72f60201347e)
+- [`b8e18ff`](https://github.com/sinonjs/referee/commit/b8e18ff4ca75e3743c90d14f2bf3c1ef551e812c)
   Fix tests in node 14 (Maximilian Antoni)
-- [`5adec8b`](https://github.com/sinonjs/referee/commit/5adec8b9694e18b6085629765cd384cc1268cf96)
+- [`828f839`](https://github.com/sinonjs/referee/commit/828f839006f803252d8b8fb0e016067a15a2e9bc)
   Drop node 10, add node 14 (Maximilian Antoni)
-- [`ba48f4b`](https://github.com/sinonjs/referee/commit/ba48f4ba91b3bae79be37da979e600600f05b132)
+- [`6944bd2`](https://github.com/sinonjs/referee/commit/6944bd232c71e6f3a5e827ac4b2db25d53f9e08a)
   Fix tests in node 12 (Maximilian Antoni)
-- [`ce485d9`](https://github.com/sinonjs/referee/commit/ce485d9bde820996671fa785da344f83d411039b)
+- [`14c6903`](https://github.com/sinonjs/referee/commit/14c690376648a38c30ead1a65dc99e3ae7d16263)
   Prettier (Maximilian Antoni)
-- [`f94da5c`](https://github.com/sinonjs/referee/commit/f94da5c04fc55c07732fc9491ac077f4e17340d2)
+- [`0f7a5fe`](https://github.com/sinonjs/referee/commit/0f7a5fec6a76e17bd38e5364cd75af95e15672e9)
   Add support for special array interpolations (Maximilian Antoni)
-- [`a8dddc5`](https://github.com/sinonjs/referee/commit/a8dddc5b72a924cebcf495e15a704f3757afb70b)
+- [`ababcdd`](https://github.com/sinonjs/referee/commit/ababcdda3c9c12ca7b7960d6029ab3b1bd1e27d0)
   Refactor property interpolation (Maximilian Antoni)
-- [`5b3b845`](https://github.com/sinonjs/referee/commit/5b3b8459ebcb9afff3bd13922a3ecb683105c563)
+- [`ed71199`](https://github.com/sinonjs/referee/commit/ed71199076b4bfb5e1e42e54ab8932969c29ef50)
   Fix formatting related assertions (Maximilian Antoni)
-- [`994ff0c`](https://github.com/sinonjs/referee/commit/994ff0ca964bffed50941cd4bb812a818f1bc2a0)
-  fixup! Update lib/assertions/is-weak-map.test.js (Maximilian Antoni)
-- [`1514ba1`](https://github.com/sinonjs/referee/commit/1514ba1aeb67daf8c6ef5d68530578d183cef16c)
+- [`61f8522`](https://github.com/sinonjs/referee/commit/61f85226828fd8dd5dcbca337398b1e43c233c7d)
   Reinstall dependencies (Maximilian Antoni)
-- [`874d29f`](https://github.com/sinonjs/referee/commit/874d29f957571ba31def4cb8862c0fc649b5265b)
+- [`6547c43`](https://github.com/sinonjs/referee/commit/6547c43eee8be53d92d4d3818b4655ce1bc5f851)
   Update lib/assertions/is-weak-map.test.js (Morgan Roderick)
-    >
-    > Co-Authored-By: Maximilian Antoni <mail@maxantoni.de>
-- [`bc62f88`](https://github.com/sinonjs/referee/commit/bc62f887a0da8acb75b0651dc539c4b2d7245d3d)
-  Update lib/assertions/is-uri-error.test.js (Morgan Roderick)
-    >
-    > Co-Authored-By: Maximilian Antoni <mail@maxantoni.de>
-- [`0544657`](https://github.com/sinonjs/referee/commit/0544657ddf03bd9d02fe25fca848b58f58cdcbfe)
+- [`53bdcbb`](https://github.com/sinonjs/referee/commit/53bdcbbf726db03ca2af15e3112932e13e7291b9)
+- [`dadce5e`](https://github.com/sinonjs/referee/commit/dadce5efb66ddb2d22a7bd204bdc171bade9a2e3)
   Add test for isURIError assertion included in API (Morgan Roderick)
-- [`671195c`](https://github.com/sinonjs/referee/commit/671195c782b47dafcc0a6c76b3d97fa398f03683)
-  fixup! Convert tests for isWeakMap to unit tests (Morgan Roderick)
-- [`4210a7e`](https://github.com/sinonjs/referee/commit/4210a7e6d482ddd363c563b4c58c5c4460d109b0)
+- [`7b595df`](https://github.com/sinonjs/referee/commit/7b595df9eb569d4237bb4728939364c1c10743f5)
   Convert tests for isURIError to unit tests (Morgan Roderick)
-- [`605b813`](https://github.com/sinonjs/referee/commit/605b813b4b9b09d41e0a4f0ca435ef543cbdbf8a)
+- [`3546c9a`](https://github.com/sinonjs/referee/commit/3546c9ad6ef40e1cc4c0a8d84f1a85f99a16e448)
   Add test for isWeakMap assertion included in API (Morgan Roderick)
-- [`2928ffb`](https://github.com/sinonjs/referee/commit/2928ffb901c3083b9603582805b4286763cebab7)
+- [`7094fe0`](https://github.com/sinonjs/referee/commit/7094fe0e2db4274e5d0d5a3e7da078332f6664b9)
   Convert tests for isWeakMap to unit tests (Morgan Roderick)
-- [`ba85c2a`](https://github.com/sinonjs/referee/commit/ba85c2a60392b702a7f6f9506fbc421fc4432af5)
-  fixup! Convert tests for isWeakSet to unit tests (Morgan Roderick)
-- [`507bf5d`](https://github.com/sinonjs/referee/commit/507bf5d043be7e13a4472fd579d3c8d0f6cf047b)
+- [`2479dc9`](https://github.com/sinonjs/referee/commit/2479dc912ac26067f66a4703d568c3b7411610fd)
   Add test for isWeakSet assertion included in API (Morgan Roderick)
-- [`e43bcbc`](https://github.com/sinonjs/referee/commit/e43bcbc5753e77b4e8f2b6ee4b3f45d595e58cc3)
+- [`060ea31`](https://github.com/sinonjs/referee/commit/060ea31c4eae204b075959d6879b46f6c493a0a3)
   Convert tests for isWeakSet to unit tests (Morgan Roderick)
-- [`de509d2`](https://github.com/sinonjs/referee/commit/de509d2af928c47131941743b018c49474670d64)
+- [`d579789`](https://github.com/sinonjs/referee/commit/d579789306b46faecda4415cef558a54e3cd96c0)
   Add test for json assertion included in API (Morgan Roderick)
-- [`3d51b44`](https://github.com/sinonjs/referee/commit/3d51b44f94dcc1d8f2cfaf5969a777b42155b9b6)
+- [`745c9c3`](https://github.com/sinonjs/referee/commit/745c9c35901825bafd0915cb69f75ffe62274fc5)
   Convert tests for json assertion to unit tests (Morgan Roderick)
-- [`d068779`](https://github.com/sinonjs/referee/commit/d068779b863f8da2418f1da9ffd5b4a090dabbad)
-  fixup! Convert tests for matchJson assertion to unit tests (Morgan Roderick)
+- [`a501c4a`](https://github.com/sinonjs/referee/commit/a501c4aa272d3c0ce6bc495602a1433f67932a75)
+  Add test for keys assertion included in API (Morgan Roderick)
+- [`8f048a4`](https://github.com/sinonjs/referee/commit/8f048a4478340856c559bfcc13d75970d601b870)
+  Convert tests for keys assertion to unit tests (Morgan Roderick)
+- [`eb3d756`](https://github.com/sinonjs/referee/commit/eb3d7562a5f2301db8d980c4464b36e86d3a354a)
+  Add test for less assertion included in API (Morgan Roderick)
+- [`d9c34d6`](https://github.com/sinonjs/referee/commit/d9c34d6b7d50520b00ecb771d27e8735fe39204b)
+  Convert tests for less assertion to unit tests (Morgan Roderick)
+- [`17cca82`](https://github.com/sinonjs/referee/commit/17cca82082d3f016f4ed37b12844dd437ac710b6)
+  Add test for matchJson assertion included in API (Morgan Roderick)
+- [`3c180f5`](https://github.com/sinonjs/referee/commit/3c180f5ea3d6450c56d00e7a9e2ffd6de6b7b91f)
+  Convert tests for matchJson assertion to unit tests (Morgan Roderick)
 - [`dd15901`](https://github.com/sinonjs/referee/commit/dd15901603845b0e4626786e968325b0142325a8)
   Add test for keys assertion included in API (Morgan Roderick)
 - [`160196c`](https://github.com/sinonjs/referee/commit/160196c18bc91225913cf782614d0368533230e3)
@@ -110,12 +118,6 @@
   Add proxyquire dependency (Morgan Roderick)
 - [`f5637ce`](https://github.com/sinonjs/referee/commit/f5637cedb74a5f7deabbc5660a094f4138cc2591)
   Bump lodash from 4.17.15 to 4.17.19 (dependabot[bot])
-    >
-    > Bumps [lodash](https://github.com/lodash/lodash) from 4.17.15 to 4.17.19.
-    > - [Release notes](https://github.com/lodash/lodash/releases)
-    > - [Commits](https://github.com/lodash/lodash/compare/4.17.15...4.17.19)
-    >
-    > Signed-off-by: dependabot[bot] <support@github.com>
 
 _Released on 2020-10-02._
 
