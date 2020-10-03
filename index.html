@@ -7,13 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="None">
   
+  
   <link rel="shortcut icon" href="img/favicon.ico">
-  <title>referee - referee</title>
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <title>referee</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
 
-  <link rel="stylesheet" href="css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
   
   <script>
     // Current page data
@@ -24,7 +25,7 @@
   
   <script src="js/jquery-2.1.1.min.js" defer></script>
   <script src="js/modernizr-2.8.3.min.js" defer></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
@@ -35,6 +36,7 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
         <a href="." class="icon icon-home"> referee</a>
         <div role="search">
@@ -45,47 +47,512 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-	<ul class="current">
-	  
-          
-            <li class="toctree-l1 current">
-		
-    <a class="current" href=".">referee</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l2"><a href="#referee">referee</a></li>
-    
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href=".">referee</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#install">Install</a>
         <ul>
-        
-            <li><a class="toctree-l3" href="#install">Install</a></li>
-        
-            <li><a class="toctree-l3" href="#assertions-and-refutations">Assertions and refutations</a></li>
-        
-            <li><a class="toctree-l3" href="#predefined-assertions">Predefined Assertions</a></li>
-        
-            <li><a class="toctree-l3" href="#custom-assertions">Custom assertions</a></li>
-        
-            <li><a class="toctree-l3" href="#overriding-assertion-messages">Overriding assertion messages</a></li>
-        
-            <li><a class="toctree-l3" href="#events">Events</a></li>
-        
-            <li><a class="toctree-l3" href="#expectations">Expectations</a></li>
-        
-            <li><a class="toctree-l3" href="#methods">Methods</a></li>
-        
-            <li><a class="toctree-l3" href="#properties">Properties</a></li>
-        
-            <li><a class="toctree-l3" href="#supporting-objects">Supporting objects</a></li>
-        
+    <li class="toctree-l3"><a class="reference internal" href="#sinonjs-integration">Sinon.JS integration</a>
+    </li>
         </ul>
-    
-
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#assertions-and-refutations">Assertions and refutations</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#assert">assert()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#refute">refute()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#predefined-assertions">Predefined Assertions</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#any">Any</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#string">String</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#number">Number</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#function">Function</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#object">Object</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#array-and-array-like">Array and array like</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dom-element">DOM element</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#promise">Promise</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#types-and-values">Types and values</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#same">same()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#equals">equals()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_1">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#greater">greater()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_2">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#less">less()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_3">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isundefined">isUndefined()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_4">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isnull">isNull()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_5">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#match">match()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#string-matcher">String matcher</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#boolean-matcher">Boolean matcher</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#regular-expression-matcher">Regular expression matcher</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#number-matcher">Number matcher</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#function-matcher">Function matcher</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#object-matcher">Object matcher</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dom-elements">DOM elements</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isobject">isObject()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_6">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isfunction">isFunction()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_7">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#istrue">isTrue()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_8">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isfalse">isFalse()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_9">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isstring">isString()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_10">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isboolean">isBoolean()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_11">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isnumber">isNumber()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_12">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isnan">isNaN()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_13">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isnegativeinfinity">isNegativeInfinity()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isarray">isArray()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_14">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isarraybuffer">isArrayBuffer()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_15">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isarraylike">isArrayLike()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_16">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isdataview">isDataView()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_17">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isdate">isDate()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_18">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#iserror">isError()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_19">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isevalerror">isEvalError()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_20">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isfloat32array">isFloat32Array()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_21">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isfloat64array">isFloat64Array()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_22">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isinfinity">isInfinity()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_23">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isint8array">isInt8Array()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_24">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isint16array">isInt16Array()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_25">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isint32array">isInt32Array()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_26">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isintlcollator">isIntlCollator()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_27">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isintldatetimeformat">isIntlDateTimeFormat()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_28">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isintlnumberformat">isIntlNumberFormat()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_29">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ismap">isMap()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_30">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ispromise">isPromise()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_31">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#israngeerror">isRangeError()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_32">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isreferenceerror">isReferenceError()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_33">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isregexp">isRegExp()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_34">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isset">isSet()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_35">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#issymbol">isSymbol()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_36">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#issyntaxerror">isSyntaxError()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_37">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#istypeerror">isTypeError()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_38">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isurierror">isURIError()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_39">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isuint16array">isUint16Array()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_40">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isuint32array">isUint32Array()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_41">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isuint8array">isUint8Array()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_42">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isuint8clampedarray">isUint8ClampedArray()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_43">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isweakmap">isWeakMap()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_44">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#isweakset">isWeakSet()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_45">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#keys">keys()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_46">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#exception">exception()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#near">near()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_47">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#hasarity">hasArity()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_48">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#hasprototype">hasPrototype()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_49">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#contains">contains()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#messages_50">Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#tagname">tagName()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#classname">className()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#resolves">resolves()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#rejects">rejects()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#json">json()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#matchjson">matchJson()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#custom-assertions">Custom assertions</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#load-custom-assertions">Load custom assertions</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#custom-assertion">Custom assertion</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#test">Test</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#execute">Execute</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#overriding-assertion-messages">Overriding assertion messages</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#events">Events</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#pass-event">pass event</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#failure-event">failure event</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#expectations">Expectations</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobe">expect.toBe()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttoequal">expect.toEqual()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobegreaterthan">expect.toBeGreaterThan()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobelessthan">expect.toBeLessThan()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobedefined">expect.toBeDefined()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobenull">expect.toBeNull()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttomatch">expect.toMatch()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobeobject">expect.toBeObject()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobefunction">expect.toBeFunction()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobetrue">expect.toBeTrue()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobefalse">expect.toBeFalse()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobestring">expect.toBeString()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobeboolean">expect.toBeBoolean()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobenumber">expect.toBeNumber()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobenan">expect.toBeNaN()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobearray">expect.toBeArray()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobearraylike">expect.toBeArrayLike()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttohavekeys">expect.toHaveKeys()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttothrow">expect.toThrow()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttobenear">expect.toBeNear()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttohaveprototype">expect.toHavePrototype()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttocontain">expect.toContain()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttohavetagname">expect.toHaveTagName()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttohaveclassname">expect.toHaveClassName()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttoequaljson">expect.toEqualJson()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttomatchjson">expect.toMatchJson()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttohavebeencalled">expect.toHaveBeenCalled()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttohavebeencalledonce">expect.toHaveBeenCalledOnce()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttohavebeencalledtwice">expect.toHaveBeenCalledTwice()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttohavebeencalledthrice">expect.toHaveBeenCalledThrice()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttohavebeencalledwith">expect.toHaveBeenCalledWith()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#expecttohavebeencalledoncewith">expect.toHaveBeenCalledOnceWith()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#methods">Methods</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#refereefail">referee.fail()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#refereeadd">referee.add()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#error-message-value-interpolation">Error message value interpolation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#refereeverifier">referee.verifier()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#properties">Properties</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#refereethrowonfailure">referee.throwOnFailure</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#supporting-objects">Supporting objects</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#class-assertionerror">class AssertionError()</a>
+    </li>
+        </ul>
+    </li>
     </ul>
-	    </li>
-          
-        </ul>
+                    </li>
+                </ul>
       </div>
-      &nbsp;
+    </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -113,6 +580,7 @@
       
     </li>
   </ul>
+  
   <hr/>
 </div>
           <div role="main">
@@ -1682,7 +2150,7 @@ it(&quot;should do something&quot;, function(){
     
   </div>
 
-  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
       
         </div>
@@ -1692,7 +2160,7 @@ it(&quot;should do something&quot;, function(){
 
   </div>
 
-  <div class="rst-versions" role="note" style="cursor: pointer">
+  <div class="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
           <a href="https://github.com/sinonjs/referee/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
@@ -1704,11 +2172,16 @@ it(&quot;should do something&quot;, function(){
     <script>var base_url = '.';</script>
     <script src="js/theme.js" defer></script>
       <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
 
 </body>
 </html>
 
 <!--
-MkDocs version : 1.0.4
-Build Date UTC : 2020-06-16 07:06:53
+MkDocs version : 1.1.2
+Build Date UTC : 2020-10-03 10:07:01.884951+00:00
 -->
