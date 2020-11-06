@@ -1481,18 +1481,18 @@ assert.className(el, ["item", "feed"]); // Passes
 ### `resolves()`
 
 ```js
-assert.resolves(promise, value)
+assert.resolves(promise[, value])
 ```
 
 **NOTE:** This assertion returns a
 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)!
 
-The assertion **resolves**, if the value resolved from `promise` is
-[`identical`](http://sinonjs.github.io/samsam/#identicalx-y) to the given `value`.
+The assertion **resolves**, if the value resolved from `promise`
+[`equals`](#equals) the given `value`.
 
 Furthermore, the assertion **rejects** if,
 
-* the resolved value from the input `promise` is not `identical` to the given `value`
+* the resolved value from the input `promise` is not equal to the given `value`
 * the given `promise` rejects instead of resolving
 * the given input is not a Promise
 
@@ -1516,18 +1516,18 @@ test("some asynchronous code", async function() {
 ### `rejects()`
 
 ```js
-assert.rejects(promise, value)
+assert.rejects(promise[, value])
 ```
 
 **NOTE:** This assertion returns a
 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)!
 
-The assertion **resolves**, if the value rejected from `promise` is
-[`identical`](http://sinonjs.github.io/samsam/#identicalx-y) to the given `value`.
+The assertion **resolves**, if the value rejected from `promise`
+[`equals`](#equals) the given `value`.
 
 Furthermore, the assertion **rejects** if,
 
-* the rejected value from the input `promise` is not `identical` to the given `value`
+* the rejected value from the input `promise` is not equal to the given `value`
 * the given `promise` resolves instead of rejecting
 * the given input is not a Promise
 
