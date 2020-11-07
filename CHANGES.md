@@ -1,5 +1,18 @@
 # Changes
 
+## 6.2.0
+
+- [`0e9ab9b`](https://github.com/sinonjs/referee/commit/0e9ab9b4b5663ea22dc01c5de0fa385a118ee2c8)
+  Adjust documentation for resolves and rejects (Maximilian Antoni)
+- [`fe4616e`](https://github.com/sinonjs/referee/commit/fe4616e8961efa2c0af1d07a27dba9a6036caff7)
+  Support resolves and rejects without expectation (Maximilian Antoni)
+- [`4b21019`](https://github.com/sinonjs/referee/commit/4b210199fadfbb95c283fac131bb67c2e2e8edf6)
+  Use deepEqual to compare rejected promise value (Maximilian Antoni)
+- [`b001fed`](https://github.com/sinonjs/referee/commit/b001fed44fdb5e8d454c90d40e98848f4eb4739b)
+  Use deepEqual to compare resolved promise value (Maximilian Antoni)
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2020-11-07._
+
 ## 6.1.0
 
 - [`9ea1198`](https://github.com/sinonjs/referee/commit/9ea1198cdf0a796a1c346d40be44e259af967725)
