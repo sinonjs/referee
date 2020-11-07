@@ -1641,16 +1641,16 @@ assert.className(el, [&quot;item&quot;, &quot;feed&quot;]); // Passes
 </code></pre>
 
 <h3 id="resolves"><code>resolves()</code></h3>
-<pre><code class="js">assert.resolves(promise, value)
+<pre><code class="js">assert.resolves(promise[, value])
 </code></pre>
 
 <p><strong>NOTE:</strong> This assertion returns a
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>!</p>
-<p>The assertion <strong>resolves</strong>, if the value resolved from <code>promise</code> is
-<a href="http://sinonjs.github.io/samsam/#identicalx-y"><code>identical</code></a> to the given <code>value</code>.</p>
+<p>The assertion <strong>resolves</strong>, if the value resolved from <code>promise</code>
+<a href="#equals"><code>equals</code></a> the given <code>value</code>.</p>
 <p>Furthermore, the assertion <strong>rejects</strong> if,</p>
 <ul>
-<li>the resolved value from the input <code>promise</code> is not <code>identical</code> to the given <code>value</code></li>
+<li>the resolved value from the input <code>promise</code> is not equal to the given <code>value</code></li>
 <li>the given <code>promise</code> rejects instead of resolving</li>
 <li>the given input is not a Promise</li>
 </ul>
@@ -1668,16 +1668,16 @@ either need to return the Promise from the assertion:</p>
 </code></pre>
 
 <h3 id="rejects"><code>rejects()</code></h3>
-<pre><code class="js">assert.rejects(promise, value)
+<pre><code class="js">assert.rejects(promise[, value])
 </code></pre>
 
 <p><strong>NOTE:</strong> This assertion returns a
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>!</p>
-<p>The assertion <strong>resolves</strong>, if the value rejected from <code>promise</code> is
-<a href="http://sinonjs.github.io/samsam/#identicalx-y"><code>identical</code></a> to the given <code>value</code>.</p>
+<p>The assertion <strong>resolves</strong>, if the value rejected from <code>promise</code>
+<a href="#equals"><code>equals</code></a> the given <code>value</code>.</p>
 <p>Furthermore, the assertion <strong>rejects</strong> if,</p>
 <ul>
-<li>the rejected value from the input <code>promise</code> is not <code>identical</code> to the given <code>value</code></li>
+<li>the rejected value from the input <code>promise</code> is not equal to the given <code>value</code></li>
 <li>the given <code>promise</code> resolves instead of rejecting</li>
 <li>the given input is not a Promise</li>
 </ul>
@@ -2183,5 +2183,5 @@ it(&quot;should do something&quot;, function(){
 
 <!--
 MkDocs version : 1.1.2
-Build Date UTC : 2020-10-03 10:07:01.884951+00:00
+Build Date UTC : 2020-11-07 16:34:26.645619+00:00
 -->
