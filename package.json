@@ -31,6 +31,7 @@
     "@sinonjs/commons": "^1.4.0",
     "@sinonjs/samsam": "^5.0.2",
     "array-from": "2.1.1",
+    "event-emitter": "^0.3.5",
     "lodash.includes": "^4.3.0",
     "lodash.isarguments": "^3.1.0",
     "object-assign": "^4.1.1"
