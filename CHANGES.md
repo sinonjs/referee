@@ -1,5 +1,17 @@
 # Changes
 
+## 6.2.1
+
+- [`f5aaf56`](https://github.com/sinonjs/referee/commit/f5aaf569d6c310a470b59425ce999797161f1b27)
+  Add package util to improve platform independence (Morgan Roderick)
+- [`36ce1fa`](https://github.com/sinonjs/referee/commit/36ce1fa8b85773b1fc2c34b9ff7c75ee554b165e)
+  Use event-emitter instead of node builtin 'events' module (Morgan Roderick)
+    >
+    > This brings us closer to browser compatibility
+    >
+
+_Released on 2020-11-11._
+
 ## 6.2.0
 
 - [`0e9ab9b`](https://github.com/sinonjs/referee/commit/0e9ab9b4b5663ea22dc01c5de0fa385a118ee2c8)
