@@ -19,14 +19,15 @@ Takes three arguments
 
     <dt>`callback`</dt>
     <dd>the function that implements tests for the assertion</dd>
+
 </dl>
 
 The `callback` will be called with four arguments:
 
-* `pass`
-* `fail`
-* `msg`
-* `error`
+- `pass`
+- `fail`
+- `msg`
+- `error`
 
 #### `pass`
 
@@ -34,25 +35,25 @@ The `callback` will be called with four arguments:
 
 It is a variadic function, which expects at least two arguments.
 
-The first argument `name` is used for creating the *expectation* for mocha's `it` function.
+The first argument `name` is used for creating the _expectation_ for mocha's `it` function.
 
 The remaining arguments are passed to the assertion.
 
 ```js
 "use strict";
 
-testHelper.assertionTests("assert", "isTrue", function(
-    pass,
-    fail,
-    msg,
-    error
+testHelper.assertionTests("assert", "isTrue", function (
+  pass,
+  fail,
+  msg,
+  error
 ) {
-    pass(
-        // name, used to create name for `it`
-        "for true",
-        // passed to assert.isTrue
-        true
-    );
+  pass(
+    // name, used to create name for `it`
+    "for true",
+    // passed to assert.isTrue
+    true
+  );
 });
 ```
 
@@ -62,25 +63,25 @@ testHelper.assertionTests("assert", "isTrue", function(
 
 It is a variadic function, which expects at least two arguments.
 
-The first argument `name` is used for creating the *expectation* for mocha's `it` function.
+The first argument `name` is used for creating the _expectation_ for mocha's `it` function.
 
 The remaining arguments are passed to the assertion.
 
 ```js
 "use strict";
 
-testHelper.assertionTests("assert", "isTrue", function(
-    pass,
-    fail,
-    msg,
-    error
+testHelper.assertionTests("assert", "isTrue", function (
+  pass,
+  fail,
+  msg,
+  error
 ) {
-    fail(
-        // name, used to create name for `it`
-        "for false",
-        // passed to assert.isTrue
-        false
-    );
+  fail(
+    // name, used to create name for `it`
+    "for false",
+    // passed to assert.isTrue
+    false
+  );
 });
 ```
 
@@ -97,20 +98,20 @@ The remaining arguments are passed to the assertion.
 ```js
 "use strict";
 
-testHelper.assertionTests("assert", "isTrue", function(
-    pass,
-    fail,
-    msg,
-    error
+testHelper.assertionTests("assert", "isTrue", function (
+  pass,
+  fail,
+  msg,
+  error
 ) {
-    msg(
-        // name
-        "represent expected value in message",
-        // message
-        "[assert.isTrue] Expected {  } to be true",
-        // passed to assert.isTrue
-        {}
-    );
+  msg(
+    // name
+    "represent expected value in message",
+    // message
+    "[assert.isTrue] Expected {  } to be true",
+    // passed to assert.isTrue
+    {}
+  );
 });
 ```
 
@@ -126,22 +127,22 @@ The remaining arguments are passed to the assertion.
 ```js
 "use strict";
 
-testHelper.assertionTests("assert", "isTrue", function(
-    pass,
-    fail,
-    msg,
-    error
+testHelper.assertionTests("assert", "isTrue", function (
+  pass,
+  fail,
+  msg,
+  error
 ) {
-    error(
-        // `name`
-        "for false",
-        // `properties`
-        {
-            code: "ERR_ASSERTION",
-            operator: "assert.isTrue"
-        },
-        // passed to assert.isTrue
-        false
-    );
+  error(
+    // `name`
+    "for false",
+    // `properties`
+    {
+      code: "ERR_ASSERTION",
+      operator: "assert.isTrue",
+    },
+    // passed to assert.isTrue
+    false
+  );
 });
 ```
