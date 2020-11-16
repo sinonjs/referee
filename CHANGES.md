@@ -1,5 +1,20 @@
 # Changes
 
+## 7.0.0
+
+- [`2a678f0`](https://github.com/sinonjs/referee/commit/2a678f0ebcaeb0a1ea42f433287545fbe014a16e)
+  Upgrade prettier to 2.x (Morgan Roderick)
+    >
+    > * upgrade `eslint-config-prettier`
+    > * upgrade `eslint-plugin-prettier`
+    > * run `prettier` on all JavaScript files
+    >     ```sh
+    >     $(npm bin)/prettier -w -u .`
+    >     ```
+    >
+
+_Released on 2020-11-16._
+
 ## 6.2.1
 
 - [`f5aaf56`](https://github.com/sinonjs/referee/commit/f5aaf569d6c310a470b59425ce999797161f1b27)
