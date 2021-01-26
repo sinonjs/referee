@@ -1,6 +1,5 @@
 extends:
     - 'eslint-config-sinon'
-    - 'plugin:prettier/recommended'
 
 env:
   browser: true
@@ -34,7 +33,12 @@ rules:
   ie11/no-loop-func: warn
   ie11/no-weak-collections: error
 
-  max-len: [error, {code: 120, ignoreStrings: true}]
+  quotes: off
+  max-len: off
+  # the sinon config is currently using prettier plugin
+  # once that has been updated, this line can be removed
+  # See https://github.com/sinonjs/eslint-config-sinon/blob/956db70f2e0566d0e7f8f1f093da4704cf16afb2/index.js#L288-L290
+  prettier/prettier: off
 
 overrides:
     - files: ['*.test.*', 'lib/test-helper/*.js']
@@ -58,4 +62,3 @@ overrides:
           mocha/no-sibling-hooks: error
           mocha/no-skipped-tests: error
           mocha/no-top-level-hooks: error
-
