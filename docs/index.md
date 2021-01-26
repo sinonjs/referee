@@ -17,10 +17,9 @@ You can extend **referee** with assertions that integrates with [Sinon.JS](https
 
 See [referee-sinon](https://github.com/sinonjs/referee-sinon)
 
-
 ## Assertions and refutations
 
-Unlike most assertion libraries, **referee** does not have `assert.notXyz` assertions to refute some fact. Instead, it has *refutations*, heavily inspired by Ruby's [minitest](http://bfts.rubyforge.org/minitest/):
+Unlike most assertion libraries, **referee** does not have `assert.notXyz` assertions to refute some fact. Instead, it has _refutations_, heavily inspired by Ruby's [minitest](http://bfts.rubyforge.org/minitest/):
 
 ```js
 var assert = referee.assert;
@@ -44,7 +43,7 @@ Fails if `actual` is falsy (`0`, `""`, `null`, `undefined`, `NaN`). Fails with e
 assert({ not: "Falsy" }, "This will pass");
 assert(null, "This will fail"); // Fails with custom message
 assert(null); // Fails
-assert(34);   // Passes
+assert(34); // Passes
 ```
 
 ### `refute()`
@@ -59,9 +58,8 @@ Fails if actual is truthy. Fails with either the provided message or "Expected n
 refute({ not: "Falsy" }, "This will fail"); // Fails with custom message
 refute(null, "This will pass");
 refute(null); // Passes
-refute(34);   // Fails
+refute(34); // Fails
 ```
-
 
 ## Predefined Assertions
 
@@ -77,89 +75,89 @@ prepended to the failure message.
 
 #### Any
 
-* [`equals()`](#equals)
-* [`match()`](#match)
-* [`same()`](#same)
+- [`equals()`](#equals)
+- [`match()`](#match)
+- [`same()`](#same)
 
 #### String
 
-* [`json()`](#json)
-* [`matchJson()`](#matchjson)
+- [`json()`](#json)
+- [`matchJson()`](#matchjson)
 
 #### Number
 
-* [`greater()`](#greater)
-* [`less()`](#less)
-* [`near()`](#near)
+- [`greater()`](#greater)
+- [`less()`](#less)
+- [`near()`](#near)
 
 #### Function
 
-* [`exception()`](#exception)
-* [`hasArity()`](#hasarity)
+- [`exception()`](#exception)
+- [`hasArity()`](#hasarity)
 
 #### Object
-* [`hasPrototype()`](#hasprototype)
+
+- [`hasPrototype()`](#hasprototype)
 
 #### Array and array like
 
-* [`contains()`](#contains)
+- [`contains()`](#contains)
 
 #### DOM element
 
-* [`tagName()`](#tagname)
-* [`className()`](#classname)
+- [`tagName()`](#tagname)
+- [`className()`](#classname)
 
 #### Promise
 
-* [`resolves`](#resolves)
-* [`rejects`](#rejects)
+- [`resolves`](#resolves)
+- [`rejects`](#rejects)
 
 #### Types and values
 
 These assertions are for checking for built-in types and values.
 
-* [`isUndefined()`](#isundefined)
-* [`isNull()`](#isnull)
-* [`isArray()`](#isarray)
-* [`isArrayBuffer()`](#isarraybuffer)
-* [`isArrayLike()`](#isarraylike)
-* [`isBoolean()`](#isboolean)
-* [`isDataView()`](#isdataview)
-* [`isDate()`](#isdate)
-* [`isError()`](#iserror)
-* [`isEvalError()`](#isevalerror)
-* [`isFalse()`](#isfalse)
-* [`isFloat32Array()`](#isfloat32array)
-* [`isFloat64Array()`](#isfloat64array)
-* [`isFunction()`](#isfunction)
-* [`isInfinity()`](#isinfinity)
-* [`isIntlCollator()`](#isintlcollator)
-* [`isIntlDateTimeFormat()`](#isintldatetimeformat)
-* [`isIntlNumberFormat()`](#isintlnumberformat)
-* [`isMap()`](#ismap)
-* [`isNaN()`](#isnan)
-* [`isNegativeInfinity()`](#isnegativeinfinity)
-* [`isNumber()`](#isnumber)
-* [`isObject()`](#isobject)
-* [`isPromise()`](#ispromise)
-* [`isRangeError()`](#israngeerror)
-* [`isReferenceError()`](#isreferenceerror)
-* [`isRegExp()`](#isregexp)
-* [`isSet()`](#isset)
-* [`isString()`](#isstring)
-* [`isSymbol()`](#issymbol)
-* [`isSyntaxError()`](#issyntaxerror)
-* [`isTrue()`](#istrue)
-* [`isTypeError()`](#istypeerror)
-* [`isUint16Array()`](#isuint16array)
-* [`isUint32Array()`](#isuint32array)
-* [`isUint8Array()`](#isuint8array)
-* [`isUint8Array()`](#isuint8array)
-* [`isUint8clampedArray()`](#isuint8clampedarray)
-* [`isURIError()`](#isurierror)
-* [`isWeakMap()`](#isweakmap)
-* [`isWeakSet()`](#isweakset)
-
+- [`isUndefined()`](#isundefined)
+- [`isNull()`](#isnull)
+- [`isArray()`](#isarray)
+- [`isArrayBuffer()`](#isarraybuffer)
+- [`isArrayLike()`](#isarraylike)
+- [`isBoolean()`](#isboolean)
+- [`isDataView()`](#isdataview)
+- [`isDate()`](#isdate)
+- [`isError()`](#iserror)
+- [`isEvalError()`](#isevalerror)
+- [`isFalse()`](#isfalse)
+- [`isFloat32Array()`](#isfloat32array)
+- [`isFloat64Array()`](#isfloat64array)
+- [`isFunction()`](#isfunction)
+- [`isInfinity()`](#isinfinity)
+- [`isIntlCollator()`](#isintlcollator)
+- [`isIntlDateTimeFormat()`](#isintldatetimeformat)
+- [`isIntlNumberFormat()`](#isintlnumberformat)
+- [`isMap()`](#ismap)
+- [`isNaN()`](#isnan)
+- [`isNegativeInfinity()`](#isnegativeinfinity)
+- [`isNumber()`](#isnumber)
+- [`isObject()`](#isobject)
+- [`isPromise()`](#ispromise)
+- [`isRangeError()`](#israngeerror)
+- [`isReferenceError()`](#isreferenceerror)
+- [`isRegExp()`](#isregexp)
+- [`isSet()`](#isset)
+- [`isString()`](#isstring)
+- [`isSymbol()`](#issymbol)
+- [`isSyntaxError()`](#issyntaxerror)
+- [`isTrue()`](#istrue)
+- [`isTypeError()`](#istypeerror)
+- [`isUint16Array()`](#isuint16array)
+- [`isUint32Array()`](#isuint32array)
+- [`isUint8Array()`](#isuint8array)
+- [`isUint8Array()`](#isuint8array)
+- [`isUint8clampedArray()`](#isuint8clampedarray)
+- [`isURIError()`](#isurierror)
+- [`isWeakMap()`](#isweakmap)
+- [`isWeakSet()`](#isweakset)
 
 ### `same()`
 
@@ -171,7 +169,7 @@ Fails if `actual` is not the same object (`===`) as `expected`. To compare simil
 
 ```js
 var obj = { id: 42, name: "Chris" };
-assert.same(obj, obj);                       // Passes
+assert.same(obj, obj); // Passes
 assert.same(obj, { id: 42, name: "Chris" }); // Fails
 ```
 
@@ -179,9 +177,9 @@ assert.same(obj, { id: 42, name: "Chris" }); // Fails
 
 ```js
 assert.same.message = "${actual} expected to be the same object as ${expected}";
-refute.same.message = "${actual} expected not to be the same object as ${expected}";
+refute.same.message =
+  "${actual} expected not to be the same object as ${expected}";
 ```
-
 
 ### `equals()`
 
@@ -210,7 +208,6 @@ assert.equals.message = "${actual} expected to be equal to ${expected}";
 refute.equals.message = "${actual} expected not to be equal to ${expected}";
 ```
 
-
 ### `greater()`
 
 ```js
@@ -229,9 +226,9 @@ assert.greater(1, 2); // Fails
 
 ```js
 assert.greater.message = "Expected ${actual} to be greater than ${expected}";
-refute.greater.message = "Expected ${actual} to be less than or equal to ${expected}";
+refute.greater.message =
+  "Expected ${actual} to be less than or equal to ${expected}";
 ```
-
 
 ### `less()`
 
@@ -251,9 +248,9 @@ assert.less(2, 1); // Fails
 
 ```js
 assert.less.message = "Expected ${actual} to be less than ${expected}";
-refute.less.message = "Expected ${actual} to be greater than or equal to ${expected}";
+refute.less.message =
+  "Expected ${actual} to be greater than or equal to ${expected}";
 ```
-
 
 ### `isUndefined()`
 
@@ -265,8 +262,8 @@ Fails if `object` is not `null`.
 
 ```js
 assert.isUndefined(undefined); // Passes
-assert.isUndefined({});        // Fails
-refute.isUndefined({});        // Passes
+assert.isUndefined({}); // Fails
+refute.isUndefined({}); // Passes
 refute.isUndefined(undefined); // Fails
 ```
 
@@ -276,7 +273,6 @@ refute.isUndefined(undefined); // Fails
 assert.isUndefined.message = "Expected ${actual} to be undefined";
 refute.isUndefined.message = "Expected not to be undefined";
 ```
-
 
 ### `isNull()`
 
@@ -288,8 +284,8 @@ Fails if `object` is not `null`.
 
 ```js
 assert.isNull(null); // Passes
-assert.isNull({});   // Fails
-refute.isNull({});   // Passes
+assert.isNull({}); // Fails
+refute.isNull({}); // Passes
 refute.isNull(null); // Fails
 ```
 
@@ -299,7 +295,6 @@ refute.isNull(null); // Fails
 assert.isNull.message = "Expected ${actual} to be null";
 refute.isNull.message = "Expected not to be null";
 ```
-
 
 ### `match()`
 
@@ -314,9 +309,16 @@ Fails if `matcher` is not a partial match for `actual`. Accepts a wide range of 
 In its simplest form, `assert.match` performs a case insensitive substring match. When the matcher is a string, the `actual` object is converted to a string, and the assertion passes if `actual` is a case-insensitive substring of expected as a string.
 
 ```js
-assert.match("Give me something", "Give");                           // Passes
-assert.match("Give me something", "sumptn");                         // Fails
-assert.match({ toString: function () { return "yeah"; } }, "Yeah!"); // Passes
+assert.match("Give me something", "Give"); // Passes
+assert.match("Give me something", "sumptn"); // Fails
+assert.match(
+  {
+    toString: function () {
+      return "yeah";
+    },
+  },
+  "Yeah!"
+); // Passes
 ```
 
 The last example is not symmetric. When the matcher is a string, the actual value is coerced to a string - in this case using `toString`. Changing the order of the arguments would cause the matcher to be an object, in which case different rules apply (see below).
@@ -332,7 +334,14 @@ When the matcher is a regular expression, the assertion will pass if `expected.t
 ```js
 assert.match("Give me something", /^[a-z\s]$/i); // Passes
 assert.match("Give me something", /[0-9]/); // Fails
-assert.match({ toString: function () { return "yeah!"; } }, /yeah/); // Passes
+assert.match(
+  {
+    toString: function () {
+      return "yeah!";
+    },
+  },
+  /yeah/
+); // Passes
 assert.match(234, /[a-z]/); // Fails
 ```
 
@@ -343,7 +352,14 @@ When the matcher is a number, the assertion will pass if `matcher == actual`.
 ```js
 assert.match("123", 123); // Passes
 assert.match("Give me something", 425); // Fails
-assert.match({ toString: function () { return "42"; } }, 42); // Passes
+assert.match(
+  {
+    toString: function () {
+      return "42";
+    },
+  },
+  42
+); // Passes
 assert.match(234, 1234); // Fails
 ```
 
@@ -354,20 +370,25 @@ When the matcher is a function, it is called with `actual` as its only argument.
 ```js
 // Passes
 assert.match("123", function (exp) {
-    return exp == "123";
+  return exp == "123";
 });
 
 // Fails
 assert.match("Give me something", function () {
-    return "ok";
+  return "ok";
 });
 
 // Passes
-assert.match({
+assert.match(
+  {
     toString: function () {
-        return "42";
-    }
-}, function () { return true; });
+      return "42";
+    },
+  },
+  function () {
+    return true;
+  }
+);
 
 // Fails
 assert.match(234, function () {});
@@ -380,25 +401,28 @@ As mentioned above, if an object matcher defines a test method the assertion wil
 ```js
 // Passes
 assert.match("123", {
-    test: function (arg) {
-        return arg == 123;
-    }
+  test: function (arg) {
+    return arg == 123;
+  },
 });
 
 // Fails
 assert.match({}, { prop: 42 });
 
 // Passes
-assert.match({
+assert.match(
+  {
     name: "Chris",
-    profession: "Programmer"
-}, {
-    name: "Chris"
-});
+    profession: "Programmer",
+  },
+  {
+    name: "Chris",
+  }
+);
 
 // Fails
 assert.match(234, {
-    name: "Chris"
+  name: "Chris",
 });
 ```
 
@@ -410,12 +434,11 @@ assert.match(234, {
 var el = document.getElementById("myEl");
 
 assert.match(el, {
-    tagName: "h2",
-    className: "item",
-    innerHTML: "Howdy"
+  tagName: "h2",
+  className: "item",
+  innerHTML: "Howdy",
 });
 ```
-
 
 ### `isObject()`
 
@@ -426,19 +449,19 @@ assert.isObject(object[, message])
 Fails if `object` is not an object or if it is `null`.
 
 ```js
-assert.isObject({});             // Passes
-assert.isObject(42);             // Fails
-assert.isObject([1, 2, 3]);      // Passes
+assert.isObject({}); // Passes
+assert.isObject(42); // Fails
+assert.isObject([1, 2, 3]); // Passes
 assert.isObject(function () {}); // Fails
 ```
 
 #### Messages
 
 ```js
-assert.isObject.message = "${actual} (${actualType}) expected to be object and not null";
+assert.isObject.message =
+  "${actual} (${actualType}) expected to be object and not null";
 refute.isObject.message = "${actual} expected to be null or not an object";
 ```
-
 
 ### `isFunction()`
 
@@ -449,8 +472,8 @@ assert.isFunction(actual[, message])
 Fails if `actual` is not a function.
 
 ```js
-assert.isFunction({});             // Fails
-assert.isFunction(42);             // Fails
+assert.isFunction({}); // Fails
+assert.isFunction(42); // Fails
 assert.isFunction(function () {}); // Passes
 ```
 
@@ -461,7 +484,6 @@ assert.isFunction.message = "${actual} (${actualType}) expected to be function";
 refute.isFunction.message = "${actual} expected not to be function";
 ```
 
-
 ### `isTrue()`
 
 ```js
@@ -471,7 +493,7 @@ assert.isTrue(actual[, message])
 Fails if `actual` is not `true`.
 
 ```js
-assert.isTrue("2" == 2);  // Passes
+assert.isTrue("2" == 2); // Passes
 assert.isTrue("2" === 2); // Fails
 ```
 
@@ -481,7 +503,6 @@ assert.isTrue("2" === 2); // Fails
 assert.isTrue.message = "Expected ${actual} to be true";
 refute.isTrue.message = "Expected ${actual} to not be true";
 ```
-
 
 ### `isFalse()`
 
@@ -493,7 +514,7 @@ Fails if `actual` is not `false`.
 
 ```js
 assert.isFalse("2" === 2); // Passes
-assert.isFalse("2" == 2);  // Fails
+assert.isFalse("2" == 2); // Fails
 ```
 
 #### Messages
@@ -502,7 +523,6 @@ assert.isFalse("2" == 2);  // Fails
 assert.isFalse.message = "Expected ${actual} to be false";
 refute.isFalse.message = "Expected ${actual} to not be false";
 ```
-
 
 ### `isString()`
 
@@ -514,7 +534,7 @@ Fails if the type of actual is not "string".
 
 ```js
 assert.isString("2"); // Passes
-assert.isString(2);   // Fails
+assert.isString(2); // Fails
 ```
 
 #### Messages
@@ -523,7 +543,6 @@ assert.isString(2);   // Fails
 assert.isString.message = "Expected ${actual} (${actualType}) to be string";
 refute.isString.message = "Expected ${actual} not to be string";
 ```
-
 
 ### `isBoolean()`
 
@@ -534,8 +553,8 @@ assert.isBoolean(actual[, message])
 Fails if the type of `actual` is not "boolean".
 
 ```js
-assert.isBoolean(true);   // Passes
-assert.isBoolean(2 < 2);  // Passes
+assert.isBoolean(true); // Passes
+assert.isBoolean(2 < 2); // Passes
 assert.isBoolean("true"); // Fails
 ```
 
@@ -546,7 +565,6 @@ assert.isBoolean.message = "Expected ${actual} (${actualType}) to be boolean";
 refute.isBoolean.message = "Expected ${actual} not to be boolean";
 ```
 
-
 ### `isNumber()`
 
 ```js
@@ -556,18 +574,18 @@ assert.isNumber(actual[, message])
 Fails if the type of `actual` is not "number" or is `NaN`.
 
 ```js
-assert.isNumber(12);   // Passes
+assert.isNumber(12); // Passes
 assert.isNumber("12"); // Fails
-assert.isNumber(NaN);  // Fails
+assert.isNumber(NaN); // Fails
 ```
 
 #### Messages
 
 ```js
-assert.isNumber.message = "Expected ${actual} (${actualType}) to be a non-NaN number";
+assert.isNumber.message =
+  "Expected ${actual} (${actualType}) to be a non-NaN number";
 refute.isNumber.message = "Expected ${actual} to be NaN or a non-number value";
 ```
-
 
 ### `isNaN()`
 
@@ -578,10 +596,10 @@ assert.isNaN(actual[, message])
 Fails if `actual` is not `NaN`. Does not perform coercion in contrast to the standard javascript function `isNaN`.
 
 ```js
-assert.isNaN(NaN);           // Passes
+assert.isNaN(NaN); // Passes
 assert.isNaN("abc" / "def"); // Passes
-assert.isNaN(12);            // Fails
-assert.isNaN({});            // Fails, would pass for standard javascript function isNaN
+assert.isNaN(12); // Fails
+assert.isNaN({}); // Fails, would pass for standard javascript function isNaN
 ```
 
 #### Messages
@@ -590,7 +608,6 @@ assert.isNaN({});            // Fails, would pass for standard javascript functi
 assert.isNaN.message = "Expected ${actual} to be NaN";
 refute.isNaN.message = "Expected not to be NaN";
 ```
-
 
 ### `isNegativeInfinity()`
 
@@ -602,9 +619,8 @@ Fails if `actual` is not `-Infinity`.
 
 ```js
 assert.isNegativeInfinity(-Infinity); // Passes
-assert.isNegativeInfinity(42);       // Fails
+assert.isNegativeInfinity(42); // Fails
 ```
-
 
 ### `isArray()`
 
@@ -616,7 +632,7 @@ Fails if the object type of `actual` is not `Array`.
 
 ```js
 assert.isArray([1, 2, 3]); // Passes
-assert.isArray({});        // Fails
+assert.isArray({}); // Fails
 ```
 
 #### Messages
@@ -636,7 +652,7 @@ Fails if the object type of `actual` is not `ArrayBuffer`.
 
 ```js
 assert.isArrayBuffer(new ArrayBuffer(8)); // Passes
-assert.isArrayBuffer({});                 // Fails
+assert.isArrayBuffer({}); // Fails
 ```
 
 #### Messages
@@ -646,7 +662,6 @@ assert.isArrayBuffer.message = "Expected ${actual} to be an ArrayBuffer";
 refute.isArrayBuffer.message = "Expected ${actual} not to be an ArrayBuffer";
 ```
 
-
 ### `isArrayLike()`
 
 ```js
@@ -655,15 +670,15 @@ assert.isArrayLike(actual[, message])
 
 Fails if none of the following conditions are fulfilled:
 
-* the object type of `actual` is `Array`
-* `actual` is an `arguments` object
-* `actual` is an object providing a property `length` of type "number" and a `property` splice of type "function"
+- the object type of `actual` is `Array`
+- `actual` is an `arguments` object
+- `actual` is an object providing a property `length` of type "number" and a `property` splice of type "function"
 
 ```js
-assert.isArrayLike([1, 2, 3]);                            // Passes
-assert.isArrayLike(arguments);                            // Passes
-assert.isArrayLike({ length: 0, splice: function() {} }); // Passes
-assert.isArrayLike({});                                   // Fails
+assert.isArrayLike([1, 2, 3]); // Passes
+assert.isArrayLike(arguments); // Passes
+assert.isArrayLike({ length: 0, splice: function () {} }); // Passes
+assert.isArrayLike({}); // Fails
 ```
 
 #### Messages
@@ -672,7 +687,6 @@ assert.isArrayLike({});                                   // Fails
 assert.isArrayLike.message = "Expected ${actual} to be array like";
 refute.isArrayLike.message = "Expected ${actual} not to be array like";
 ```
-
 
 ### `isDataView()`
 
@@ -694,7 +708,6 @@ assert.isDataView.message = "Expected ${actual} to be a DataView";
 refute.isDataView.message = "Expected ${actual} not to be a DataView";
 ```
 
-
 ### `isDate()`
 
 ```js
@@ -704,8 +717,8 @@ assert.isDate(actual[, message])
 Fails if `actual` is not an instance of `Date`.
 
 ```js
-assert.isDate(new Date());  // Passes
-assert.isDate(12345678);    // Fails
+assert.isDate(new Date()); // Passes
+assert.isDate(12345678); // Fails
 assert.isDate("apple pie"); // Fails
 ```
 
@@ -715,7 +728,6 @@ assert.isDate("apple pie"); // Fails
 assert.isDate.message = "Expected ${actual} to be a Date";
 refute.isDate.message = "Expected ${actual} not to be a Date";
 ```
-
 
 ### `isError()`
 
@@ -738,7 +750,6 @@ assert.isError.message = "Expected ${actual} to be an Error";
 refute.isError.message = "Expected ${actual} not to be an Error";
 ```
 
-
 ### `isEvalError()`
 
 ```js
@@ -748,7 +759,7 @@ assert.isEvalError(actual[, message])
 Fails if `actual` is not an instance of `EvalError`.
 
 ```js
-assert.isEvalError(new EvalError("this is an eval error"));  // Passes
+assert.isEvalError(new EvalError("this is an eval error")); // Passes
 assert.isEvalError(new Error("this is not an eval error")); // Fails
 ```
 
@@ -758,7 +769,6 @@ assert.isEvalError(new Error("this is not an eval error")); // Fails
 assert.isEvalError.message = "Expected ${actual} to be an EvalError";
 refute.isEvalError.message = "Expected ${actual} not to be an EvalError";
 ```
-
 
 ### `isFloat32Array()`
 
@@ -779,7 +789,6 @@ assert.isFloat32Array(new Float64Array(2)); // Fails
 assert.isFloat32Array.message = "Expected ${actual} to be a Float32Array";
 refute.isFloat32Array.message = "Expected ${actual} not to be n Float32Array";
 ```
-
 
 ### `isFloat64Array()`
 
@@ -811,7 +820,7 @@ Fails if `actual` is not `Infinity`.
 
 ```js
 assert.isInfinity(Infinity); // Passes
-assert.isInfinity(42);       // Fails
+assert.isInfinity(42); // Fails
 ```
 
 #### Messages
@@ -840,7 +849,6 @@ assert.isInt8Array(new Int16Array(2)); // Fails
 assert.isInt8Array.message = "Expected ${actual} to be an Int8Array";
 refute.isInt8Array.message = "Expected ${actual} not to be an Int8Array";
 ```
-
 
 ### `isInt16Array()`
 
@@ -882,7 +890,6 @@ assert.isInt32Array.message = "Expected ${actual} to be an Int32Array";
 refute.isInt32Array.message = "Expected ${actual} not to be an Int32Array";
 ```
 
-
 ### `isIntlCollator()`
 
 ```js
@@ -893,7 +900,7 @@ Fails if `actual` is not an instance of `Intl.Collator`.
 
 ```js
 assert.isIntlCollator(new Intl.Collator()); // Passes
-assert.isIntlCollator({});                   // Fails
+assert.isIntlCollator({}); // Fails
 ```
 
 #### Messages
@@ -902,7 +909,6 @@ assert.isIntlCollator({});                   // Fails
 assert.isIntlCollator.message = "Expected ${actual} to be an Intl.Collator";
 refute.isIntlCollator.message = "Expected ${actual} not to be an Intl.Collator";
 ```
-
 
 ### `isIntlDateTimeFormat()`
 
@@ -914,16 +920,17 @@ Fails if `actual` is not an instance of `Intl.DateTimeFormat`.
 
 ```js
 assert.isIntlDateTimeFormat(new Intl.DateTimeFormat()); // Passes
-assert.isIntlDateTimeFormat({});                        // Fails
+assert.isIntlDateTimeFormat({}); // Fails
 ```
 
 #### Messages
 
 ```js
-assert.isIntlDateTimeFormat.message = "Expected ${actual} to be an Intl.DateTimeFormat";
-refute.isIntlDateTimeFormat.message = "Expected ${actual} not to be an Intl.DateTimeFormat";
+assert.isIntlDateTimeFormat.message =
+  "Expected ${actual} to be an Intl.DateTimeFormat";
+refute.isIntlDateTimeFormat.message =
+  "Expected ${actual} not to be an Intl.DateTimeFormat";
 ```
-
 
 ### `isIntlNumberFormat()`
 
@@ -935,16 +942,17 @@ Fails if `actual` is not an instance of `Intl.NumberFormat`.
 
 ```js
 assert.isIntlNumberFormat(new Intl.NumberFormat()); // Passes
-assert.isIntlNumberFormat({});                      // Fails
+assert.isIntlNumberFormat({}); // Fails
 ```
 
 #### Messages
 
 ```js
-assert.isIntlNumberFormat.message = "Expected ${actual} to be an Intl.NumberFormat";
-refute.isIntlNumberFormat.message = "Expected ${actual} not to be an Intl.NumberFormat";
+assert.isIntlNumberFormat.message =
+  "Expected ${actual} to be an Intl.NumberFormat";
+refute.isIntlNumberFormat.message =
+  "Expected ${actual} not to be an Intl.NumberFormat";
 ```
-
 
 ### `isMap()`
 
@@ -956,7 +964,7 @@ Fails if `actual` is not an instance of `Map`.
 
 ```js
 assert.isMap(new Map()); // Passes
-assert.isMap({});        // Fails
+assert.isMap({}); // Fails
 ```
 
 #### Messages
@@ -965,7 +973,6 @@ assert.isMap({});        // Fails
 assert.isMap.message = "Expected ${actual} to be a Map";
 refute.isMap.message = "Expected ${actual} not to be a Map";
 ```
-
 
 ### `isPromise()`
 
@@ -977,7 +984,7 @@ Fails if `actual` is not an instance of `Promise`.
 
 ```js
 assert.isPromise(new Promise()); // Passes
-assert.isPromise({});            // Fails
+assert.isPromise({}); // Fails
 ```
 
 #### Messages
@@ -986,7 +993,6 @@ assert.isPromise({});            // Fails
 assert.isPromise.message = "Expected ${actual} to be a Promise";
 refute.isPromise.message = "Expected ${actual} not to be a Promise";
 ```
-
 
 ### `isRangeError()`
 
@@ -997,8 +1003,8 @@ assert.isRangeError(actual[, message])
 Fails if `actual` is not an instance of `RangeError`.
 
 ```js
-assert.isRangeError(new RangeError("this is a range error"));  // Passes
-assert.isRangeError(new Error("this is not a range error"));   // Fails
+assert.isRangeError(new RangeError("this is a range error")); // Passes
+assert.isRangeError(new Error("this is not a range error")); // Fails
 ```
 
 #### Messages
@@ -1007,7 +1013,6 @@ assert.isRangeError(new Error("this is not a range error"));   // Fails
 assert.isRangeError.message = "Expected ${actual} to be an RangeError";
 refute.isRangeError.message = "Expected ${actual} not to be an RangeError";
 ```
-
 
 ### `isReferenceError()`
 
@@ -1018,17 +1023,17 @@ assert.isReferenceError(actual[, message])
 Fails if `actual` is not an instance of `ReferenceError`.
 
 ```js
-assert.isReferenceError(new ReferenceError("this is a range error"));  // Passes
-assert.isReferenceError(new Error("this is not a range error"));   // Fails
+assert.isReferenceError(new ReferenceError("this is a range error")); // Passes
+assert.isReferenceError(new Error("this is not a range error")); // Fails
 ```
 
 #### Messages
 
 ```js
 assert.isReferenceError.message = "Expected ${actual} to be a ReferenceError";
-refute.isReferenceError.message = "Expected ${actual} not to be a ReferenceError";
+refute.isReferenceError.message =
+  "Expected ${actual} not to be a ReferenceError";
 ```
-
 
 ### `isRegExp()`
 
@@ -1039,9 +1044,9 @@ assert.isRegExp(actual[, message])
 Fails if `actual` is not an instance of `RegExp`.
 
 ```js
-assert.isRegExp(new RegExp("apple pie"));  // Passes
-assert.isRegExp(/apple pie/);              // Passes
-assert.isRegExp("apple pie");              // Fails
+assert.isRegExp(new RegExp("apple pie")); // Passes
+assert.isRegExp(/apple pie/); // Passes
+assert.isRegExp("apple pie"); // Fails
 ```
 
 #### Messages
@@ -1050,7 +1055,6 @@ assert.isRegExp("apple pie");              // Fails
 assert.isRegExp.message = "Expected ${actual} to be an RegExp";
 refute.isRegExp.message = "Expected ${actual} not to be an RegExp";
 ```
-
 
 ### `isSet()`
 
@@ -1061,8 +1065,8 @@ assert.isSet(actual[, message])
 Fails if `actual` is not an instance of `Set`.
 
 ```js
-assert.isSet(new Set());  // Passes
-assert.isSet([]);         // Fails
+assert.isSet(new Set()); // Passes
+assert.isSet([]); // Fails
 ```
 
 #### Messages
@@ -1071,7 +1075,6 @@ assert.isSet([]);         // Fails
 assert.isSet.message = "Expected ${actual} to be a Set";
 refute.isSet.message = "Expected ${actual} not to be a Set";
 ```
-
 
 ### `isSymbol()`
 
@@ -1082,8 +1085,8 @@ assert.isSymbol(actual[, message])
 Fails if `actual` is not a value of type `Symbol`.
 
 ```js
-assert.isSymbol(Symbol("apple pie"));  // Passes
-assert.isSymbol("apple pie");          // Fails
+assert.isSymbol(Symbol("apple pie")); // Passes
+assert.isSymbol("apple pie"); // Fails
 ```
 
 #### Messages
@@ -1092,7 +1095,6 @@ assert.isSymbol("apple pie");          // Fails
 assert.isSymbol.message = "Expected ${actual} to be a Symbol";
 refute.isSymbol.message = "Expected ${actual} not to be a Symbol";
 ```
-
 
 ### `isSyntaxError()`
 
@@ -1103,8 +1105,8 @@ assert.isSyntaxError(actual[, message])
 Fails if `actual` is not an instance of `SyntaxError`.
 
 ```js
-assert.isSyntaxError(new SyntaxError("this is a syntax error"));  // Passes
-assert.isSyntaxError(new Error("this is not a syntax error"));    // Fails
+assert.isSyntaxError(new SyntaxError("this is a syntax error")); // Passes
+assert.isSyntaxError(new Error("this is not a syntax error")); // Fails
 ```
 
 #### Messages
@@ -1113,7 +1115,6 @@ assert.isSyntaxError(new Error("this is not a syntax error"));    // Fails
 assert.isSyntaxError.message = "Expected ${actual} to be a SyntaxError";
 refute.isSyntaxError.message = "Expected ${actual} not to be a SyntaxError";
 ```
-
 
 ### `isTypeError()`
 
@@ -1124,8 +1125,8 @@ assert.isTypeError(actual[, message])
 Fails if `actual` is not an instance of `TypeError`.
 
 ```js
-assert.isTypeError(new TypeError("this is a type error"));  // Passes
-assert.isTypeError(new Error("this is not a type error"));  // Fails
+assert.isTypeError(new TypeError("this is a type error")); // Passes
+assert.isTypeError(new Error("this is not a type error")); // Fails
 ```
 
 #### Messages
@@ -1134,7 +1135,6 @@ assert.isTypeError(new Error("this is not a type error"));  // Fails
 assert.isTypeError.message = "Expected ${actual} to be a TypeError";
 refute.isTypeError.message = "Expected ${actual} not to be a TypeError";
 ```
-
 
 ### `isURIError()`
 
@@ -1145,7 +1145,7 @@ assert.isURIError(actual[, message])
 Fails if `actual` is not an instance of `URIError`.
 
 ```js
-assert.isURIError(new URIError("this is a uri error"));  // Passes
+assert.isURIError(new URIError("this is a uri error")); // Passes
 assert.isURIError(new Error("this is not a uri error")); // Fails
 ```
 
@@ -1156,7 +1156,6 @@ assert.isURIError.message = "Expected ${actual} to be a URIError";
 refute.isURIError.message = "Expected ${actual} not to be a URIError";
 ```
 
-
 ### `isUint16Array()`
 
 ```js
@@ -1166,9 +1165,9 @@ assert.isUint16Array(actual[, message])
 Fails if `actual` is not an instance of `Uint16Array`.
 
 ```js
-assert.isUint16Array(new Uint16Array());  // Passes
-assert.isUint16Array(new Uint32Array());  // Fails
-assert.isUint16Array(new Uint8Array());   // Fails
+assert.isUint16Array(new Uint16Array()); // Passes
+assert.isUint16Array(new Uint32Array()); // Fails
+assert.isUint16Array(new Uint8Array()); // Fails
 ```
 
 #### Messages
@@ -1177,7 +1176,6 @@ assert.isUint16Array(new Uint8Array());   // Fails
 assert.isUint16Array.message = "Expected ${actual} to be a Uint16Array";
 refute.isUint16Array.message = "Expected ${actual} not to be a Uint16Array";
 ```
-
 
 ### `isUint32Array()`
 
@@ -1188,9 +1186,9 @@ assert.isUint32Array(actual[, message])
 Fails if `actual` is not an instance of `Uint32Array`.
 
 ```js
-assert.isUint32Array(new Uint16Array());  // Fails
-assert.isUint32Array(new Uint32Array());  // Passes
-assert.isUint32Array(new Uint8Array());   // Fails
+assert.isUint32Array(new Uint16Array()); // Fails
+assert.isUint32Array(new Uint32Array()); // Passes
+assert.isUint32Array(new Uint8Array()); // Fails
 ```
 
 #### Messages
@@ -1199,7 +1197,6 @@ assert.isUint32Array(new Uint8Array());   // Fails
 assert.isUint32Array.message = "Expected ${actual} to be a Uint32Array";
 refute.isUint32Array.message = "Expected ${actual} not to be a Uint32Array";
 ```
-
 
 ### `isUint8Array()`
 
@@ -1210,9 +1207,9 @@ assert.isUint8Array(actual[, message])
 Fails if `actual` is not an instance of `Uint8Array`.
 
 ```js
-assert.isUint8Array(new Uint16Array());  // Fails
-assert.isUint8Array(new Uint32Array());  // Fails
-assert.isUint8Array(new Uint8Array());   // Passes
+assert.isUint8Array(new Uint16Array()); // Fails
+assert.isUint8Array(new Uint32Array()); // Fails
+assert.isUint8Array(new Uint8Array()); // Passes
 ```
 
 #### Messages
@@ -1221,7 +1218,6 @@ assert.isUint8Array(new Uint8Array());   // Passes
 assert.isUint8Array.message = "Expected ${actual} to be a Uint8Array";
 refute.isUint8Array.message = "Expected ${actual} not to be a Uint8Array";
 ```
-
 
 ### `isUint8ClampedArray()`
 
@@ -1232,17 +1228,18 @@ assert.isUint8ClampedArray(actual[, message])
 Fails if `actual` is not an instance of `Uint8ClampedArray`.
 
 ```js
-assert.isUint8ClampedArray(new Uint8ClampedArray());   // Passes
-assert.isUint8ClampedArray(new Uint8Array());          // Fails
+assert.isUint8ClampedArray(new Uint8ClampedArray()); // Passes
+assert.isUint8ClampedArray(new Uint8Array()); // Fails
 ```
 
 #### Messages
 
 ```js
-assert.isUint8ClampedArray.message = "Expected ${actual} to be a Uint8ClampedArray";
-refute.isUint8ClampedArray.message = "Expected ${actual} not to be a Uint8ClampedArray";
+assert.isUint8ClampedArray.message =
+  "Expected ${actual} to be a Uint8ClampedArray";
+refute.isUint8ClampedArray.message =
+  "Expected ${actual} not to be a Uint8ClampedArray";
 ```
-
 
 ### `isWeakMap()`
 
@@ -1253,8 +1250,8 @@ assert.isWeakMap(actual[, message])
 Fails if `actual` is not an instance of `WeakMap`.
 
 ```js
-assert.isWeakMap(new WeakMap());   // Passes
-assert.isWeakMap(new Map());       // Fails
+assert.isWeakMap(new WeakMap()); // Passes
+assert.isWeakMap(new Map()); // Fails
 ```
 
 #### Messages
@@ -1263,7 +1260,6 @@ assert.isWeakMap(new Map());       // Fails
 assert.isWeakMap.message = "Expected ${actual} to be a WeakMap";
 refute.isWeakMap.message = "Expected ${actual} not to be a WeakMap";
 ```
-
 
 ### `isWeakSet()`
 
@@ -1274,8 +1270,8 @@ assert.isWeakSet(actual[, message])
 Fails if `actual` is not an instance of `WeakSet`.
 
 ```js
-assert.isWeakSet(new WeakSet());   // Passes
-assert.isWeakSet(new Set());       // Fails
+assert.isWeakSet(new WeakSet()); // Passes
+assert.isWeakSet(new Set()); // Fails
 ```
 
 #### Messages
@@ -1284,8 +1280,6 @@ assert.isWeakSet(new Set());       // Fails
 assert.isWeakSet.message = "Expected ${actual} to be a WeakSet";
 refute.isWeakSet.message = "Expected ${actual} not to be a WeakSet";
 ```
-
-
 
 ### `keys()`
 
@@ -1296,9 +1290,9 @@ assert.keys(object, keyArray[, message])
 Fails if object’s own properties are not exactly the same as a given list.
 
 ```js
-assert.keys({ test1: 't1', test2: 't2' }, ['test1']);                 // Fails - 'test2' is unexpected
-assert.keys({ test1: 't1', test2: 't2' }, ['test1','test2','test3']); // Fails - 'test3' is not present
-assert.keys({ test1: 't1', test2: 't2' }, ['test1','test2']);         // Passes
+assert.keys({ test1: "t1", test2: "t2" }, ["test1"]); // Fails - 'test2' is unexpected
+assert.keys({ test1: "t1", test2: "t2" }, ["test1", "test2", "test3"]); // Fails - 'test3' is not present
+assert.keys({ test1: "t1", test2: "t2" }, ["test1", "test2"]); // Passes
 ```
 
 #### Messages
@@ -1323,38 +1317,50 @@ If the `matcher` is of type `function`, the captured error object is passed as a
 ```js
 // Passes
 assert.exception(function () {
-    throw new Error("Ooops!");
+  throw new Error("Ooops!");
 });
 
 // Fails
 assert.exception(function () {});
 
 // Passes
-assert.exception(function () {
+assert.exception(
+  function () {
     throw new TypeError("Ooops!");
-},  { name: "TypeError" });
+  },
+  { name: "TypeError" }
+);
 
 // Fails, wrong exception type
-assert.exception(function () {
+assert.exception(
+  function () {
     throw new Error("Aww");
-}, { name: "TypeError" });
+  },
+  { name: "TypeError" }
+);
 
 // Fails, wrong exception message
-assert.exception(function () {
+assert.exception(
+  function () {
     throw new Error("Aww");
-}, { message: "Ooops!" });
+  },
+  { message: "Ooops!" }
+);
 
 // Fails, wrong exception type
-assert.exception(function () {
+assert.exception(
+  function () {
     throw new Error("Aww");
-}, function (err) {
+  },
+  function (err) {
     if (err.name !== "TypeError") {
-        return false;
+      return false;
     }
     return true;
-}, "Type of exception is wrong!");  // with message to print, if test fails
+  },
+  "Type of exception is wrong!"
+); // with message to print, if test fails
 ```
-
 
 ### `near()`
 
@@ -1373,8 +1379,10 @@ assert.near(10.6, 10, 0.5); // Fails
 #### Messages
 
 ```js
-assert.near.message = "Expected ${actual} to be equal to ${expected} +/- ${delta}";
-refute.near.message = "Expected ${actual} not to be equal to ${expected} +/- ${delta}";
+assert.near.message =
+  "Expected ${actual} to be equal to ${expected} +/- ${delta}";
+refute.near.message =
+  "Expected ${actual} not to be equal to ${expected} +/- ${delta}";
 ```
 
 ### `hasArity()`
@@ -1386,15 +1394,22 @@ assert.hasArity(actual, arity[, message])
 Fails when `actual` does not have the desired arity.
 
 ```js
-assert.hasArity(function(one) {return one}, 1);            // Passes
-assert.hasArity(function(one, two) {return one + two}, 2); // Passes
-assert.hasArity(function(one, two) {return one + two}, 1); // Fails
+assert.hasArity(function (one) {
+  return one;
+}, 1); // Passes
+assert.hasArity(function (one, two) {
+  return one + two;
+}, 2); // Passes
+assert.hasArity(function (one, two) {
+  return one + two;
+}, 1); // Fails
 ```
 
 #### Messages
 
 ```js
-assert.hasArity.message = "Expected ${name} to have arity of ${1} but was ${arity}";
+assert.hasArity.message =
+  "Expected ${name} to have arity of ${1} but was ${arity}";
 refute.hasArity.message = "Expected ${name} to not have arity of ${1}";
 ```
 
@@ -1407,18 +1422,19 @@ assert.hasPrototype(actual, prototype[, message])
 Fails if `prototype` does not exist in the prototype chain of `actual`.
 
 ```js
-assert.hasPrototype(function() {}, Function.prototype); // Passes
-assert.hasPrototype(function() {}, Object.prototype);   // Passes
-assert.hasPrototype({}, Function.prototype);            // Fails
+assert.hasPrototype(function () {}, Function.prototype); // Passes
+assert.hasPrototype(function () {}, Object.prototype); // Passes
+assert.hasPrototype({}, Function.prototype); // Fails
 ```
 
 #### Messages
 
 ```js
-assert.hasPrototype.message = "Expected ${actual} to have ${expected} on its prototype chain";
-refute.hasPrototype.message = "Expected ${actual} not to have ${expected} on its prototype chain";
+assert.hasPrototype.message =
+  "Expected ${actual} to have ${expected} on its prototype chain";
+refute.hasPrototype.message =
+  "Expected ${actual} not to have ${expected} on its prototype chain";
 ```
-
 
 ### `contains()`
 
@@ -1429,8 +1445,8 @@ assert.contains(haystack, needle[, message])
 Fails if the array like object `haystack` does not contain the `needle` argument.
 
 ```js
-assert.contains([1, 2, 3], 2);   // Passes
-assert.contains([1, 2, 3], 4);   // Fails
+assert.contains([1, 2, 3], 2); // Passes
+assert.contains([1, 2, 3], 4); // Fails
 assert.contains([1, 2, 3], "2"); // Fails
 ```
 
@@ -1440,7 +1456,6 @@ assert.contains([1, 2, 3], "2"); // Fails
 assert.contains.message = "Expected [${actual}] to contain ${expected}";
 refute.contains.message = "Expected [${actual}] not to contain ${expected}";
 ```
-
 
 ### `tagName()`
 
@@ -1453,9 +1468,8 @@ Fails if the `element` either does not specify a `tagName` property, or if its v
 ```js
 assert.tagName(document.createElement("p"), "p"); // Passes
 assert.tagName(document.createElement("h2"), "H2"); // Passes
-assert.tagName(document.createElement("p"), "li");  // Fails
+assert.tagName(document.createElement("p"), "li"); // Fails
 ```
-
 
 ### `className()`
 
@@ -1471,10 +1485,10 @@ Fails if the `element` either does not specify a `className` property, or if its
 var el = document.createElement("p");
 el.className = "feed item blog-post";
 
-assert.className(el, "item");           // Passes
-assert.className(el, "news");           // Fails
+assert.className(el, "item"); // Passes
+assert.className(el, "news"); // Fails
 assert.className(el, "blog-post feed"); // Passes
-assert.className(el, "feed items");     // Fails, "items" is not a match
+assert.className(el, "feed items"); // Fails, "items" is not a match
 assert.className(el, ["item", "feed"]); // Passes
 ```
 
@@ -1492,9 +1506,9 @@ The assertion **resolves**, if the value resolved from `promise`
 
 Furthermore, the assertion **rejects** if,
 
-* the resolved value from the input `promise` is not equal to the given `value`
-* the given `promise` rejects instead of resolving
-* the given input is not a Promise
+- the resolved value from the input `promise` is not equal to the given `value`
+- the given `promise` rejects instead of resolving
+- the given input is not a Promise
 
 **NOTE:** In order to tell the test runner to wait until the assertion has completed, you
 either need to return the Promise from the assertion:
@@ -1527,9 +1541,9 @@ The assertion **resolves**, if the value rejected from `promise`
 
 Furthermore, the assertion **rejects** if,
 
-* the rejected value from the input `promise` is not equal to the given `value`
-* the given `promise` resolves instead of rejecting
-* the given input is not a Promise
+- the rejected value from the input `promise` is not equal to the given `value`
+- the given `promise` resolves instead of rejecting
+- the given input is not a Promise
 
 **NOTE:** In order to tell the test runner to wait until the assertion has completed, you
 either need to return the Promise from the assertion:
@@ -1561,10 +1575,9 @@ var serialized = JSON.stringify({ is: 42 });
 
 assert.json(serialized, { is: 42 }); // Passes
 assert.json(serialized, { or: 42 }); // Fails
-assert.json(serialized, { is: 7 });  // Fails
-assert.json("no-json", {});          // Fails
+assert.json(serialized, { is: 7 }); // Fails
+assert.json("no-json", {}); // Fails
 ```
-
 
 ### `matchJson()`
 
@@ -1580,10 +1593,9 @@ var serialized = JSON.stringify({ is: 42, and: 3 });
 assert.matchJson(serialized, { is: 42 }); // Passes
 assert.matchJson(serialized, { and: 3 }); // Passes
 assert.matchJson(serialized, { or: 42 }); // Fails
-assert.matchJson(serialized, { is: 7 });  // Fails
-assert.matchJson("no-json", {});          // Fails
+assert.matchJson(serialized, { is: 7 }); // Fails
+assert.matchJson("no-json", {}); // Fails
 ```
-
 
 ## Custom assertions
 
@@ -1597,47 +1609,48 @@ Custom assertions can be loaded as modules using e.g. [mocha](https://mochajs.or
 #### Custom assertion
 
 `./test/assertions/is-prime.js`
+
 ```js
 const referee = require("referee");
 
 // adapted from https://stackoverflow.com/a/40200710
-function isPrime(number){
-    for (var i = 2; i < number; i++){
-        if (number % i === 0){
-            return false;
-        }
+function isPrime(number) {
+  for (var i = 2; i < number; i++) {
+    if (number % i === 0) {
+      return false;
     }
-    return number !== 1 && number !== 0;
+  }
+  return number !== 1 && number !== 0;
 }
 
 referee.add("isPrime", {
-    assert: function assert(actual) {
-        if (typeof actual !== "number" || actual < 0) {
-            throw new TypeError("'actual' argument should be a non-negative Number");
-        }
+  assert: function assert(actual) {
+    if (typeof actual !== "number" || actual < 0) {
+      throw new TypeError("'actual' argument should be a non-negative Number");
+    }
 
-        this.actual = actual;
+    this.actual = actual;
 
-        return isPrime(actual);
-    },
-    assertMessage: "Expected ${actual} to be a prime number",
-    refuteMessage: "Expected ${actual} to not be a prime number",
-    expectation: "toHaveArity"
-
+    return isPrime(actual);
+  },
+  assertMessage: "Expected ${actual} to be a prime number",
+  refuteMessage: "Expected ${actual} to not be a prime number",
+  expectation: "toHaveArity",
 });
 ```
 
 #### Test
 
 `./test/some.test.js`
-```js
-const { assert, refute  } = require("referee");
 
-describe("some", function() {
-    it("should have isPrime installed", function() {
-        assert.isPrime(5);
-        refute.isPrime(6);
-    });
+```js
+const { assert, refute } = require("referee");
+
+describe("some", function () {
+  it("should have isPrime installed", function () {
+    assert.isPrime(5);
+    refute.isPrime(6);
+  });
 });
 ```
 
@@ -1656,13 +1669,13 @@ overwrite are listed with each assertion. You can use the same keys for
 string interpolation (e.g. `${actual}`, `${expected}`). equals:
 
 ```js
-var assert = require('referee').assert;
-assert.equals.message = "I wanted ${actual} == ${expected}!"
+var assert = require("referee").assert;
+assert.equals.message = "I wanted ${actual} == ${expected}!";
 
 try {
-    assert.equals(3, 4);
+  assert.equals(3, 4);
 } catch (e) {
-    console.log(e.message);
+  console.log(e.message);
 }
 
 // Prints:
@@ -1675,15 +1688,16 @@ try {
 
 ```js
 referee.on("failure", function (err) {
-    console.log(err.message);
+  console.log(err.message);
 });
 ```
 
 ### `pass` event
 
 Signature:
+
 ```js
-"pass", function () {}
+"pass", function () {};
 ```
 
 Assertion passed. The callback is invoked with the assertion name, e.g.
@@ -1693,12 +1707,12 @@ when refutations pass.
 ### `failure` event
 
 Signature:
+
 ```js
-    "failure", function (error) {}
+"failure", function (error) {};
 ```
 
 Assertion failed. The callback is invoked with an [`AssertionError`](#class-assertionerror) object.
-
 
 ## Expectations
 
@@ -1707,7 +1721,7 @@ All of **referee**'s assertions and refutations are also exposed as "expectation
 Expectations mirror assertions under different names. Refutations can be expressed using `expect(obj).not` and then calling either of the expectations on the resulting object.
 
 ```js
-var expect = require('referee').expect;
+var expect = require("referee").expect;
 
 expect({ id: 42 }).toBeObject(); // Passes
 expect("Somewhere in here").toMatch("in"); // Passes
@@ -1717,7 +1731,7 @@ expect(42).not.toEqual(43); // Passes
 ### `expect.toBe()`
 
 ```js
-expect(actual).toBe(expected)
+expect(actual).toBe(expected);
 ```
 
 See [`same()`](#same)
@@ -1725,7 +1739,7 @@ See [`same()`](#same)
 ### `expect.toEqual()`
 
 ```js
-expect(actual).toEqual(expected)
+expect(actual).toEqual(expected);
 ```
 
 See [`equals()`](#equals)
@@ -1733,7 +1747,7 @@ See [`equals()`](#equals)
 ### `expect.toBeGreaterThan()`
 
 ```js
-expect(actual).toBeGreaterThan(expected)
+expect(actual).toBeGreaterThan(expected);
 ```
 
 See [`greater()`](#greater)
@@ -1741,7 +1755,7 @@ See [`greater()`](#greater)
 ### `expect.toBeLessThan()`
 
 ```js
-expect(actual).toBeLessThan(expected)
+expect(actual).toBeLessThan(expected);
 ```
 
 See [`less()`](#less)
@@ -1749,7 +1763,7 @@ See [`less()`](#less)
 ### `expect.toBeDefined()`
 
 ```js
-expect(actual).toBeDefined(expected)
+expect(actual).toBeDefined(expected);
 ```
 
 See [`defined()`](#defined)
@@ -1757,7 +1771,7 @@ See [`defined()`](#defined)
 ### `expect.toBeNull()`
 
 ```js
-expect(actual).toBeNull(expected)
+expect(actual).toBeNull(expected);
 ```
 
 See [`isNull()`](#isnull)
@@ -1765,7 +1779,7 @@ See [`isNull()`](#isnull)
 ### `expect.toMatch()`
 
 ```js
-expect(actual).toMatch(expected)
+expect(actual).toMatch(expected);
 ```
 
 See [`match()`](#match)
@@ -1773,7 +1787,7 @@ See [`match()`](#match)
 ### `expect.toBeObject()`
 
 ```js
-expect(actual).toBeObject(expected)
+expect(actual).toBeObject(expected);
 ```
 
 See [`isObject()`](#isobject)
@@ -1781,7 +1795,7 @@ See [`isObject()`](#isobject)
 ### `expect.toBeFunction()`
 
 ```js
-expect(actual).toBeFunction(expected)
+expect(actual).toBeFunction(expected);
 ```
 
 See [`isFunction()`](#isfunction)
@@ -1789,7 +1803,7 @@ See [`isFunction()`](#isfunction)
 ### `expect.toBeTrue()`
 
 ```js
-expect(actual).toBeTrue()
+expect(actual).toBeTrue();
 ```
 
 See [`isTrue()`](#istrue)
@@ -1797,7 +1811,7 @@ See [`isTrue()`](#istrue)
 ### `expect.toBeFalse()`
 
 ```js
-expect(actual).toBeFalse()
+expect(actual).toBeFalse();
 ```
 
 See [`isFalse()`](#isfalse)
@@ -1805,7 +1819,7 @@ See [`isFalse()`](#isfalse)
 ### `expect.toBeString()`
 
 ```js
-expect(actual).toBeString()
+expect(actual).toBeString();
 ```
 
 See [`isString()`](#isstring)
@@ -1813,7 +1827,7 @@ See [`isString()`](#isstring)
 ### `expect.toBeBoolean()`
 
 ```js
-expect(actual).toBeBoolean()
+expect(actual).toBeBoolean();
 ```
 
 See [`isBoolean()`](#isboolean)
@@ -1821,7 +1835,7 @@ See [`isBoolean()`](#isboolean)
 ### `expect.toBeNumber()`
 
 ```js
-expect(actual).toBeNumber()
+expect(actual).toBeNumber();
 ```
 
 See [`isNumber()`](#isnumber)
@@ -1829,7 +1843,7 @@ See [`isNumber()`](#isnumber)
 ### `expect.toBeNaN()`
 
 ```js
-expect(actual).toBeNaN()
+expect(actual).toBeNaN();
 ```
 
 See [`isNaN()`](#isnan)
@@ -1837,7 +1851,7 @@ See [`isNaN()`](#isnan)
 ### `expect.toBeArray()`
 
 ```js
-expect(actual).toBeArray()
+expect(actual).toBeArray();
 ```
 
 See [`isArray()`](#isarray)
@@ -1845,7 +1859,7 @@ See [`isArray()`](#isarray)
 ### `expect.toBeArrayLike()`
 
 ```js
-expect(actual).toBeArrayLike()
+expect(actual).toBeArrayLike();
 ```
 
 See [`isArrayLike()`](#isarraylike)
@@ -1853,7 +1867,7 @@ See [`isArrayLike()`](#isarraylike)
 ### `expect.toHaveKeys()`
 
 ```js
-expect(object).toHaveKeys(keyArray)
+expect(object).toHaveKeys(keyArray);
 ```
 
 See [`keys()`](#keys)
@@ -1861,7 +1875,7 @@ See [`keys()`](#keys)
 ### `expect.toThrow()`
 
 ```js
-expect(actual).toThrow(expected)
+expect(actual).toThrow(expected);
 ```
 
 See [`exception()`](#exception)
@@ -1869,7 +1883,7 @@ See [`exception()`](#exception)
 ### `expect.toBeNear()`
 
 ```js
-expect(actual).toBeNear(expected, delta)
+expect(actual).toBeNear(expected, delta);
 ```
 
 See [`near()`](#near)
@@ -1877,7 +1891,7 @@ See [`near()`](#near)
 ### `expect.toHavePrototype()`
 
 ```js
-expect(actual).toHavePrototype(prototype)
+expect(actual).toHavePrototype(prototype);
 ```
 
 See [`hasPrototype()`](#hasprototype)
@@ -1885,7 +1899,7 @@ See [`hasPrototype()`](#hasprototype)
 ### `expect.toContain()`
 
 ```js
-expect(haystack).toContain(needle)
+expect(haystack).toContain(needle);
 ```
 
 See [`contains()`](#contains)
@@ -1893,7 +1907,7 @@ See [`contains()`](#contains)
 ### `expect.toHaveTagName()`
 
 ```js
-expect(actual).toHaveTagName(expected)
+expect(actual).toHaveTagName(expected);
 ```
 
 See [`tagName()`](#tagname)
@@ -1901,7 +1915,7 @@ See [`tagName()`](#tagname)
 ### `expect.toHaveClassName()`
 
 ```js
-expect(actual).toHaveClassName(expected)
+expect(actual).toHaveClassName(expected);
 ```
 
 See [`className()`](#classname)
@@ -1909,7 +1923,7 @@ See [`className()`](#classname)
 ### `expect.toEqualJson()`
 
 ```js
-expect(actual).toEqualJson(expected)
+expect(actual).toEqualJson(expected);
 ```
 
 See [`json()`](#json)
@@ -1917,7 +1931,7 @@ See [`json()`](#json)
 ### `expect.toMatchJson()`
 
 ```js
-expect(actual).toMatchJson(expected)
+expect(actual).toMatchJson(expected);
 ```
 
 See [`matchJson()`](#matchJson)
@@ -1925,7 +1939,7 @@ See [`matchJson()`](#matchJson)
 ### `expect.toHaveBeenCalled()`
 
 ```js
-expect(spy).toHaveBeenCalled()
+expect(spy).toHaveBeenCalled();
 ```
 
 See [`called()`](#called)
@@ -1933,7 +1947,7 @@ See [`called()`](#called)
 ### `expect.toHaveBeenCalledOnce()`
 
 ```js
-expect(spy).toHaveBeenCalledOnce(expected)
+expect(spy).toHaveBeenCalledOnce(expected);
 ```
 
 See [`calledOnce()`](calledonce)
@@ -1949,7 +1963,7 @@ See [`calledTwice()`](#calledtwice)
 ### `expect.toHaveBeenCalledThrice()`
 
 ```js
-expect(spy).toHaveBeenCalledThrice(expected)
+expect(spy).toHaveBeenCalledThrice(expected);
 ```
 
 See [`calledThrice()`](#calledthrice)
@@ -1975,7 +1989,7 @@ See [`calledOnceWith()`](#calledoncewith)
 ### `referee.fail()`
 
 ```js
-referee.fail(message)
+referee.fail(message);
 ```
 
 When an assertion fails, it calls `referee.fail()` with the failure message as the only argument. The built-in `fail` function both throws an [`AssertionError()`](#class-assertionerror) and emits it to the `failure` event. The error can be caught and handled by the test runner. If this behavior is not suitable for your testing framework of choice, you can override `referee.fail()` to make it do the right thing.
@@ -1984,7 +1998,7 @@ Example: To use **referee** with JsTestDriver, you can simply configure it as fo
 
 ```js
 referee.fail = function (message) {
-    fail(message);
+  fail(message);
 };
 ```
 
@@ -1992,21 +2006,20 @@ Where the global `fail` function is the one provided by JsTestDriver.
 
 It is possible to make the default `assert.fail` method only emit an event and not throw an error. This may be suitable in asynchronous test runners, where you might not be able to catch exceptions. To silence exceptions, see the `throwOnFailure` property.
 
-
 ### `referee.add()`
 
 ```js
-referee.add(name, options)
+referee.add(name, options);
 ```
 
 Add a custom assertion. Using this ‘macro’ to add project specific assertions has a few advantages:
 
-* Assertions will be counted
-* Failure messages will have interpolated arguments formatted
-* A single function generates both an assertion and a refutation
-* If using expectations, an expectation can easily be generated as well
-* When `failOnNoAssertions` is set to `true`, the assertion will behave correctly (may be important for asynchronous tests)
-* The assertion will fail if too few arguments are passed
+- Assertions will be counted
+- Failure messages will have interpolated arguments formatted
+- A single function generates both an assertion and a refutation
+- If using expectations, an expectation can easily be generated as well
+- When `failOnNoAssertions` is set to `true`, the assertion will behave correctly (may be important for asynchronous tests)
+- The assertion will fail if too few arguments are passed
 
 Here’s an example of adding a “foo” assertion, that only passes when its only argument is the string “foo”:
 
@@ -2016,12 +2029,12 @@ var refute = referee.refute;
 var expect = referee.expect;
 
 referee.add("isFoo", {
-    assert: function (actual) {
-        return actual == "foo";
-    },
-    assertMessage: "Expected ${0} to be foo!",
-    refuteMessage: "Expected not to be foo!",
-    expectation: "toBeFoo"
+  assert: function (actual) {
+    return actual == "foo";
+  },
+  assertMessage: "Expected ${0} to be foo!",
+  refuteMessage: "Expected not to be foo!",
+  expectation: "toBeFoo",
 });
 
 // Now you can do:
@@ -2039,15 +2052,15 @@ expect("foo").toBeFoo();
 
 // To support custom messages, do this:
 referee.add("isFoo", {
-    assert: function (actual) {
-        return actual == "foo";
-    },
-    assertMessage: "${1}Expected ${0} to be foo!",
-    refuteMessage: "${1}Expected not to be foo!",
-    expectation: "toBeFoo",
-    values: function (thing, message) {
-        return [thing, message ? message + " " : ""];
-    }
+  assert: function (actual) {
+    return actual == "foo";
+  },
+  assertMessage: "${1}Expected ${0} to be foo!",
+  refuteMessage: "${1}Expected not to be foo!",
+  expectation: "toBeFoo",
+  values: function (thing, message) {
+    return [thing, message ? message + " " : ""];
+  },
 });
 
 // Fails: "[assert.isFoo] Ouch: Expected { id: 42 } to be foo!"
@@ -2060,13 +2073,13 @@ Arguments are available in assertion failure messages using the `"${n}"` switche
 
 ```js
 referee.add("isString", {
-    assert: function (actual) {
-        this.actualType = typeof actual;
-        return this.actualType == "string";
-    },
-    assertMessage: "Expected ${0} (${actualType}) to be string",
-    refuteMessage: "Expected not to be string",
-    expectation: "toBeString"
+  assert: function (actual) {
+    this.actualType = typeof actual;
+    return this.actualType == "string";
+  },
+  assertMessage: "Expected ${0} (${actualType}) to be string",
+  refuteMessage: "Expected not to be string",
+  expectation: "toBeString",
 });
 ```
 
@@ -2092,16 +2105,17 @@ All arguments are available for interpolation into the resulting error message. 
             <dd>Custom refutation function. Used over <code>!assert()</code> if provided.</dd>
             <dt><code>assertMessage</code></dt>
             <dd>The error message to use when the assertion fails. The message may refer to arguments through switches like <code>"${0}"</code> and so on (see above, under the assert argument). The message is exposed on the generated assertion as the property <code>assert.[name].message</code>.</dd>
-            <dt><code>refuteMessage</code></dt>
-            <dd>Like <code>assertMessage</code>, but for refutations. Exposed as <code>refute.[name].message</code>.</dd>
-            <dt><code>values</code></dt>
-            <dd>A function that maps values to be interpolated into the failure messages. This can be used when you need something more/else than the actual <code>arguments</code> in order.</dd>
-            <dt><code>expectation</code></dt>
-            <dd>The name of the assertion as an expectation, e.g. “toBeSomething”. Optional.</dd>
-        </dl>
-    </dd>
-</dl>
 
+<dt><code>refuteMessage</code></dt>
+<dd>Like <code>assertMessage</code>, but for refutations. Exposed as <code>refute.[name].message</code>.</dd>
+<dt><code>values</code></dt>
+<dd>A function that maps values to be interpolated into the failure messages. This can be used when you need something more/else than the actual <code>arguments</code> in order.</dd>
+<dt><code>expectation</code></dt>
+<dd>The name of the assertion as an expectation, e.g. “toBeSomething”. Optional.</dd>
+</dl>
+</dd>
+
+</dl>
 
 ### `referee.verifier()`
 
@@ -2112,32 +2126,31 @@ It exposes `verify.count` which is incremented every time `referee` emits a `"pa
 `verify()` always unsubscribes the event listeners, so that `verify.count` does not change. This means you have to create a new verifier for each test run.
 
 ```js
-it("should do something", function(){
-    var verify = referee.verifier();
+it("should do something", function () {
+  var verify = referee.verifier();
 
-    var limit = 10;
-    for (var i = 0; i < 10; i++){
-        console.log(i);
-    }
+  var limit = 10;
+  for (var i = 0; i < 10; i++) {
+    console.log(i);
+  }
 
-    // this test will fail as no assertions have been made
-    verify();
+  // this test will fail as no assertions have been made
+  verify();
 });
 
+it("should do something", function () {
+  var verify = referee.verifier();
 
-it("should do something", function(){
-    var verify = referee.verifier();
+  var limit = 10;
+  for (var i = 0; i < 10; i++) {
+    assert.isTrue(true);
+  }
 
-    var limit = 10;
-    for (var i = 0; i < 10; i++){
-        assert.isTrue(true);
-    }
+  // this will pass because exactly 10 (`limit`) assertions have been made
+  verify(limit);
 
-    // this will pass because exactly 10 (`limit`) assertions have been made
-    verify(limit);
-
-    console.log(verify.count);
-    // 10
+  console.log(verify.count);
+  // 10
 });
 ```
 
