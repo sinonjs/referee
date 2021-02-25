@@ -1,9 +1,5 @@
 extends:
-    - 'eslint-config-sinon'
-
-env:
-  browser: true
-  node: true
+  - "@sinonjs/eslint-config"
 
 globals:
   Float32Array: false
@@ -22,43 +18,10 @@ globals:
   WeakMap: false
   WeakSet: false
 
-plugins:
-  - ie11
-
 rules:
-  strict: [error, 'global']
-
-  ie11/no-collection-args: error
-  ie11/no-for-in-const: error
-  ie11/no-loop-func: warn
-  ie11/no-weak-collections: error
-
   quotes: off
   max-len: off
   # the sinon config is currently using prettier plugin
   # once that has been updated, this line can be removed
   # See https://github.com/sinonjs/eslint-config-sinon/blob/956db70f2e0566d0e7f8f1f093da4704cf16afb2/index.js#L288-L290
   prettier/prettier: off
-
-overrides:
-    - files: ['*.test.*', 'lib/test-helper/*.js']
-      plugins:
-          - mocha
-      env:
-          mocha: true
-      rules:
-          max-nested-callbacks: [error, 6]
-          no-empty-function: off
-          strict: [error, 'global']
-
-          mocha/handle-done-callback: error
-          mocha/no-exclusive-tests: error
-          mocha/no-global-tests: error
-          mocha/no-hooks-for-single-case: off
-          mocha/no-identical-title: error
-          mocha/no-mocha-arrows: error
-          mocha/no-nested-tests: error
-          mocha/no-return-and-callback: error
-          mocha/no-sibling-hooks: error
-          mocha/no-skipped-tests: error
-          mocha/no-top-level-hooks: error
