@@ -1,5 +1,21 @@
 # Changes
 
+## 8.0.0
+
+- [`84afaf0`](https://github.com/sinonjs/referee/commit/84afaf0e0f5ddf505f0dd03593354bf26a580dee)
+  Upgrade linting config (Morgan Roderick)
+    > This drops support for IE11, legacy Edge and older Safari (pre 10)
+    >
+    > Replace `eslint-config-sinon` with the new version under a new name
+    > `@sinonjs/eslint-config`. The new package includes the correct versions
+    > of all the dependencies to have a working `eslint` setup in downstream
+    > projects.
+    >
+    > See https://github.com/sinonjs/eslint-config/pull/7
+    >
+
+_Released on 2021-03-12._
+
 ## 7.0.0
 
 - [`2a678f0`](https://github.com/sinonjs/referee/commit/2a678f0ebcaeb0a1ea42f433287545fbe014a16e)
