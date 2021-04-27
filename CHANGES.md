@@ -1,5 +1,12 @@
 # Changes
 
+## 8.0.2
+
+- [`f695dca`](https://github.com/sinonjs/referee/commit/f695dcac7ebaae942d2ef574688cc044e11771b7)
+  Fix resolves and rejects arity (Maximilian Antoni)
+
+_Released on 2021-04-27._
+
 ## 8.0.1
 
 - [`06aeae4`](https://github.com/sinonjs/referee/commit/06aeae4d7cd45899dd44093704fd71bd9cbba5f9)
