@@ -258,7 +258,7 @@ refute.less.message =
 assert.isUndefined(object[, message])
 ```
 
-Fails if `object` is not `null`.
+Fails if `object` is not `undefined`.
 
 ```js
 assert.isUndefined(undefined); // Passes
