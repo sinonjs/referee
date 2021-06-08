@@ -31,7 +31,7 @@
     "*.js": "eslint --quiet"
   },
   "dependencies": {
-    "@sinonjs/commons": "^1.4.0",
+    "@sinonjs/commons": "^1.8.3",
     "@sinonjs/samsam": "^5.0.2",
     "event-emitter": "^0.3.5",
     "lodash.isarguments": "^3.1.0",
