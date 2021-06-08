@@ -55,7 +55,7 @@
     "!lib/**/*.test.js"
   ],
   "devDependencies": {
-    "@sinonjs/eslint-config": "^4.0.0",
+    "@sinonjs/eslint-config": "^4.0.3",
     "@studio/changes": "^2.0.0",
     "esbuild": "^0.8.6",
     "husky": "^4.2.1",
