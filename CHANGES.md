@@ -1,5 +1,32 @@
 # Changes
 
+## 9.0.0
+
+- [`cd4d34a`](https://github.com/sinonjs/referee/commit/cd4d34aa30b6af1be0775a849096ae398a73770a)
+  npm audit (Maximilian Antoni)
+- [`136f4a5`](https://github.com/sinonjs/referee/commit/136f4a51bde80a5a62c5887894995df80be38999)
+  Upgrade @sinonjs/samsam and sinon (Maximilian Antoni)
+- [`95d9bec`](https://github.com/sinonjs/referee/commit/95d9bec608d2b3ea90275109c0124ae39cf555ca)
+  Update @studio/changes (Maximilian Antoni)
+- [`ac6ea7a`](https://github.com/sinonjs/referee/commit/ac6ea7adb0278d857e6b8fdbb6f7529c9a64a204)
+  Update @sinonjs/eslint-config (Maximilian Antoni)
+- [`affa3dc`](https://github.com/sinonjs/referee/commit/affa3dc5d57af3733268141ec51517bd1a01bc98)
+  Update @sinonjs/commons (Maximilian Antoni)
+- [`71ce2d5`](https://github.com/sinonjs/referee/commit/71ce2d5a3c1fefc9312f11131bffee6bc9148438)
+  Use npm 7 (Maximilian Antoni)
+- [`5450458`](https://github.com/sinonjs/referee/commit/5450458cb8c4ff42002a36e622cb5825fba79502)
+  Bump glob-parent from 5.1.1 to 5.1.2 (dependabot[bot])
+- [`85d4143`](https://github.com/sinonjs/referee/commit/85d41432e06ed5041bc4ac486ec4ab7c2f11c0b5)
+  Bump browserslist from 4.16.3 to 4.16.6 (dependabot[bot])
+- [`564ec3b`](https://github.com/sinonjs/referee/commit/564ec3b11deeda6320aa9885161f1da6c2bc7598)
+  Fix typo in isUndefined docs (Serkan Özel)
+- [`cfa8bcd`](https://github.com/sinonjs/referee/commit/cfa8bcd33c96057ce96f5aeab9003905ebffe7d0)
+  Bump hosted-git-info from 3.0.5 to 3.0.8 (dependabot[bot])
+- [`17c84ba`](https://github.com/sinonjs/referee/commit/17c84bab005184c68c5f7ffd45ca9c3b36d7d98c)
+  Bump lodash from 4.17.20 to 4.17.21 (dependabot[bot])
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2021-06-08._
+
 ## 8.0.2
 
 - [`f695dca`](https://github.com/sinonjs/referee/commit/f695dcac7ebaae942d2ef574688cc044e11771b7)
