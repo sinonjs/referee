@@ -70,6 +70,14 @@ jobs:
     steps:
       - *attach-step
       - run:
+          name: Test
+          command: npm test
+  node-16:
+    docker:
+      - image: circleci/node:16
+    steps:
+      - *attach-step
+      - run:
           name: Test with coverage
           command: npm run test-check-coverage
       - run:
@@ -91,5 +99,8 @@ workflows:
           requires:
             - install-dependencies
       - node-14:
+          requires:
+            - install-dependencies
+      - node-16:
           requires:
             - install-dependencies
