@@ -1,5 +1,25 @@
 # Changes
 
+## 9.0.1
+
+- [`d5e06d5`](https://github.com/sinonjs/referee/commit/d5e06d53b08267e023bffb26f118e20d165d7a76)
+  Add support for Node 16 (Morgan Roderick)
+    >
+    > * Run tests in Node 16
+    >
+- [`c0a9a6b`](https://github.com/sinonjs/referee/commit/c0a9a6bdc29d173117e16a145f793839ef3a50d7)
+  Fix Node 16 (Morgan Roderick)
+    >
+    > The object formatting changed (improved) slightly between Node 14 and 16, which
+    > broke some of the tests.
+    >
+    > Since https://github.com/sinonjs/referee/pull/183, we're supposed to be using a
+    > frozen version of `util` for formatting values for error messages. Looks like we
+    > missed a few places.
+    >
+
+_Released by Morgan Roderick on 2021-06-15._
+
 ## 9.0.0
 
 - [`cd4d34a`](https://github.com/sinonjs/referee/commit/cd4d34aa30b6af1be0775a849096ae398a73770a)
