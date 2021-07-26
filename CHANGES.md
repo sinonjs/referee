@@ -1,5 +1,24 @@
 # Changes
 
+## 9.1.0
+
+- [`910e80c`](https://github.com/sinonjs/referee/commit/910e80c85b88cf8fc0e5a6fd53262c11d7b125bc)
+  Allow functions for assert and refute messages (Morgan Roderick)
+    >
+    > This allows for dynamic assert and refute messages, which is required to
+    > improve combined assertions like `calledOnceWith` in
+    > `@sinonjs/refere-sinon`.
+    >
+- [`f9d0c82`](https://github.com/sinonjs/referee/commit/f9d0c82c2c4eef6951922fd453f9ed6f7bdc242a)
+  Fix tests in node 12.14.1 (Morgan Roderick)
+    >
+    > Some tests were failing in node 12.14.1, because of changes (likely
+    > improvements) to object formatting. By using `util.inspect` in tests, we
+    > can match the strings correctly, no matter the node version.
+    >
+
+_Released by Morgan Roderick on 2021-07-26._
+
 ## 9.0.1
 
 - [`d5e06d5`](https://github.com/sinonjs/referee/commit/d5e06d53b08267e023bffb26f118e20d165d7a76)
