@@ -1,5 +1,18 @@
 # Changes
 
+## 9.1.1
+
+- [`3666289`](https://github.com/sinonjs/referee/commit/36662898c2f149e4485e45455188dade36262bde)
+  Fix pending promise in async assertion on error (Maximilian Antoni)
+    >
+    > Fail the test with the thrown error message by rejecting the internal
+    > assertion promise. Without handling the exception, the assertion promise
+    > wouldn't be resolved or rejected and a test case awaiting the promise
+    > would hang.
+    >
+
+_Released by Morgan Roderick on 2021-08-05._
+
 ## 9.1.0
 
 - [`910e80c`](https://github.com/sinonjs/referee/commit/910e80c85b88cf8fc0e5a6fd53262c11d7b125bc)
