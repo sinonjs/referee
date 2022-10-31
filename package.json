@@ -24,7 +24,8 @@
     "prettier:write": "prettier --write '**/*.{js,css,md}'",
     "preversion": "npm run test-check-coverage",
     "version": "changes --commits --footer",
-    "postversion": "git push --follow-tags && npm publish"
+    "postversion": "git push --follow-tags && npm publish",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.{js,css,md}": "prettier --check",
@@ -58,7 +59,7 @@
     "@sinonjs/eslint-config": "^4.0.3",
     "@studio/changes": "^2.2.0",
     "esbuild": "^0.8.6",
-    "husky": "^4.2.1",
+    "husky": "^8.0.1",
     "lint-staged": "^10.0.7",
     "mkdirp": "^1.0.3",
     "mocha": "^9.2.0",
