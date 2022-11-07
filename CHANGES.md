@@ -1,5 +1,15 @@
 # Changes
 
+## 9.1.2
+
+- [`003d1a0`](https://github.com/sinonjs/referee/commit/003d1a0781142bf6790af8ef6d2b1305fd190f24)
+  Prefer @sinonjs/commons@2 (Morgan Roderick)
+    >
+    > That makes ES2017 support explicit
+    >
+
+_Released by Morgan Roderick on 2022-11-07._
+
 ## 9.1.1
 
 - [`3666289`](https://github.com/sinonjs/referee/commit/36662898c2f149e4485e45455188dade36262bde)
