@@ -1,5 +1,28 @@
 # Changes
 
+## 10.0.0
+
+- [`039c5d2`](https://github.com/sinonjs/referee/commit/039c5d27490a85c14dc49c5a9f9e5f573b19c9c8)
+  Remove support for node 12, add node 18 (Maximilian Antoni)
+- [`c86946a`](https://github.com/sinonjs/referee/commit/c86946ade6145d0ae0a920ab1ed9263f61864f33)
+  npm audit (Maximilian Antoni)
+- [`5c0129a`](https://github.com/sinonjs/referee/commit/5c0129a998eab193969cf4c72b4f8b0e936d6732)
+  Update util (Maximilian Antoni)
+- [`a136e6a`](https://github.com/sinonjs/referee/commit/a136e6a40b9f5b16354df75a86416b0d0ebd6e07)
+  Update husky (Maximilian Antoni)
+- [`bbe42aa`](https://github.com/sinonjs/referee/commit/bbe42aada87001aeb3ad35841b6086a2395eb615)
+  Update eslint-config (Maximilian Antoni)
+- [`cd5caf5`](https://github.com/sinonjs/referee/commit/cd5caf5ebfeb32e4afb6b631bf167a87a5ca8679)
+  Update prettier and reformat files (Maximilian Antoni)
+- [`aa3978a`](https://github.com/sinonjs/referee/commit/aa3978a34d3c79acf4026232d3fec1c41a5a20a3)
+  Upgrade lint-staged (Maximilian Antoni)
+- [`9878fc2`](https://github.com/sinonjs/referee/commit/9878fc27423fd4b53f7e35a5a0d83982495fe7ee)
+  Upgrade mocha (Maximilian Antoni)
+- [`dd45436`](https://github.com/sinonjs/referee/commit/dd45436215fa837bc1c38dc2cffd7e2bb5a3b3a5)
+  Upgrade samsam and sinon (Maximilian Antoni)
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2023-01-24._
+
 ## 9.1.2
 
 - [`003d1a0`](https://github.com/sinonjs/referee/commit/003d1a0781142bf6790af8ef6d2b1305fd190f24)
