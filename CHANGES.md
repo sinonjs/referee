@@ -1,5 +1,18 @@
 # Changes
 
+## 10.0.1
+
+- [`4d3e91c`](https://github.com/sinonjs/referee/commit/4d3e91c761adaf6ea793158b7833d80e9072ab03)
+  Upgrade samsam to v8 to fix a matcher issue (Maximilian Antoni)
+- [`957a3f9`](https://github.com/sinonjs/referee/commit/957a3f9d1c1a00c2b57babe25705c675eaaaf077)
+  Add failing test for sinon.match.string (Maximilian Antoni)
+- [`3e6ce3d`](https://github.com/sinonjs/referee/commit/3e6ce3dde85ebfad44b3b0cc2569e52e9e065586)
+  Update sinon (Maximilian Antoni)
+- [`d0dfef5`](https://github.com/sinonjs/referee/commit/d0dfef5d4eeb4ac66075fc09485777a31629c9dc)
+  Upgrade esbuild to fix the build (Maximilian Antoni)
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2023-06-29._
+
 ## 10.0.0
 
 - [`039c5d2`](https://github.com/sinonjs/referee/commit/039c5d27490a85c14dc49c5a9f9e5f573b19c9c8)
