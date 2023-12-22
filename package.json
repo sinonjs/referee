@@ -60,7 +60,7 @@
     "@studio/changes": "^2.2.0",
     "esbuild": "^0.17.4",
     "husky": "^8.0.3",
-    "lint-staged": "^13.1.0",
+    "lint-staged": "^15.2.0",
     "mkdirp": "^1.0.3",
     "mocha": "^10.2.0",
     "nyc": "^15.1.0",
