@@ -317,7 +317,7 @@ assert.match(
       return "yeah";
     },
   },
-  "Yeah!"
+  "Yeah!",
 ); // Passes
 ```
 
@@ -340,7 +340,7 @@ assert.match(
       return "yeah!";
     },
   },
-  /yeah/
+  /yeah/,
 ); // Passes
 assert.match(234, /[a-z]/); // Fails
 ```
@@ -358,7 +358,7 @@ assert.match(
       return "42";
     },
   },
-  42
+  42,
 ); // Passes
 assert.match(234, 1234); // Fails
 ```
@@ -387,7 +387,7 @@ assert.match(
   },
   function () {
     return true;
-  }
+  },
 );
 
 // Fails
@@ -417,7 +417,7 @@ assert.match(
   },
   {
     name: "Chris",
-  }
+  },
 );
 
 // Fails
@@ -1328,7 +1328,7 @@ assert.exception(
   function () {
     throw new TypeError("Ooops!");
   },
-  { name: "TypeError" }
+  { name: "TypeError" },
 );
 
 // Fails, wrong exception type
@@ -1336,7 +1336,7 @@ assert.exception(
   function () {
     throw new Error("Aww");
   },
-  { name: "TypeError" }
+  { name: "TypeError" },
 );
 
 // Fails, wrong exception message
@@ -1344,7 +1344,7 @@ assert.exception(
   function () {
     throw new Error("Aww");
   },
-  { message: "Ooops!" }
+  { message: "Ooops!" },
 );
 
 // Fails, wrong exception type
@@ -1358,7 +1358,7 @@ assert.exception(
     }
     return true;
   },
-  "Type of exception is wrong!"
+  "Type of exception is wrong!",
 ); // with message to print, if test fails
 ```
 
