@@ -8,7 +8,7 @@
     <title>referee</title>
     <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
@@ -17,12 +17,11 @@
         var mkdocs_page_url = null;
       </script>
     
-    <script src="js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
       <script src="js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -557,8 +556,8 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
-      <li>referee</li>
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">referee</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/sinonjs/referee/edit/master/docs/index.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
@@ -793,7 +792,7 @@ assert.match(
       return &quot;yeah&quot;;
     },
   },
-  &quot;Yeah!&quot;
+  &quot;Yeah!&quot;,
 ); // Passes
 </code></pre>
 <p>The last example is not symmetric. When the matcher is a string, the actual value is coerced to a string - in this case using <code>toString</code>. Changing the order of the arguments would cause the matcher to be an object, in which case different rules apply (see below).</p>
@@ -809,7 +808,7 @@ assert.match(
       return &quot;yeah!&quot;;
     },
   },
-  /yeah/
+  /yeah/,
 ); // Passes
 assert.match(234, /[a-z]/); // Fails
 </code></pre>
@@ -823,7 +822,7 @@ assert.match(
       return &quot;42&quot;;
     },
   },
-  42
+  42,
 ); // Passes
 assert.match(234, 1234); // Fails
 </code></pre>
@@ -848,7 +847,7 @@ assert.match(
   },
   function () {
     return true;
-  }
+  },
 );
 
 // Fails
@@ -874,7 +873,7 @@ assert.match(
   },
   {
     name: &quot;Chris&quot;,
-  }
+  },
 );
 
 // Fails
@@ -1399,7 +1398,7 @@ assert.exception(
   function () {
     throw new TypeError(&quot;Ooops!&quot;);
   },
-  { name: &quot;TypeError&quot; }
+  { name: &quot;TypeError&quot; },
 );
 
 // Fails, wrong exception type
@@ -1407,7 +1406,7 @@ assert.exception(
   function () {
     throw new Error(&quot;Aww&quot;);
   },
-  { name: &quot;TypeError&quot; }
+  { name: &quot;TypeError&quot; },
 );
 
 // Fails, wrong exception message
@@ -1415,7 +1414,7 @@ assert.exception(
   function () {
     throw new Error(&quot;Aww&quot;);
   },
-  { message: &quot;Ooops!&quot; }
+  { message: &quot;Ooops!&quot; },
 );
 
 // Fails, wrong exception type
@@ -1429,7 +1428,7 @@ assert.exception(
     }
     return true;
   },
-  &quot;Type of exception is wrong!&quot;
+  &quot;Type of exception is wrong!&quot;,
 ); // with message to print, if test fails
 </code></pre>
 <h3 id="near"><code>near()</code></h3>
@@ -1985,20 +1984,21 @@ it(&quot;should do something&quot;, function () {
     
   </span>
 </div>
-    <script>var base_url = '.';</script>
-    <script src="js/theme_extra.js" defer></script>
-    <script src="js/theme.js" defer></script>
-      <script src="search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>
 </html>
 
 <!--
-MkDocs version : 1.4.3
-Build Date UTC : 2023-06-29 09:07:31.484255+00:00
+MkDocs version : 1.5.3
+Build Date UTC : 2023-12-27 17:26:51.238196+00:00
 -->
