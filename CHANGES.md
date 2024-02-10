@@ -1,5 +1,41 @@
 # Changes
 
+## 11.0.0
+
+- [`14949b9`](https://github.com/sinonjs/referee/commit/14949b9e56fd49fadc65a30858c4847d3d8d4db6)
+  Use setup-node v4 and use lts/* as node-version (Maximilian Antoni)
+- [`ecd5d7a`](https://github.com/sinonjs/referee/commit/ecd5d7ab090b0962a3da7fa311a60324fc0cad74)
+  Drop node 14, add node 20 (Maximilian Antoni)
+- [`744fafb`](https://github.com/sinonjs/referee/commit/744fafbe2ef71060104b71d5813532f72ab5f95c)
+  npm audit (Maximilian Antoni)
+- [`79cf800`](https://github.com/sinonjs/referee/commit/79cf800c878f502b02501c8a5701111b5b32907e)
+  Upgrade mkdirp (Maximilian Antoni)
+- [`f19019f`](https://github.com/sinonjs/referee/commit/f19019fc1301fa5d121bd5e7cdeee0c3d15b126c)
+  Update esbuild (Maximilian Antoni)
+- [`424f343`](https://github.com/sinonjs/referee/commit/424f34348dd6419c521d16ce05eaa66d95b5c6f7)
+  Upgrade prettier to v3 and reformat files (Maximilian Antoni)
+- [`bcb67ce`](https://github.com/sinonjs/referee/commit/bcb67ced33bf50bf88ced4932c14cde41e9fa44e)
+  Upgrade lint-staged (Maximilian Antoni)
+- [`719ebb0`](https://github.com/sinonjs/referee/commit/719ebb0b1f27368581e850d400b263d529a951dc)
+  Update @sinonjs/eslint-config (Maximilian Antoni)
+- [`e4f0b29`](https://github.com/sinonjs/referee/commit/e4f0b29813fc1181f273124554739bf7a142f91f)
+  Upgrade sinon and @sinonjs/commons to latest (Maximilian Antoni)
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2023-12-27._
+
+## 10.0.1
+
+- [`4d3e91c`](https://github.com/sinonjs/referee/commit/4d3e91c761adaf6ea793158b7833d80e9072ab03)
+  Upgrade samsam to v8 to fix a matcher issue (Maximilian Antoni)
+- [`957a3f9`](https://github.com/sinonjs/referee/commit/957a3f9d1c1a00c2b57babe25705c675eaaaf077)
+  Add failing test for sinon.match.string (Maximilian Antoni)
+- [`3e6ce3d`](https://github.com/sinonjs/referee/commit/3e6ce3dde85ebfad44b3b0cc2569e52e9e065586)
+  Update sinon (Maximilian Antoni)
+- [`d0dfef5`](https://github.com/sinonjs/referee/commit/d0dfef5d4eeb4ac66075fc09485777a31629c9dc)
+  Upgrade esbuild to fix the build (Maximilian Antoni)
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2023-06-29._
+
 ## 10.0.0
 
 - [`039c5d2`](https://github.com/sinonjs/referee/commit/039c5d27490a85c14dc49c5a9f9e5f573b19c9c8)
