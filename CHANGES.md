@@ -1,5 +1,15 @@
 # Changes
 
+## 11.0.1
+
+- [`d75d082`](https://github.com/sinonjs/referee/commit/d75d08206270add0ff8f3dcb352fccb7336569ea)
+  chore: add cdn fields to package.json (Morgan Roderick)
+    >
+    > This is basically the same changes as in https://github.com/sinonjs/sinon/pull/1520/files
+    >
+
+_Released by Morgan Roderick on 2024-02-10._
+
 ## 11.0.0
 
 - [`14949b9`](https://github.com/sinonjs/referee/commit/14949b9e56fd49fadc65a30858c4847d3d8d4db6)
