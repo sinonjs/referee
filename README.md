@@ -10,7 +10,7 @@ Some highlights:
 
 - Rich library of assertions
 - Supports custom assertions
-- Symmetric assert/refute (refute is **referee**'s "assert.not\*")
+- Complementary `assert/refute` (`refute` is referee's `assert.not`)
 - Evented: Emits success and failure events
 - Failing assertions throw exceptions by default, but can be configured to not
 - API to add custom assertions that provides quite a bit of plumbing for free
