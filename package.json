@@ -1,6 +1,6 @@
 {
   "name": "@sinonjs/referee",
-  "version": "10.0.1",
+  "version": "11.0.0",
   "description": "Assertions for any JavaScript test framework and environment",
   "author": "Christian Johansen",
   "license": "BSD-3-Clause",
@@ -32,7 +32,7 @@
     "*.js": "eslint --quiet"
   },
   "dependencies": {
-    "@sinonjs/commons": "^2.0.0",
+    "@sinonjs/commons": "^3.0.0",
     "@sinonjs/samsam": "^8.0.0",
     "event-emitter": "^0.3.5",
     "lodash.isarguments": "^3.1.0",
@@ -56,16 +56,16 @@
     "!lib/**/*.test.js"
   ],
   "devDependencies": {
-    "@sinonjs/eslint-config": "^4.0.6",
+    "@sinonjs/eslint-config": "^5.0.1",
     "@studio/changes": "^2.2.0",
-    "esbuild": "^0.17.4",
+    "esbuild": "^0.19.10",
     "husky": "^8.0.3",
-    "lint-staged": "^13.1.0",
-    "mkdirp": "^1.0.3",
+    "lint-staged": "^15.2.0",
+    "mkdirp": "^3.0.1",
     "mocha": "^10.2.0",
     "nyc": "^15.1.0",
-    "prettier": "^2.8.3",
+    "prettier": "^3.1.1",
     "proxyquire": "^2.1.3",
-    "sinon": "^15.0.3"
+    "sinon": "^17.0.1"
   }
 }
