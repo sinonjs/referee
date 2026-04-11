@@ -40,6 +40,7 @@
   },
   "nyc": {
     "exclude": [
+      "eslint.config.js",
       "rollup.config.js",
       "coverage/**",
       "site/**",
