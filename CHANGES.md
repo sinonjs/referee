@@ -1,5 +1,16 @@
 # Changes
 
+## 11.0.2
+
+- [`72527d7`](https://github.com/sinonjs/referee/commit/72527d7d5a9121cd6e2e526aa7e8fb3a9dc8376b)
+  Upgrade to breaking ESLint 10 and new shared config (#259) (Carl-Erik Kopseng)
+- [`210f1fb`](https://github.com/sinonjs/referee/commit/210f1fbd2b51cbca093c1cef73c61bd839764aa3)
+  npm audit (Morgan Roderick)
+- [`9da0bf7`](https://github.com/sinonjs/referee/commit/9da0bf76f8a7b040d9e1f64f04c491a57f81b5f2)
+  chore: upgrade esbuild to latest (Morgan Roderick)
+
+_Released by [Carl-Erik Kopseng](https://github.com/fatso83) on 2026-04-11._
+
 ## 11.0.1
 
 - [`d75d082`](https://github.com/sinonjs/referee/commit/d75d08206270add0ff8f3dcb352fccb7336569ea)
