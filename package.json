@@ -59,7 +59,7 @@
   "devDependencies": {
     "@sinonjs/eslint-config": "^7.0.2",
     "@studio/changes": "^2.2.0",
-    "esbuild": "^0.25.1",
+    "esbuild": "^0.28.1",
     "eslint": "^10.2.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
