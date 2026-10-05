@@ -2,7 +2,6 @@ coverage/
 pkg/
 site/
 coverage/
-.nyc_output/
 tmp/
 dist/
 CHANGES.md

@@ -1697,7 +1697,7 @@ referee.on("failure", function (err) {
 Signature:
 
 ```js
-"pass", function () {};
+referee.on("pass", function (assertionName) {});
 ```
 
 Assertion passed. The callback is invoked with the assertion name, e.g.
@@ -1709,7 +1709,7 @@ when refutations pass.
 Signature:
 
 ```js
-"failure", function (error) {};
+referee.on("failure", function (error) {});
 ```
 
 Assertion failed. The callback is invoked with an [`AssertionError`](#class-assertionerror) object.
@@ -2100,11 +2100,11 @@ In some cases the refutation may not be the exact opposite of the assertion. If 
 The number of formal parameters the function accepts determines the number of required arguments to the function. If the assertion is called with less arguments than expected, <strong>referee</strong> will fail it before your custom function is even called.
 
 All arguments are available for interpolation into the resulting error message. The first argument will be available as <code>"${0}"</code>, the second as <code>"${1}"</code> and so on. If you want to embed other values than exact arguments into the string, you can set properties on this in the custom assertion, and refer to them as <code>"${name}"</code> in the message.
-            </dd>
-            <dt><code>refute</code></dt>
-            <dd>Custom refutation function. Used over <code>!assert()</code> if provided.</dd>
-            <dt><code>assertMessage</code></dt>
-            <dd>The error message to use when the assertion fails. The message may refer to arguments through switches like <code>"${0}"</code> and so on (see above, under the assert argument). The message is exposed on the generated assertion as the property <code>assert.[name].message</code>.</dd>
+</dd>
+<dt><code>refute</code></dt>
+<dd>Custom refutation function. Used over <code>!assert()</code> if provided.</dd>
+<dt><code>assertMessage</code></dt>
+<dd>The error message to use when the assertion fails. The message may refer to arguments through switches like <code>"${0}"</code> and so on (see above, under the assert argument). The message is exposed on the generated assertion as the property <code>assert.[name].message</code>.</dd>
 
 <dt><code>refuteMessage</code></dt>
 <dd>Like <code>assertMessage</code>, but for refutations. Exposed as <code>refute.[name].message</code>.</dd>
