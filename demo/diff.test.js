@@ -3,7 +3,7 @@
  */
 "use strict";
 
-var assert = require("..").assert;
+const assert = require("..").assert;
 
 describe("diff", function () {
   it("multiline string", function () {
